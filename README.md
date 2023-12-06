@@ -1,8 +1,11 @@
+# Vue3 JsonSchema Form
 Use the same schema that you use for server-side validation, to generate client-side forms.
 ## 1 Demo
 
 ## 2 Install
-
+```
+npm i vue3-jsonschema-form --save
+```
 ## 3 Usage:
 
 Globally in main.ts:
@@ -30,10 +33,10 @@ app.mount("#app");
 - **Four modes**: JsonSchema Form can be presented in four different modes:
 	- **Readonly Dense**: Read only. Only properties with corresponding data in the data object are shown. 
 	- **Readonly Full**: Read only. All properties are shown.
-	- **Edit Updateable Properties**: All properties are shown. Only properties that have corresponding property in the **updateable properties** object are updateable.
+	- **Edit Permitted**: All properties are shown. Only properties that have corresponding property in the **updateable properties** object are updateable.
 	- **Edit Full**: All properties are shown. All properties are updateable. Mostly used for development purposes.
-- **Updateable properties**: Often we want to present a form as read only for most users and present the same form with certain fields updateable for users with a particular role. This can be achieved by passing an user specific updateable properties object
-- **Validate before save:** We apply el-form validations before returning data. Required properties have a red asterix  next to the label
+- **Updateable properties**: Often we want to present a form as read only for most users and present the same form with certain fields updateable for users with a particular role. This can be achieved by passing an user specific updateable properties object. This object can also determin if the user is allow modify an array of subforms: e.g add, remove, reorder.
+- **Validate before save:** We apply el-form validations before returning data. Required properties have a red asterix  next to the label.
 - **Info Icon:** If a description is provided then a hover-over info icon is displayed next to the label.
 - **Subforms for nested objects:** Nested object are displayed in subforms on a mostly transparent grey background. With multiple nesting levels the subform backgrounds become lighter, making them easy to distinguish.
 - **Array of subforms for arrays containing objects:** If the property describes an array of objects then an array of subforms is displayed. The is a '+' icon to add a new subform. Each subform has a '-' icon in order to remove it. The order of the subforms can be changed through drag and drop.
