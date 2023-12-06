@@ -6,6 +6,7 @@ let isDark = useDark()
 const toggleDark = useToggle(isDark)
 let mode = "Readonly Dense"
 let activeName = ""
+let valid = true
 </script>
 
 <template>
@@ -17,22 +18,35 @@ let activeName = ""
     <el-row>
       <el-radio-group v-model="mode">
         <el-radio label="Readonly Dense">Readonly Dense</el-radio>
-        <el-radio label="Readonly Dense">Readonly Full</el-radio>
-        <el-radio label="Readonly Dense">Edit Permitted</el-radio>
-        <el-radio label="Readonly Dense">Edit Full</el-radio>
+        <el-radio label="Readonly Full">Readonly Full</el-radio>
+        <el-radio label="Edit Permitted">Edit Permitted</el-radio>
+        <el-radio label="Edit Full">Edit Full</el-radio>
       </el-radio-group>
-    </el-row>
-    <el-row>
-      <div>Valid: {{ valid }}</div>
     </el-row>
     <el-row>
       <button type="primary" plain @click="validateForm()">Validate</button>
       <button type="primary" plain @click="resetForm()">Reset</button>
     </el-row>
-    <div>Valid: {{ valid }}</div>
-    <el-tabs v-model="activeName">
-      <el-tab-pane label="Form" name="first">Form</el-tab-pane>
-      <el-tab-pane label="Table" name="second">Table"</el-tab-pane>
+    <el-row>
+      <div>Is Valid: {{ valid }}</div>
+    </el-row>
+    <el-tabs>
+      <el-tab-pane label="Form">
+        <el-tabs>
+          <el-tab-pane label="Schema Form">Form</el-tab-pane>
+          <el-tab-pane label="Jsonschema">Table"</el-tab-pane>
+          <el-tab-pane label="Data Object">Table"</el-tab-pane>
+          <el-tab-pane label="Updateable Properties">Table"</el-tab-pane>
+        </el-tabs>
+      </el-tab-pane>
+      <el-tab-pane label="Table">
+        <el-tabs>
+          <el-tab-pane label="Schema Table">Form</el-tab-pane>
+          <el-tab-pane label="Jsonschema">Table"</el-tab-pane>
+          <el-tab-pane label="Data Object">Table"</el-tab-pane>
+          <el-tab-pane label="Updateable Properties">Table"</el-tab-pane>
+        </el-tabs>
+      </el-tab-pane>
     </el-tabs>
 
 
