@@ -1,0 +1,59 @@
+<script setup lang="ts">
+import { ref, computed } from "vue";
+
+const props = defineProps({
+  hashLevel: { type: Number, default: 0 },
+  modelValue: { type: Object, default: {} },
+  property: { type: Object, default: {} },
+  readonly: { type: Boolean, default: true },
+  formMode: { type: String, default: "Readonly Dense" },
+})
+
+const highlightedCode = computed(() => {
+
+});
+</script>
+
+<template>
+  <JsonSchemaForm class="ar-subform-background" value="modelValue" :properties="property.properties"
+    :requiredArr="property.required" :form-mode="formMode" :hash-level="hashLevel"></JsonSchemaForm>
+</template>
+<!--
+<script>
+//import JsonSchemaForm from "./JsonSchemaForm"; // must be declared globally
+
+export default {
+  name: "ar-nested-object",
+  props: {
+    modelValue: {
+      type: Object,
+      default: () => {},
+    },
+    property: {
+      type: Object,
+      default: () => {},
+    },
+    formMode: String,
+    hashLevel: Number,
+  },
+  watch: {
+    modelValue: {
+      handler(newVal) {
+        this.$emit("input", newVal);
+      },
+      deep: true,
+    },
+  },
+};
+</script>
+-->
+<style scoped>
+/* subForm background */
+.ar-subform-background {
+  background-color: #ffffff08;
+  padding: 10px 10px 10px 15px;
+  border-radius: 4px;
+  border-style: none;
+  margin-bottom: 10px;
+}
+</style>

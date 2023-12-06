@@ -1,0 +1,38 @@
+{
+  "name": "vue3-jsonschema-form",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./styles.css": "./dist/style.css"
+  },
+  "browser": {
+    "./styles.css": "./dist/style.css"
+  },
+  "types": "dist/ViewerPlugin.d.ts",
+  "license": "Apache-2.0",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "element-plus": "^2.4.3",
+    "highlight.js": "^11.9.0",
+    "markdown-it": "^13.0.2",
+    "vue": "^3.3.8"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.0",
+    "@vueuse/core": "^10.7.0",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0",
+    "vue-tsc": "^1.8.22"
+  }
+}
