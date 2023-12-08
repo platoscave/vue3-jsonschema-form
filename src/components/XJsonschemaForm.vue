@@ -17,14 +17,13 @@ import SelectStringQuery from "./controls/SelectStringQuery.vue";
 import SelectStringEnum from "./controls/SelectStringEnum.vue";
 import SelectArrayQuery from "./controls/SelectArrayQuery.vue";
 import String from "./controls/String.vue";
-import JsonSchemaForm from "./jsonschema-form.vue";
+import JsonschemaForm from "./JsonschemaForm.vue";
 
 // For some reason I can only add default to requiredArr.
 // As soon as I addd others I get wierd compiler erros. I'm clueless.
 const props = defineProps<{
-  hashLevel: number,
-  modelValue: object,
-  properties: object,
+  modelValue: Object,
+  properties: Object,
   requiredArr: { type: Array, default: () => [] },
   formMode: string,
 }>();
@@ -125,10 +124,12 @@ const dynamicComp = [
   { name: "SelectStringEnum", comp: SelectStringEnum },
   { name: "SelectStringQuery", comp: SelectStringQuery },
   { name: "String", comp: String },
-  { name: "JsonSchemaForm", comp: JsonSchemaForm },
+  { name: "JsonschemaForm", comp: JsonschemaForm },
   { name: "TableArray", comp: TableArray },
 ];
 interface IProperty {
+  tile: string;
+  decription: string;
   type: string;
   contentMediaType: string;
   argoQuery: object;
@@ -208,17 +209,6 @@ const getComponent = (property: IProperty) => {
             </svg>
           </el-tooltip>
         </template>
-        <!-- 
-            The control
-            ar-control-selector is a functional component that that replaces itself with a control component
-            depending on property type. It also performs some magic on certain property.attrs
-            - readonly is used by standard input elements to disable input and by css to remove blue border
-            - required is used by Selects to optionaly add a clear button (or a None option in the case of radio buttons)
-            - hash-level is used by Selects with a argoQuery (to get selectedObjectId from hash)
-            - property and form-mode are passed in case we're creating a subForm
-            - We use the v-model pattern to send/recieve data to/from child components. 
-              Below, we watch for changes to modelValue and emit input events accordingly.
-           -->
         <component :is="getComponent(property)" class="ar-control" v-model="modelValue[propertyName]" :property="property"
           :readonly="formMode.startsWith('Readonly')" :required="requiredArr.includes(propertyName)"
           :hash-level="hashLevel" :form-mode="formMode"></component>

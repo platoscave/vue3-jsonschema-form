@@ -1,8 +1,8 @@
 <script setup lang="ts">
-const props = defineProps({
-  modelValue: { type: String, default: "" },
+const props = defineProps<{
+  value: { type: String, default: "" },
   readonly: { type: Boolean, default: true },
-});
+}>();
 </script>
 
 <template>
@@ -13,5 +13,5 @@ const props = defineProps({
     @input="$emit('update:modelValue', $event)"
   
   -->
-  <el-input v-else autosize value="modelValue" @change="$emit('update:modelValue', $event)"></el-input>
+  <el-input v-else autosize :value="value" @input="($event)=> $emit('update:value', $event.target.value)"></el-input>
 </template>

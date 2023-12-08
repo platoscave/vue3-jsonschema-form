@@ -69,7 +69,7 @@ export default {
       description: "Plain string",
       type: "string",
     },
-    string2: {
+    stringLength: {
       title: "String Length",
       description: "String with min-max length and placeholder",
       type: "string",
@@ -80,7 +80,7 @@ export default {
         placeholder: "Your Full Name",
       },
     },
-    string3: {
+    stringEmail: {
       title: "Email",
       description: "Enter valid email address",
       type: "string",
@@ -91,7 +91,7 @@ export default {
         placeholder: "name@provider.com",
       },
     },
-    string4: {
+    stringPassword: {
       title: "Password",
       description: "Hidden input",
       type: "string",
@@ -99,7 +99,7 @@ export default {
         type: "password",
       },
     },
-    string5: {
+    stringRegEx: {
       title: "Regular Expression",
       description: "Enter letters between a-e",
       type: "string",
@@ -107,11 +107,11 @@ export default {
     },
 
     // "number"://////////////////////////////////////////////
-    number1: {
+    number: {
       title: "Number",
       type: "number",
     },
-    number2: {
+    numberDecimal: {
       title: "Two Decimal",
       description: "Number with min - max values and two decimal places",
       type: "number",
@@ -120,12 +120,12 @@ export default {
       multipleOf: 0.01,
     },
     // "integer"://////////////////////////////////////////////
-    integer1: {
+    integer: {
       title: "Integer",
       type: "integer",
     },
-    integer2: {
-      title: "Integer",
+    integerMinMax: {
+      title: "Integer Min Max",
       description: "Integer with min - max values",
       type: "integer",
       minimum: 10,
@@ -139,7 +139,7 @@ export default {
     // "object"://////////////////////////////////////////////
     //     property.properties
     object: {
-      title: "Nested Subform",
+      title: "Object",
       description: "Nested object",
       type: "object",
       properties: {
@@ -162,7 +162,7 @@ export default {
           },
         },
         nestedSubFormObj: {
-          title: "Dubble Nested Object",
+          title: "Nested Object",
           type: "object",
           properties: {
             petName: {

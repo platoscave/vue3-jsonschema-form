@@ -27,9 +27,9 @@ export default defineConfig({
   build: {
     cssCodeSplit: false,
     lib: {
-      entry: "./src/JsonSchemaForm.ts",
+      entry: "./src/ViewerPlugin.ts",
       formats: ["es", "cjs"],
-      name: "JsonSchemaForm",
+      name: "jsonschema-form",
       fileName: (format) => (format === "es" ? "index.js" : "index.cjs"),
     },
     rollupOptions: {
