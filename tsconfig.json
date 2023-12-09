@@ -23,7 +23,6 @@
     // Volar support
     "types": ["element-plus/global"],
 
-    "eslint.rules.customizations": [ { "rule": "*", "severity": "warn" } ]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]

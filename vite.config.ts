@@ -1,3 +1,4 @@
+import { fileURLToPath, URL } from "url";
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import typescript2 from "rollup-plugin-typescript2";
@@ -19,11 +20,11 @@ export default defineConfig({
       },
     }),
   ],
-  // resolve: {
-  //   alias: {
-  //     "@": fileURLToPath(new URL("./src", import.meta.url)),
-  //   },
-  // },
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
   build: {
     cssCodeSplit: false,
     lib: {

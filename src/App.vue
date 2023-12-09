@@ -21,27 +21,29 @@ const toggleDark = useToggle(isDark)
 const extensions = [json(), oneDark]
 
 let formMode = ref("Readonly Dense")
-let size = ref("Default")
-let labelPosition = ref("Left")
+let size = ref("default")
+let labelPosition = ref("left")
+let labelWidth = ref("100px")
 let valid = ref(true)
 
-let formSchemaObj:any = ref({properties:{}, required:{}})
-let formDataObj = ref({data:{}})
-let formUpdateableProperties = ref({data:{}})
+let formSchemaObj = { properties: {}, required: [] }
+let formDataObj = ref(initialFormDataObj)
+let formUpdateableProperties = {}
 
 
-const updatedFormDataObj = (newFormDataObj:Object) => {
-
-}
+// const updatedFormDataObj = (newFormDataObj: {}) => {
+//     // validate
+//     // copy
+//     //formDataObj.value = newFormDataObj
+// }
 const validateForm = () => {
 
 };
 const resetForm = () => {
-    //debugger;
-    formSchemaObj.value.properties = initialFormSchemaObj.properties
-    formSchemaObj.value.required = initialFormSchemaObj.required
-    formDataObj.value.data = initialFormDataObj.data
-    formUpdateableProperties.value.data = initialFormUpdateableObj.data
+    //formDataObj.value = initialFormDataObj
+
+    formSchemaObj = initialFormSchemaObj
+    formUpdateableProperties = initialFormUpdateableObj
 };
 const queryCallback = () => {
 
@@ -50,25 +52,25 @@ onMounted(() => {
     resetForm()
 })
 // deep watch dataObj, perform pudate
-// watch(updatedFormDataObj, (newDataObj, oldDataObj) => {
+watch(formDataObj, (newDataObj, oldDataObj) => {
 
-//   console.log('watch dataObj', newDataObj)
+    console.log('App dataObj', newDataObj)
 
-//   // Get rid of false updates (otherwise we will loop)
-//   if (previousDataObj === JSON.stringify(newDataObj)) return;
-//   previousDataObj = JSON.stringify(newDataObj)
+    // Get rid of false updates (otherwise we will loop)
+    //   if (previousDataObj === JSON.stringify(newDataObj)) return;
+    //   previousDataObj = JSON.stringify(newDataObj)
 
-//   if (!formMode.value.startsWith("Edit")) return;
-//   if (!oldDataObj) return; // will be empty first time
-//   subFormEl.value.validate().then((valid) => {
-//     console.log("valid", valid);
-//     if (valid) {
-//       db.state.put(toRaw(newDataObj)).catch(function (e) {
-//         alert("Failed update: " + e);
-//       })
-//     }
-//   });
-// }, { deep: true });
+    //   if (!formMode.value.startsWith("Edit")) return;
+    //   if (!oldDataObj) return; // will be empty first time
+    //   subFormEl.value.validate().then((valid) => {
+    //     console.log("valid", valid);
+    //     if (valid) {
+    //       db.state.put(toRaw(newDataObj)).catch(function (e) {
+    //         alert("Failed update: " + e);
+    //       })
+    //     }
+    //   });
+}, { deep: true });
 
 // const highlightedCode = computed(() => {
 //   if (props.modelValue) {
@@ -97,17 +99,21 @@ onMounted(() => {
         </el-row>
         <el-row>
             <el-radio-group v-model="size">
-                <el-radio label="Large">Large</el-radio>
-                <el-radio label="Default">Default</el-radio>
-                <el-radio label="Small">Small</el-radio>
+                <el-radio label="large">large</el-radio>
+                <el-radio label="default">default</el-radio>
+                <el-radio label="small">small</el-radio>
             </el-radio-group>
         </el-row>
         <el-row>
             <el-radio-group v-model="labelPosition">
-                <el-radio label="Left">Left</el-radio>
-                <el-radio label="Right">Right</el-radio>
-                <el-radio label="Top">Top</el-radio>
+                <el-radio label="left">left</el-radio>
+                <el-radio label="right">right</el-radio>
+                <el-radio label="top">top</el-radio>
             </el-radio-group>
+        </el-row>
+        <el-row>
+            <el-input v-model="labelWidth" placeholder="Label width e.g. 100px or auto"
+                @input="labelWidth = $event.target.value" size="small"></el-input>
         </el-row>
         <el-row>
             <button @click="validateForm()">Validate</button>
@@ -119,26 +125,21 @@ onMounted(() => {
                 <el-tabs>
                     <el-tab-pane label="Schema Form">
                         <!-- The form -->
-                        <JsonschemaForm 
-                            :model-value="formDataObj.data"
-                            :properties="formSchemaObj.properties" 
-                            :requiredArr="formSchemaObj.required"
-                            :updateable-properties="formUpdateableProperties.data"
-                            :form-mode="formMode"
-                            :size="size"
-                            :label-position="labelPosition"
-                            :query-callback="queryCallback"
-                            @update="updatedFormDataObj($event.target.value)">
+                        <JsonschemaForm v-model="formDataObj" :properties="formSchemaObj.properties"
+                            :required-arr="formSchemaObj.required" :updateable-properties="formUpdateableProperties"
+                            :form-mode="formMode" :size="size" :label-position="labelPosition" :label-width="labelWidth"
+                            :query-callback="queryCallback">
                         </JsonschemaForm>
                     </el-tab-pane>
                     <el-tab-pane label="Jsonschema">
                         <el-input type="textarea" autosize :value="JSON.stringify(formSchemaObj, null, 4)"></el-input>
                     </el-tab-pane>
                     <el-tab-pane label="Data Object">
-                        <el-input type="textarea" autosize :value="JSON.stringify(formDataObj.data, null, 4)"></el-input>
+                        <el-input type="textarea" autosize :value="JSON.stringify(formDataObj, null, 4)"></el-input>
                     </el-tab-pane>
                     <el-tab-pane label="Updateable Properties">
-                        <el-input type="textarea" autosize :value="JSON.stringify(formUpdateableProperties.data, null, 4)"></el-input>
+                        <el-input type="textarea" autosize
+                            :value="JSON.stringify(formUpdateableProperties, null, 4)"></el-input>
                     </el-tab-pane>
                 </el-tabs>
             </el-tab-pane>
@@ -158,6 +159,7 @@ onMounted(() => {
 button {
     margin-right: 1em
 }
+
 .logo {
     height: 6em;
     padding: 1.5em;

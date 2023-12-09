@@ -264,6 +264,5 @@ export default {
     }
 //     else "CodeEditor";
 
-  },
-  required: ['string']
+  }
 }

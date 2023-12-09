@@ -1,0 +1,61 @@
+<script setup lang="ts">
+import { ref, watch, reactive, toRaw, toRefs, computed, onMounted } from "vue";
+import * as CodeMirror from 'codemirror'
+// import 'codemirror/lib/codemirror.css'
+// import 'codemirror/theme/dracula.css'
+// import 'codemirror/mode/javascript/javascript.js'
+// import 'codemirror/mode/gfm/gfm.js'
+// import 'codemirror/mode/css/css.js'
+
+
+const props = defineProps({
+  modelValue: { type: Object, default: {} },
+  property: { type: Object, default: {} },
+  readonly: { type: Boolean, default: true },
+});
+
+const getMode = (mediaType) => {
+  const mediaTypeArr = mediaType.split('/')
+  const simpleMime = mediaTypeArr[1].replace("x-", "");
+  switch (simpleMime) {
+    case 'x-markdown': return 'gfm'
+    case 'markdown': return 'gfm'
+    case 'xml': return 'xml'
+    case 'html': return 'xml'
+    case 'javascript': return 'javascript'
+    case 'ecmascript': return 'javascript'
+    case 'json': return 'javascript'
+    case 'typescript': return 'javascript'
+    case 'schema+json': return 'javascript'
+
+    case 'csrc (C)': return 'c-like'
+    case 'c++src (C++)': return 'c-like'
+    case 'csharp (C#)': return 'c-like'
+    case 'objectivec (Objective-C)': return 'c-like'
+    case 'vertex': return 'c-like'
+    case 'fragment (shader programs)': return 'c-like'
+
+    default: return 'javascript'
+  }
+}
+
+const data = () => {
+  return {
+    content: "HI"
+  }
+}
+onMounted(() => {
+  // CodeMirror.editorFromTextArea(document.getElementById('editor'), {
+  //   theme: 'dracula',
+  //   mode: getMode(props.property.mediaType)
+  // })
+})
+
+</script>
+
+<template>
+  <div v-if="readonly" class="ar-lightgrey-background">
+    {{ modelValue }}
+  </div>
+  <textarea v-else v-model="content" id="editor"></textarea>
+</template>

@@ -8,7 +8,7 @@ import { ref, reactive, computed, toRefs, watch } from "vue";
 import DateTime from "./controls/DateTime.vue";
 import MarkDown from "./controls/MarkDown.vue";
 import Image from "./controls/Image.vue";
-import Json from "./controls/Json.vue";
+import CodeEditor from "./controls/CodeEditor.vue";
 import NestedObject from "./controls/NestedObject.vue";
 import Number from "./controls/Number.vue";
 import ObjectsArray from "./controls/ObjectsArray.vue";
@@ -116,7 +116,7 @@ const dynamicComp = [
   { name: "DateTime", comp: DateTime },
   { name: "MarkDown", comp: MarkDown },
   { name: "Image", comp: Image },
-  { name: "Json", comp: Json },
+  { name: "CodeEditor", comp: CodeEditor },
   { name: "NestedObject", comp: NestedObject },
   { name: "Number", comp: Number },
   { name: "ObjectsArray", comp: ObjectsArray },
@@ -153,7 +153,7 @@ const getComponent = (property: IProperty) => {
         if (mediaType) {
           if (mediaType === "text/html") return "Html";
           if (mediaType.startsWith("image/")) return "Image";
-          return "Json";
+          return "CodeEditor";
         }
         if (property.argoQuery) return "SelectStringQuery";
         if (property.enum) return "SelectStringEnum";
@@ -164,7 +164,7 @@ const getComponent = (property: IProperty) => {
       case "boolean": return "ElCheckbox";
       case "object":
         if (property.properties) return "NestedObject";
-        return "Json";
+        return "CodeEditor";
       case "array":
         if (property.items) {
           // objects
@@ -175,11 +175,11 @@ const getComponent = (property: IProperty) => {
           // multi select
           else if (property.items.type === "string") {
             if (property.items.argoQuery) return "SelectArrayQuery";
-            return "Json";
+            return "CodeEditor";
           }
         }
     }
-    return "Json";
+    return "CodeEditor";
 
   };
 
