@@ -170,9 +170,11 @@ const getComponent = (property: IProperty) => {
     else return CodeEditor.comp
 };
 const infoIcon =
-    `<svg viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">\n` +
-    `    <path fill="blue" d="M512 64a448 448 0 1 1 0 896.064A448 448 0 0 1 512 64zm67.2 275.072c33.28 0 60.288-23.104 60.288-57.344s-27.072-57.344-60.288-57.344c-33.28 0-60.16 23.104-60.16 57.344s26.88 57.344 60.16 57.344zM590.912 699.2c0-6.848 2.368-24.64 1.024-34.752l-52.608 60.544c-10.88 11.456-24.512 19.392-30.912 17.28a12.992 12.992 0 0 1-8.256-14.72l87.68-276.992c7.168-35.136-12.544-67.2-54.336-71.296-44.096 0-108.992 44.736-148.48 101.504 0 6.784-1.28 23.68.064 33.792l52.544-60.608c10.88-11.328 23.552-19.328 29.952-17.152a12.8 12.8 0 0 1 7.808 16.128L388.48 728.576c-10.048 32.256 8.96 63.872 55.04 71.04 67.84 0 107.904-43.648 147.456-100.416z"></path>\n` +
-    `</svg >`
+    `<svg viewBox="0 0 100 100" height="12" width="12" >` +
+    `   <circle cx="50" cy = "50" r = "50" fill="#2a598a" />` +
+    `   <text fill="rgba(255, 255, 255, 0.87)" x = "33" y = "80" font-size="70" font-style="italic" font-weight="1000" >i</text>\n` +
+    `</svg>`
+
 </script>
 <template>
     <!-- Validation rules are provided by a Computed -->
@@ -187,12 +189,9 @@ const infoIcon =
                 " :prop="propertyName">
                 <!-- Use label slot to add label with info icon -->
                 <template #label>
-                    <span>{{ property.title + " " }}</span>
+                    <span>{{ property.title + " " }} &nbsp;</span>
                     <el-tooltip v-if="property.description" effect="light" :content="property.description" raw-content>
-                        <svg class="icon" height="1em" width="1em" color="blue">
-                            <use xmlns:xlink="http://www.w3.org/1999/xlink"
-                                :xlink:href="'toolbar-symbols.svg#el-icon-info'"></use>
-                        </svg>
+                        <div v-html="infoIcon" height="1em" width="1em"></div>
                     </el-tooltip>
                 </template>
                 <component :is="getComponent(property)" class="ar-control" v-model="modelValue[propertyName]"

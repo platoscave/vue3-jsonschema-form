@@ -15,6 +15,9 @@
 .dark {
   background-color: #01051a; 
 }
+.el-form {
+  max-width: 750px;
+}
 .ar-lightgrey-background {
   background-color: #ffffff08;
   padding: 1px 7px;
