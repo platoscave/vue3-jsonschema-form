@@ -28,6 +28,24 @@ const props = defineProps({
 
 const emit = defineEmits(['update'])
 
+
+interface IProperty {
+    tile: string;
+    decription: string;
+    type: string;
+    contentMediaType: string;
+    argoQuery: object;
+    enum: string[];
+    format: string;
+    properties: object;
+    items: {
+        type: string;
+        properties: object;
+        argoQuery: object;
+    };
+    displayAs: string;
+}
+
 // methodes called from outside, so pass on to our form
 const formEl = ref(null);
 const validate = () => {
@@ -109,6 +127,48 @@ const propertyIsReadonly = (formMode: string, propertyName: string) => {
     return false
 }
 
+// Determin the control type
+const getControlName = (property: IProperty) => {
+
+    switch (property.type) {
+        case "string":
+            const mediaType = property.contentMediaType
+            if (mediaType) {
+                if (mediaType === "text/html") return "Html";
+                if (mediaType.startsWith("image/")) return "Image";
+                return "CodeEditor";
+            }
+            if (property.argoQuery) return "SelectStringQuery";
+            if (property.enum) return "SelectStringEnum";
+            if (property.format === "date-time") return "DateTime";
+            return "StringPlain";
+        case "number": return "Number";
+        case "integer": return "Number";
+        case "boolean": return "ElCheckbox";
+        case "object":
+            if (property.properties) return "NestedObject";
+            else return "CodeEditor";
+        case "array":
+            // objects
+            if (property.items.type === "object" && property.items.properties) {
+                if (property.displayAs === "Table") return "TableArray"; // objects in a table
+                return "ObjectsArray"; // objects in a subform
+            }
+            // multi select
+            else if (property.items.type === "string") {
+                if (property.items.argoQuery) return "SelectArrayQuery";
+                return "CodeEditor";
+            }
+    }
+    return "CodeEditor";
+
+};
+const isNestedObject = (property: IProperty) => {
+    const controlName = getControlName(property)
+    if (controlName in ['NestedObject', 'ObjectsArray', 'TableArray']) return true
+    return false
+}
+
 const getComponent = (property: IProperty) => {
 
     const dynamicComp = [
@@ -127,52 +187,15 @@ const getComponent = (property: IProperty) => {
         { name: "TableArray", comp: TableArray },
     ];
 
-    // Determin the control type
-    const getControlName = (type: string) => {
-
-        switch (type) {
-            case "string":
-                const mediaType = property.contentMediaType
-                if (mediaType) {
-                    if (mediaType === "text/html") return "Html";
-                    if (mediaType.startsWith("image/")) return "Image";
-                    return "CodeEditor";
-                }
-                if (property.argoQuery) return "SelectStringQuery";
-                if (property.enum) return "SelectStringEnum";
-                if (property.format === "date-time") return "DateTime";
-                return "StringPlain";
-            case "number": return "Number";
-            case "integer": return "Number";
-            case "boolean": return "ElCheckbox";
-            case "object":
-                if (property.properties) return "NestedObject";
-                else return "CodeEditor";
-            case "array":
-                // objects
-                if (property.items.type === "object" && property.items.properties) {
-                    if (property.displayAs === "Table") return "TableArray"; // objects in a table
-                    return "ObjectsArray"; // objects in a subform
-                }
-                // multi select
-                else if (property.items.type === "string") {
-                    if (property.items.argoQuery) return "SelectArrayQuery";
-                    return "CodeEditor";
-                }
-        }
-        return "CodeEditor";
-
-    };
-
-    const controlName = getControlName(property.type)
+    const controlName = getControlName(property)
     const nameComp = dynamicComp.find((item) => item.name === controlName);
     if (nameComp) return nameComp.comp;
     else return CodeEditor.comp
 };
 const infoIcon =
     `<svg viewBox="0 0 100 100" height="12" width="12" >` +
-    `   <circle cx="50" cy = "50" r = "50" fill="#2a598a" />` +
-    `   <text fill="rgba(255, 255, 255, 0.87)" x = "33" y = "80" font-size="70" font-style="italic" font-weight="1000" >i</text>\n` +
+    `   <circle cx="50" cy = "50" r = "50" fill="blue"/>` +
+    `   <text fill="rgba(255, 255, 255, 0.87)" x = "33" y = "80" font-size="70" font-style="italic" font-weight="1000" >i</text>` +
     `</svg>`
 
 </script>
@@ -187,18 +210,41 @@ const infoIcon =
             <!-- :prop is needed for validation rules. Do not mess with it! -->
             <el-form-item class="ar-form-item" v-if="includeThisProperty(formMode, modelValue[propertyName], property.type)
                 " :prop="propertyName">
-                <!-- Use label slot to add label with info icon -->
+                <!-- Use label slot to add label with tooltip info icon -->
                 <template #label>
                     <span>{{ property.title + " " }} &nbsp;</span>
                     <el-tooltip v-if="property.description" effect="light" :content="property.description" raw-content>
-                        <div v-html="infoIcon" height="1em" width="1em"></div>
+                        <div class="icon" v-html="infoIcon" height="1em" width="1em"></div>
                     </el-tooltip>
                 </template>
-                <component :is="getComponent(property)" class="ar-control" v-model="modelValue[propertyName]"
+                <!-- The dynamic component is found using getComponent -->
+                <div v-if="isNestedObject(property)"></div>
+                <!-- <component v-if="isNestedObject(property)" :is="getComponent(property)" class="ar-control"
+                    v-model="modelValue[propertyName]" :property="property.properties" :required-arr="property.required"
+                    :updateable-properties="updateableProperties" :form-mode="formMode" :size="size"
+                    :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback">
+                </component> -->
+                <component v-else :is="getComponent(property)" class="ar-control" v-model="modelValue[propertyName]"
                     :property="property" :readonly="propertyIsReadonly(formMode, propertyName)"
-                    :required="requiredArr.includes(propertyName)" :form-mode="formMode">
+                    :required="requiredArr.includes(propertyName)">
                 </component>
             </el-form-item>
         </div>
     </el-form>
 </template>
+<style scoped>
+.icon /deep/ circle {
+    fill: var(--el-color-primary-light-7);
+}
+
+.icon /deep/ text {
+    fill: var(--el-color-primary);
+}
+
+.icon {
+    /* force icon next to label */
+    display: inline;
+    width: 12px;
+    height: 12px;
+}
+</style>
