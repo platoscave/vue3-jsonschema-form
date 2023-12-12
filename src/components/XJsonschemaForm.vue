@@ -219,7 +219,7 @@ const getComponent = (property: IProperty) => {
 
 <style scoped>
 .ar-json-schema-form {
-  max-width: 750px;
+  /* max-width: 750px; */
 }
 
 .icon {

@@ -1,17 +1,16 @@
 <script setup lang="ts">
-const props = defineProps({
+import MarkdownIt from 'markdown-it';
+
+defineProps({
   modelValue: { type: String, default: "" },
+  property: { type: Object, default: () => { } },
   readonly: { type: Boolean, default: true },
 });
 </script>
 
 <template>
   <div v-if="readonly" class="ar-lightgrey-background">
-    {{ modelValue }}
+    <MarkdownIt :source="modelValue"></MarkdownIt>
   </div>
-  <!-- TODO type="textarea" 
-    @input="$emit('update:modelValue', $event)"
-  
-  -->
   <el-input v-else autosize value="modelValue" @change="$emit('update:modelValue', $event)"></el-input>
 </template>

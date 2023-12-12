@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
+import BooleanCtrl from "./controls/BooleanCtrl.vue";
 import DateTime from "./controls/DateTime.vue";
 import MarkDown from "./controls/MarkDown.vue";
 import Image from "./controls/Image.vue";
@@ -13,6 +14,7 @@ import SelectStringEnum from "./controls/SelectStringEnum.vue";
 import SelectArrayQuery from "./controls/SelectArrayQuery.vue";
 import StringPlain from "./controls/StringPlain.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
+import { ElCheckbox } from "element-plus";
 
 const props = defineProps({
     modelValue: { type: Object, default: () => { } },
@@ -144,7 +146,7 @@ const getControlName = (property: IProperty) => {
             return "StringPlain";
         case "number": return "Number";
         case "integer": return "Number";
-        case "boolean": return "ElCheckbox";
+        case "boolean": return "BooleanCtrl";
         case "object":
             if (property.properties) return "NestedObject";
             else return "CodeEditor";
@@ -172,6 +174,7 @@ const isNestedObject = (property: IProperty) => {
 const getComponent = (property: IProperty) => {
 
     const dynamicComp = [
+        { name: "BooleanCtrl", comp: BooleanCtrl },
         { name: "DateTime", comp: DateTime },
         { name: "MarkDown", comp: MarkDown },
         { name: "Image", comp: Image },

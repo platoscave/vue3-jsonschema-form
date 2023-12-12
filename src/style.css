@@ -18,6 +18,10 @@
 .el-form {
   max-width: 750px;
 }
+.ar-control {
+  width: 100%
+
+}
 .ar-lightgrey-background {
   background-color: #ffffff08;
   padding: 1px 7px;

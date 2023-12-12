@@ -1,3 +1,4 @@
 export default {
-    string: "Hi"
+    string: "Hi",
+    Markdown: "# Markdown"
 }

@@ -6,6 +6,72 @@ export default {
   properties: {
 
     // "string": ///////////////////////////////////////////////////
+
+    string: {
+      title: "String",
+      description: "String with min-max length and placeholder",
+      type: "string",
+      minLength: 3,
+      maxLength: 10,
+      title: "Full Name",
+      attrs: {
+        placeholder: "Your Full Name",
+      },
+    },
+    stringEmail: {
+      title: "Email",
+      description: "Enter valid email address",
+      type: "string",
+      format: "email",
+      maxLength: 120,
+      attrs: {
+        type: "email",
+        placeholder: "name@provider.com",
+      },
+    },
+    stringPassword: {
+      title: "Password",
+      description: "Hidden input",
+      type: "string",
+      attrs: {
+        placeholder: "Enter your password",
+        type: "password",
+      },
+    },
+    stringRegEx: {
+      title: "Regular Expression",
+      description: "String with regular expression",
+      type: "string",
+      pattern: "[a-e]+",
+      attrs: {
+        placeholder: "Enter letters between a-e",
+      },
+    },
+
+    // "number"://////////////////////////////////////////////
+    numberDecimal: {
+      title: "Two Decimal",
+      description: "Number with min - max values and two decimal places",
+      type: "number",
+      minimum: 10,
+      maximum: 100,
+      multipleOf: 0.01,
+    },
+    // "integer"://////////////////////////////////////////////
+    integerMinMax: {
+      title: "Integer Min Max",
+      description: "Integer with min - max values",
+      type: "integer",
+      minimum: 10,
+      maximum: 100,
+    },
+    // "boolean"://////////////////////////////////////////////
+    boolean: {
+      title: "Boolean",
+      type: "boolean",
+    },
+
+
     //     mediaType === "text/markdown"
     stringMarkdown: {
       title: "Markdown",
@@ -16,7 +82,7 @@ export default {
       attrs: {
         type: "textarea",
         placeholder: "Enter your markdown text hier",
-        "show-word-limit": true,
+        showWordLimit: true,
       },
     },
     //     mediaType.startsWith("image/")
@@ -63,79 +129,9 @@ export default {
         type: "datetime",
       },
     },
-    //     else "String";
-    string1: {
-      title: "String",
-      description: "Plain string",
-      type: "string",
-    },
-    stringLength: {
-      title: "String Length",
-      description: "String with min-max length and placeholder",
-      type: "string",
-      minLength: 6,
-      maxLength: 10,
-      title: "Full Name",
-      attrs: {
-        placeholder: "Your Full Name",
-      },
-    },
-    stringEmail: {
-      title: "Email",
-      description: "Enter valid email address",
-      type: "string",
-      format: "email",
-      maxLength: 120,
-      attrs: {
-        type: "email",
-        placeholder: "name@provider.com",
-      },
-    },
-    stringPassword: {
-      title: "Password",
-      description: "Hidden input",
-      type: "string",
-      attrs: {
-        type: "password",
-      },
-    },
-    stringRegEx: {
-      title: "Regular Expression",
-      description: "Enter letters between a-e",
-      type: "string",
-      pattern: "[a-e]+",
-    },
 
-    // "number"://////////////////////////////////////////////
-    number: {
-      title: "Number",
-      type: "number",
-    },
-    numberDecimal: {
-      title: "Two Decimal",
-      description: "Number with min - max values and two decimal places",
-      type: "number",
-      minimum: 10,
-      maximum: 100,
-      multipleOf: 0.01,
-    },
-    // "integer"://////////////////////////////////////////////
-    integer: {
-      title: "Integer",
-      type: "integer",
-    },
-    integerMinMax: {
-      title: "Integer Min Max",
-      description: "Integer with min - max values",
-      type: "integer",
-      minimum: 10,
-      maximum: 100,
-    },
-    // "boolean"://////////////////////////////////////////////
-    boolean: {
-      title: "Boolean",
-      type: "boolean",
-    },
+
+
     // "object"://////////////////////////////////////////////
     //     property.properties
     object: {
