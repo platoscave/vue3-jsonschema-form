@@ -9,11 +9,10 @@ export default {
 
     string: {
       title: "String",
-      description: "String with min-max length and placeholder",
+      description: "Required string with min-max length and placeholder",
       type: "string",
       minLength: 3,
       maxLength: 10,
-      title: "Full Name",
       attrs: {
         placeholder: "Your Full Name",
       },
@@ -49,8 +48,8 @@ export default {
     },
 
     // "number"://////////////////////////////////////////////
-    numberDecimal: {
-      title: "Two Decimal",
+    number: {
+      title: "Number",
       description: "Number with min - max values and two decimal places",
       type: "number",
       minimum: 10,
@@ -58,8 +57,8 @@ export default {
       multipleOf: 0.01,
     },
     // "integer"://////////////////////////////////////////////
-    integerMinMax: {
-      title: "Integer Min Max",
+    integer: {
+      title: "Integer",
       description: "Integer with min - max values",
       type: "integer",
       minimum: 10,

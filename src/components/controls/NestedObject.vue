@@ -10,6 +10,7 @@ defineProps({
   labelWidth: { type: String, default: 'auto' },
   labelPosition: { type: String, default: 'left' }
 });
+defineEmits(['update:modelValue']);
 
 </script>
 
@@ -18,7 +19,10 @@ defineProps({
     :requiredArr="property.required" :form-mode="formMode" :hash-level="hashLevel"></JsonschemaForm> -->
   <JsonschemaForm class="ar-subform-background" :model-value="modelValue" :properties="property.properties"
     :requiredArr="property.required" :updateable-properties="updateableProperties" :form-mode="formMode" :size="size"
-    :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback">
+    :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback" @update:modelValue="($event) => {
+      console.log($event)
+      $emit('update:modelValue', $event)
+    }">
   </JsonschemaForm>
 </template>
 

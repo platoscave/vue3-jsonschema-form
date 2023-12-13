@@ -116,8 +116,8 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
         </el-radio-group>
     </div>
     <div>
-        <el-input v-model="labelWidth" placeholder="Label width: e.g. 100 or auto" @input="labelWidth = $event.target.value"
-            size="small"></el-input>
+        <el-input v-model="labelWidth" style="width:200px;" placeholder="Label width: e.g. 100 or auto"
+            @input="labelWidth = $event.target.value" size="small"></el-input>
     </div>
     <div>
         <button @click="validateForm()">Validate</button>
