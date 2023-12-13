@@ -27,7 +27,7 @@ const props = defineProps({
     labelPosition: { type: String, default: 'left' }
 });
 
-const emit = defineEmits(['update'])
+const emits = defineEmits(['update:modelValue'])
 
 
 interface IProperty {
@@ -47,7 +47,7 @@ interface IProperty {
     displayAs: string;
 }
 
-// methodes called from outside, so pass on to our form
+// Methodes called from parent comp, so pass on to our form
 const formEl = ref(null);
 const validate = () => {
     if (formEl.value) return formEl.value.validate();
@@ -55,17 +55,24 @@ const validate = () => {
 const resetFields = () => {
     if (formEl.value) formEl.value.resetFields();
 };
+// Expose these methods to parent component
 defineExpose({ validate, resetFields });
 
-watch(props.modelValue, (newDataObj, oldDataObj) => {
+// We do our own 'update:modelValue' so we can take advantage of 
+// v-model automatic update of subproperties
+watch(() => props.modelValue, (newDataObj, oldDataObj) => {
 
-    console.log('JSF dataObj', newDataObj)
+    console.log('JSFwacth dataObj', newDataObj)
+    emits('update:modelValue', newDataObj)
+
 }, { deep: true });
 
+// Create the validation rules object
 const validationRules = computed(() => {
 
     let rulesObj = {};
     // no rules for readonly
+    // TODO formmode Edit Permitted
     if (props.formMode.startsWith('Readonly')) return {};
 
     for (var propertyName in props.properties) {
@@ -128,7 +135,7 @@ const propertyIsReadonly = (formMode: string, propertyName: string) => {
     return false
 }
 
-// Determin the control type
+// Determin the control name based on property type
 const getControlName = (property: IProperty) => {
 
     switch (property.type) {
@@ -165,6 +172,7 @@ const getControlName = (property: IProperty) => {
     return "CodeEditor";
 
 };
+// Nested object have different props compared to plain controls, so we find out here 
 const isNestedObject = (property: IProperty) => {
     const controlName = getControlName(property)
     if (['NestedObject', 'ObjectsArray', 'TableArray'].includes(controlName)) return true
@@ -230,8 +238,7 @@ const infoIcon =
                     :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback">
                 </component>
                 <component v-else :is="getComponent(property)" class="ar-control" v-model="modelValue[propertyName]"
-                    :property="property" :readonly="propertyIsReadonly(formMode, propertyName)"
-                    :required="requiredArr.includes(propertyName)">
+                    :property="property" :readonly="propertyIsReadonly(formMode, propertyName)">
                 </component>
             </el-form-item>
         </div>

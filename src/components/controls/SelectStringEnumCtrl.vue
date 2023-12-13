@@ -4,6 +4,7 @@ defineProps({
   property: { type: Object, default: () => ({}) },
   readonly: { type: Boolean, default: true },
 })
+defineEmits(['update:modelValue']);
 
 </script>
 
@@ -12,12 +13,12 @@ defineProps({
     {{ modelValue }}
   </div>
 
-  <el-radio-group class="ar-radio-group" v-else-if="property.enum.length < 5" v-on:input="$emit('input', $event)"
-    v-on:change="$emit('change', $event)" :model-value="modelValue">
+  <el-radio-group class="ar-radio-group" v-else-if="property.enum.length < 5" :model-value="modelValue"
+    @update:modelValue="($event) => $emit('update:modelValue', $event)">
     <el-radio class="ar-radio" v-for="item in property.enum" :key="item" :label="item" :model-value="item"></el-radio>
   </el-radio-group>
 
-  <el-select v-else v-on:input="$emit('input', $event)" v-on:change="$emit('change', $event)" :model-value="modelValue">
+  <el-select v-else :model-value="modelValue" @update:modelValue="($event) => $emit('update:modelValue', $event)">
     <el-option v-for="item in property.enum" :key="item" :label="item" :value="item">
     </el-option>
   </el-select>
