@@ -16,7 +16,7 @@ import StringCtrl from "./controls/StringCtrl.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
 
 const props = defineProps({
-    modelValue: { type: Object, default: () => ({}) },
+    modelValue: { type: Object, default: () => ([]) },
     properties: { type: Object, default: () => ({}) },
     requiredArr: { type: Array, default: () => ([]) },
     updateableProperties: { type: Object, default: () => ({}) },
@@ -24,10 +24,11 @@ const props = defineProps({
     formMode: { type: String, default: 'Readonly Full' },
     size: { type: String, default: 'default' },
     labelWidth: { type: String, default: 'auto' },
-    labelPosition: { type: String, default: 'left' }
+    labelPosition: { type: String, default: 'left' },
+    columWidths: { type: Array, default: () => ([]) }
 });
 
-const emit = defineEmits(['update'])
+const emit = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
 
 
 interface IProperty {
@@ -167,7 +168,7 @@ const getControlName = (property: IProperty) => {
 };
 const isNestedObject = (property: IProperty) => {
     const controlName = getControlName(property)
-    if (['NestedObject', 'ObjectsArray', 'TableArray'].includes(controlName)) return true
+    if (controlName in ['NestedObject', 'ObjectsArray', 'TableArray']) return true
     return false
 }
 
@@ -195,6 +196,17 @@ const getComponent = (property: IProperty) => {
     if (nameComp) return nameComp.comp;
     else return CodeEditor.comp
 };
+const sortFunc = (type: string, a: any, b: any) => {
+    if (type === "string") {
+        if (a.toUpperCase() < b.toUpperCase()) return -1;
+        if (a.toUpperCase() > b.toUpperCase()) return 1;
+        return 0;
+    } else if (type === "number") {
+        const toFloat = (num) => parseFloat(num.replace(".", "").replace(",", "."));
+        return toFloat(a) - toFloat(b);
+    }
+    return 0;
+};
 const infoIcon =
     `<svg viewBox="0 0 100 100" height="12" width="12" >` +
     `   <circle cx="50" cy = "50" r = "50" fill="blue"/>` +
@@ -204,28 +216,35 @@ const infoIcon =
 </script>
 
 
+
 <template>
-    <!-- Validation rules are provided by a Computed -->
-    <!-- :model and :rules are needed for validation rules. Do not mess with them! You will regret it-->
-    <el-form ref="formEl" :model="modelValue" :rules="validationRules" :size="size" :label-position="labelPosition"
-        :label-width="labelWidth" :show-message="formMode.startsWith('Edit')">
-        <!-- For each property in properties -->
-        <div v-for="(property, propertyName) in properties" :key="propertyName">
-            <!-- includeThisProperty: Skip form item if formMode is Readonly Dense and value is empty -->
-            <!-- :prop is needed for validation rules. Do not mess with it! -->
-            <el-form-item class="ar-form-item" v-if="includeThisProperty(formMode, modelValue[propertyName], property.type)"
-                :prop="propertyName">
-                <!-- Use label slot to add label with tooltip info icon -->
-                <template #label>
-                    <span>{{ property.title + " " }} &nbsp;</span>
-                    <el-tooltip v-if="property.description" effect="light" :content="property.description" raw-content>
-                        <div class="icon" v-html="infoIcon" height="1em" width="1em"></div>
-                    </el-tooltip>
-                </template>
+    <!-- table-layout="auto" -->
+    <el-table v-if="modelValue && properties" class="ar-table" ref="tableEl" :data="modelValue" highlight-current-row border
+        @current-change="($event) => $emit('current-change', $event)"
+        @header-dragend="($event) => $emit('header-dragend', $event)">
+        <!--  -->
+        <el-table-column v-for="( property, propertyName ) in  properties.properties " :key="propertyName"
+            :property="propertyName" :width="columWidths[propertyName]" :label="property.title"
+            :sortable="property.type !== 'object' && property.type !== 'array'"
+            :sort-method="(a, b) => sortFunc(property.type, a[propertyName], b[propertyName])" resizable>
+            <!-- Header with tooltip. -->
+            <template #header>
+                <span>{{ property.title + " " }} &nbsp;</span>
+                <el-tooltip v-if="property.description" effect="light" :content="property.description" raw-content>
+                    <div class="icon" v-html="infoIcon" height="1em" width="1em"></div>
+                </el-tooltip>
+            </template>
+
+            <!-- The control -->
+            <template #default="scope">
+                <!-- <component :is="getComponent(property)" class="ar-control" v-model="scope.row[propertyName]"
+                    :property="property" :readonly="formMode.startsWith('Readonly')" :required="false"
+                    :hash-level="hashLevel" :form-mode="formMode">
+                </component> -->
                 <!-- Nested objects have different parms than simple controls. Hense isNestedObject -->
                 <!-- The dynamic component is found using getComponent -->
                 <component v-if="isNestedObject(property)" :is="getComponent(property)" class="ar-control"
-                    v-model="modelValue[propertyName]" :property="property" :required-arr="property.required"
+                    v-model="modelValue[propertyName]" :property="property.properties" :required-arr="property.required"
                     :updateable-properties="updateableProperties[propertyName]" :form-mode="formMode" :size="size"
                     :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback">
                 </component>
@@ -233,13 +252,40 @@ const infoIcon =
                     :property="property" :readonly="propertyIsReadonly(formMode, propertyName)"
                     :required="requiredArr.includes(propertyName)">
                 </component>
-            </el-form-item>
-        </div>
-    </el-form>
+            </template>
+        </el-table-column>
+    </el-table>
 </template>
 <style scoped>
+.ar-json-schema-form {
+    max-width: 750px;
+}
+
+
+/* Item bottom margin */
+.el-form-item {
+    margin-bottom: 8px;
+}
+
+.ar-table>>>.el-table__cell {
+    padding: 4px;
+    border-bottom: unset;
+}
+
+.ar-table>>>.cell {
+    padding: unset;
+    word-break: unset;
+    /* line-height: 23px; */
+}
+
+.ar-table>>>th .cell {
+    padding: 10px;
+}
+
 .icon /deep/ circle {
     fill: var(--el-color-primary-light-7);
+    margin-left: 5px;
+
 }
 
 .icon /deep/ text {

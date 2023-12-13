@@ -1,54 +1,22 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
-
-const props = defineProps({
-  hashLevel: { type: Number, default: 0 },
-  modelValue: { type: Object, default: {} },
-  property: { type: Object, default: {} },
-  readonly: { type: Boolean, default: true },
-  formMode: { type: String, default: "Readonly Dense" },
-})
-
-const highlightedCode = computed(() => {
-
+defineProps({
+  modelValue: { type: Object, default: () => ({}) },
+  property: { type: Object, default: () => ({}) },
+  requiredArr: { type: Array, default: () => ([]) },
+  updateableProperties: { type: Object, default: () => ({}) },
+  queryCallback: { type: Function },
+  formMode: { type: String, default: 'Readonly Full' },
+  size: { type: String, default: 'default' },
+  labelWidth: { type: String, default: 'auto' },
+  labelPosition: { type: String, default: 'left' }
 });
 </script>
 
-
 <template>
-  <ar-sub-table class="ar-subform-background" value="modelValue" :properties="property.items.properties"
-    :requiredArr="property.required" :form-mode="formMode" :hash-level="hashLevel"></ar-sub-table>
+  <!-- <ar-sub-table class="ar-subform-background" value="modelValue" :properties="property.items.properties"
+    :requiredArr="property.required" :form-mode="formMode" :hash-level="hashLevel"></ar-sub-table> -->
 </template>
-<!--
-<script>
-//import JsonschemaForm from "./JsonschemaForm"; // must be declared globally
 
-export default {
-  name: "ar-view-table-array",
-  props: {
-    modelValue: {
-      type: Array,
-      default: () => ([]),
-    },
-    property: {
-      type: Object,
-      default: () => {},
-    },
-    readonly: Boolean,
-    formMode: String,
-    hashLevel: Number,
-  },
-  watch: {
-    modelValue: {
-      handler(newVal) {
-        this.$emit("input", newVal);
-      },
-      deep: true,
-    },
-  },
-};
-</script>
--->
 <style scoped>
 /* subForm background */
 .ar-subform-background {
