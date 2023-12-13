@@ -32,10 +32,12 @@
   width: 100%;
 }
 
+
+
 /* Input background and border */
 .el-input__wrapper {
-  background-color: #ffffff08;
-  box-shadow: 0 0 0 1px #00adff42;
+  background-color: #ffffff08 ;
+  box-shadow: 0 0 0 1px #00adff42 ;
   height: 24px;
   border-radius: 4px;
 }
@@ -50,6 +52,10 @@
 }
 .el-textarea__inner:hover {
   box-shadow: 0 0 0 1px #409eff inset;
+}
+/* Radio-group background and border */
+.el-radio-group {
+  background-color: #ffffff08;
 }
 /* allow label height to grow as needed */
 .el-form-item__label {

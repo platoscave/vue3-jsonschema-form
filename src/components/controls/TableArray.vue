@@ -21,14 +21,14 @@ const highlightedCode = computed(() => {
 </template>
 <!--
 <script>
-//import JsonSchemaForm from "./JsonSchemaForm"; // must be declared globally
+//import JsonschemaForm from "./JsonschemaForm"; // must be declared globally
 
 export default {
   name: "ar-view-table-array",
   props: {
     modelValue: {
       type: Array,
-      default: () => [],
+      default: () => ([]),
     },
     property: {
       type: Object,

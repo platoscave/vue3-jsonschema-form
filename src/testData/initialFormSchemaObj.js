@@ -118,15 +118,17 @@ export default {
       format: "date-time",
       attrs: {
         type: "date",
+        placeholder: "Pick a day"
       },
     },
     stringDateTime: {
       title: "Date Time",
-      description: "Dispaly localized date-time",
+      description: "Display localized date-time",
       type: "string",
       format: "date-time",
       attrs: {
         type: "datetime",
+        placeholder: "Pick a date - time"
       },
     },
 
@@ -217,9 +219,9 @@ export default {
       additionalItems: true,
     },
     //     else "ObjectsArray"; // objects in a subform
-    objectSubform: {
-      title: "Objects Subform",
-      description: "Display an array objects as subforms",
+    objectsArray: {
+      title: "Array of Subforms",
+      description: "Display an array of objects as subforms",
       type: "array",
       items: {
         type: "object",
@@ -258,7 +260,7 @@ export default {
 
       }
     }
-//     else "CodeEditor";
+    //     else "CodeEditor";
 
   },
   required: ['string']

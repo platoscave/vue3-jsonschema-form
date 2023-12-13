@@ -5,7 +5,7 @@ import { ref, reactive, computed, toRefs, watch } from "vue";
 // import ControlSelector from "./ControlSelector";
 // /* eslint-disable vue/no-unused-components */
 // // on behalf of the control selector
-import DateTime from "./controls/DateTime.vue";
+import DateTimeCtrl from "./controls/DateTimeCtrl.vue";
 import MarkDown from "./controls/MarkDown.vue";
 import Image from "./controls/Image.vue";
 import CodeEditor from "./controls/CodeEditor.vue";
@@ -14,7 +14,7 @@ import Number from "./controls/Number.vue";
 import ObjectsArray from "./controls/ObjectsArray.vue";
 import TableArray from "./controls/TableArray.vue";
 import SelectStringQuery from "./controls/SelectStringQuery.vue";
-import SelectStringEnum from "./controls/SelectStringEnum.vue";
+import SelectStringEnumCtrl from "./controls/SelectStringEnumCtrl.vue";
 import SelectArrayQuery from "./controls/SelectArrayQuery.vue";
 import String from "./controls/String.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
@@ -113,7 +113,7 @@ const notReadonlyDenseAndEmpty = (formMode: string, dataObj: object[], type: str
 };
 
 const dynamicComp = [
-  { name: "DateTime", comp: DateTime },
+  { name: "DateTimeCtrl", comp: DateTimeCtrl },
   { name: "MarkDown", comp: MarkDown },
   { name: "Image", comp: Image },
   { name: "CodeEditor", comp: CodeEditor },
@@ -121,7 +121,7 @@ const dynamicComp = [
   { name: "Number", comp: Number },
   { name: "ObjectsArray", comp: ObjectsArray },
   { name: "SelectArrayQuery", comp: SelectArrayQuery },
-  { name: "SelectStringEnum", comp: SelectStringEnum },
+  { name: "SelectStringEnumCtrl", comp: SelectStringEnumCtrl },
   { name: "SelectStringQuery", comp: SelectStringQuery },
   { name: "String", comp: String },
   { name: "JsonschemaForm", comp: JsonschemaForm },
@@ -156,8 +156,8 @@ const getComponent = (property: IProperty) => {
           return "CodeEditor";
         }
         if (property.argoQuery) return "SelectStringQuery";
-        if (property.enum) return "SelectStringEnum";
-        if (property.format === "date-time") return "DateTime";
+        if (property.enum) return "SelectStringEnumCtrl";
+        if (property.format === "date-time") return "DateTimeCtrl";
         return "String";
       case "number": return "Number";
       case "integer": return "Number";

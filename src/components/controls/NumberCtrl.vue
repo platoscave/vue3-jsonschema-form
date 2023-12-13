@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed } from "vue";
 
 const props = defineProps({
-  modelValue: { type: String, default: "" },
-  property: { type: Object, default: () => { } },
+  modelValue: { type: Number, default: 0 },
+  property: { type: Object, default: () => ({}) },
   readonly: { type: Boolean, default: true },
 });
 defineEmits(['update:modelValue']);
@@ -13,8 +13,8 @@ const precision = computed(() => {
     if (props.property.multipleOf) {
       // use the exponent of multipleOf to determin precision
       let exp = String(props.property.multipleOf.toExponential());
-      exp = Number(exp.substr(exp.lastIndexOf("e") + 1));
-      return Math.abs(exp); // must be positive int
+      let expNumber = Number(exp.substr(exp.lastIndexOf("e") + 1));
+      return Math.abs(expNumber); // must be positive int
     }
   }
   // integer

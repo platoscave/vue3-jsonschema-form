@@ -2,7 +2,7 @@
 import { get } from 'lodash';
 defineProps({
   modelValue: { type: String, default: "" },
-  property: { type: Object, default: () => { } },
+  property: { type: Object, default: () => ({}) },
   readonly: { type: Boolean, default: true },
 });
 defineEmits(['update:modelValue']);

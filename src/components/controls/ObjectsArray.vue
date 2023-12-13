@@ -17,9 +17,9 @@ const props = defineProps({
       'ar-subform-background': true,
       'not-readonly': formMode.startsWith('Edit') && property.additionalItems,
     }">
-      <JsonSchemaForm v-model="modelValue[idx]" :draggable="formMode.startsWith('Edit') && property.additionalItems"
+      <JsonschemaForm v-model="modelValue[idx]" :draggable="formMode.startsWith('Edit') && property.additionalItems"
         :properties="property.items.properties" :requiredArr="property.required" :form-mode="formMode"
-        :hash-level="hashLevel"></JsonSchemaForm>
+        :hash-level="hashLevel"></JsonschemaForm>
       <!-- Delete icon -->
       <svg class="el-icon-close" v-if="formMode.startsWith('Edit') && property.additionalItems"
         @click="modelValue.splice(idx, 1)">

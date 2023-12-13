@@ -15,12 +15,12 @@ const highlightedCode = computed(() => {
 </script>
 
 <template>
-  <JsonSchemaForm class="ar-subform-background" value="modelValue" :properties="property.properties"
-    :requiredArr="property.required" :form-mode="formMode" :hash-level="hashLevel"></JsonSchemaForm>
+  <JsonschemaForm class="ar-subform-background" value="modelValue" :properties="property.properties"
+    :requiredArr="property.required" :form-mode="formMode" :hash-level="hashLevel"></JsonschemaForm>
 </template>
 <!--
 <script>
-//import JsonSchemaForm from "./JsonSchemaForm"; // must be declared globally
+//import JsonschemaForm from "./JsonschemaForm"; // must be declared globally
 
 export default {
   name: "ar-nested-object",
