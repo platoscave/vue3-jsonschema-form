@@ -63,7 +63,7 @@ defineExpose({ validate, resetFields });
 watch(() => props.modelValue, (newDataObj, oldDataObj) => {
 
     console.log('JSFwacth dataObj', newDataObj)
-    emits('update:modelValue', newDataObj)
+    //emits('update:modelValue', newDataObj)
 
 }, { deep: true });
 
@@ -179,6 +179,14 @@ const isNestedObject = (property: IProperty) => {
     return false
 }
 
+
+const onUpdateModelValue = (newDataObj: any, propertyName: string) => {
+    debugger
+    props.modelValue[propertyName] = newDataObj
+    emits('update:modelValue', props.modelValue)
+}
+
+// Get the control component based on name 
 const getComponent = (property: IProperty) => {
 
     const dynamicComp = [
@@ -233,12 +241,14 @@ const infoIcon =
                 <!-- Nested objects have different parms than simple controls. Hense isNestedObject -->
                 <!-- The dynamic component is found using getComponent -->
                 <component v-if="isNestedObject(property)" :is="getComponent(property)" class="ar-control"
-                    v-model="modelValue[propertyName]" :property="property" :required-arr="property.required"
+                    :model-value="modelValue[propertyName]" :property="property" :required-arr="property.required"
                     :updateable-properties="updateableProperties[propertyName]" :form-mode="formMode" :size="size"
-                    :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback">
+                    :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback"
+                    @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)">
                 </component>
-                <component v-else :is="getComponent(property)" class="ar-control" v-model="modelValue[propertyName]"
-                    :property="property" :readonly="propertyIsReadonly(formMode, propertyName)">
+                <component v-else :is="getComponent(property)" class="ar-control" :model-value="modelValue[propertyName]"
+                    :property="property" :readonly="propertyIsReadonly(formMode, propertyName)"
+                    @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)">
                 </component>
             </el-form-item>
         </div>

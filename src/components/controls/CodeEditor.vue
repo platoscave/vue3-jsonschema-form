@@ -57,5 +57,5 @@ onMounted(() => {
   <div v-if="readonly" class="ar-lightgrey-background">
     {{ modelValue }}
   </div>
-  <textarea v-else v-model="content" id="editor"></textarea>
+  <textarea v-else v-model="data" id="editor"></textarea>
 </template>

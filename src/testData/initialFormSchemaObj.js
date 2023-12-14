@@ -158,7 +158,7 @@ export default {
             type: "date",
           },
         },
-        nestedSubFormObj: {
+        nestedObject: {
           title: "Nested Object",
           type: "object",
           properties: {

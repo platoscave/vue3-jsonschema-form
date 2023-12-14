@@ -23,7 +23,7 @@ let isDark = useDark()
 const toggleDark = useToggle(isDark)
 const extensions = [json(), oneDark]
 
-let formMode = ref("Readonly Dense")
+let formMode = ref("Edit Full")
 let size = ref("default")
 let labelPosition = ref("left")
 let labelWidth = ref("auto")
@@ -142,15 +142,15 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
                 </pane>
                 <pane size="25">
                     <splitpanes horizontal>
+                        <pane>
+                            <div class="header">Data Object</div>
+                            <el-input type="textarea" autosize :value="JSON.stringify(formDataObj, null, 4)"></el-input>
+                        </pane>
                         <pane size="20">
                             <div class="header">Updateable Properties Object</div>
                             <!-- <div>Only aplicable in "Edit Permitted" Form Mode</div> -->
                             <el-input type="textarea" autosize
                                 :value="JSON.stringify(formUpdateableProperties, null, 4)"></el-input>
-                        </pane>
-                        <pane>
-                            <div class="header">Data Object</div>
-                            <el-input type="textarea" autosize :value="JSON.stringify(formDataObj, null, 4)"></el-input>
                         </pane>
                     </splitpanes>
                 </pane>
