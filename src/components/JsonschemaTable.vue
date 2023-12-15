@@ -19,7 +19,7 @@ const props = defineProps({
     modelValue: { type: Object, default: () => ([]) },
     properties: { type: Object, default: () => ({}) },
     requiredArr: { type: Array, default: () => ([]) },
-    updateableProperties: { type: Object, default: () => ({}) },
+    editPermitted: { type: Object, default: () => ({}) },
     queryCallback: { type: Function },
     formMode: { type: String, default: 'Readonly Full' },
     size: { type: String, default: 'default' },
@@ -245,7 +245,7 @@ const infoIcon =
                 <!-- The dynamic component is found using getComponent -->
                 <component v-if="isNestedObject(property)" :is="getComponent(property)" class="ar-control"
                     v-model="modelValue[propertyName]" :property="property.properties" :required-arr="property.required"
-                    :updateable-properties="updateableProperties[propertyName]" :form-mode="formMode" :size="size"
+                    :updateable-properties="editPermitted[propertyName]" :form-mode="formMode" :size="size"
                     :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback">
                 </component>
                 <component v-else :is="getComponent(property)" class="ar-control" v-model="modelValue[propertyName]"
@@ -264,6 +264,7 @@ const infoIcon =
 
 /* Item bottom margin */
 .el-form-item {
+    /* to make the form more dense */
     margin-bottom: 8px;
 }
 

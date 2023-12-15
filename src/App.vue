@@ -3,7 +3,8 @@ import { ref, watch, reactive, toRaw, toRefs, computed, onMounted } from "vue";
 
 import initialFormSchemaObj from './testData/initialFormSchemaObj'
 import initialFormDataObj from './testData/initialFormDataObj'
-import initialFormUpdateableObj from './testData/initialFormUpdateableObj'
+import initialEditPermittedObj from './testData/initialEditPermittedObj'
+import initialFormQueryData from './testData/formQueryData'
 
 import { Codemirror } from 'vue-codemirror'
 
@@ -31,7 +32,8 @@ let valid = ref(true)
 
 let formSchemaObj = { properties: {}, required: [] }
 let formDataObj = ref(initialFormDataObj)
-let formUpdateableProperties = {}
+let formEditPermitted = ref(initialEditPermittedObj)
+let formQueryData = ref(initialFormQueryData)
 
 
 // const updatedFormDataObj = (newFormDataObj: {}) => {
@@ -46,11 +48,19 @@ const resetForm = () => {
     //formDataObj.value = initialFormDataObj
 
     formSchemaObj = initialFormSchemaObj
-    formUpdateableProperties = initialFormUpdateableObj
+    formEditPermitted = initialEditPermittedObj
 };
-const queryCallback = () => {
+const queryCallback = (query: any) => {
 
+    let data = formQueryData.value
+    if (query.select === 'small') data = formQueryData.value.slice(0, 3)
+    debugger
+    return new Promise(function (resolve, reject) {
+        setTimeout(() => resolve(data), 2000);
+    });
 }
+
+
 onMounted(() => {
     resetForm()
 })
@@ -135,7 +145,7 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
                     <div class="header">Jsonschema Form</div>
                     <!-- The form -->
                     <JsonschemaForm v-model="formDataObj" :properties="formSchemaObj.properties"
-                        :required-arr="formSchemaObj.required" :updateable-properties="formUpdateableProperties"
+                        :required-arr="formSchemaObj.required" :updateable-properties="formEditPermitted"
                         :form-mode="formMode" :size="size" :label-position="labelPosition" :label-width="labelWidth"
                         :query-callback="queryCallback">
                     </JsonschemaForm>
@@ -147,10 +157,10 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
                             <el-input type="textarea" autosize :value="JSON.stringify(formDataObj, null, 4)"></el-input>
                         </pane>
                         <pane size="20">
-                            <div class="header">Updateable Properties Object</div>
+                            <div class="header">Edit Permitted Object</div>
                             <!-- <div>Only aplicable in "Edit Permitted" Form Mode</div> -->
                             <el-input type="textarea" autosize
-                                :value="JSON.stringify(formUpdateableProperties, null, 4)"></el-input>
+                                :value="JSON.stringify(formEditPermitted, null, 4)"></el-input>
                         </pane>
                     </splitpanes>
                 </pane>
@@ -161,7 +171,7 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
                 <el-tab-pane label="Schema Table">Form</el-tab-pane>
                 <el-tab-pane label="Jsonschema">Table"</el-tab-pane>
                 <el-tab-pane label="Data Object">Table"</el-tab-pane>
-                <el-tab-pane label="Updateable Properties">Table"</el-tab-pane>
+                <el-tab-pane label="Edit Permitted">Table"</el-tab-pane>
             </el-tabs>
         </el-tab-pane>
     </el-tabs>

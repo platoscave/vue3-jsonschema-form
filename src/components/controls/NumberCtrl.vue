@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
-
 const props = defineProps({
-  modelValue: { type: Number, default: 0 },
+  modelValue: { type: Number },
   property: { type: Object, default: () => ({}) },
   readonly: { type: Boolean, default: true },
 });
@@ -20,11 +19,12 @@ const precision = computed(() => {
   // integer
   return 0;
 });
+
 </script>
 
 <template>
   <div v-if="readonly" class="ar-number-div">
-    {{ Number.parseFloat(modelValue).toFixed(precision) }}
+    <div v-if="modelValue !== undefined">{{ Number.parseFloat(modelValue.toString()).toFixed(precision) }}</div>
   </div>
   <el-input-number v-else :value="modelValue" :min="property.minimum" :max="property.maximum" :precision="precision"
     :controls=false @input="($event) => $emit('update:modelValue', $event)">

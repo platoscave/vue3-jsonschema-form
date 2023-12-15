@@ -19,7 +19,7 @@ const props = defineProps({
     modelValue: { type: Object, default: () => ({}) },
     properties: { type: Object, default: () => ({}) },
     requiredArr: { type: Array, default: () => ([]) },
-    updateableProperties: { type: Object, default: () => ({}) },
+    editPermitted: { type: Object, default: () => ({}) },
     queryCallback: { type: Function },
     formMode: { type: String, default: 'Readonly Full' },
     size: { type: String, default: 'default' },
@@ -35,14 +35,14 @@ interface IProperty {
     decription: string;
     type: string;
     contentMediaType: string;
-    argoQuery: object;
+    query: object;
     enum: string[];
     format: string;
     properties: object;
     items: {
         type: string;
         properties: object;
-        argoQuery: object;
+        query: object;
     };
     displayAs: string;
 }
@@ -147,7 +147,7 @@ const getControlName = (property: IProperty) => {
                 if (mediaType.startsWith("image/")) return "Image";
                 return "CodeEditor";
             }
-            if (property.argoQuery) return "SelectStringQuery";
+            if (property.query) return "SelectStringQuery";
             if (property.enum) return "SelectStringEnumCtrl";
             if (property.format === "date-time") return "DateTimeCtrl";
             return "StringCtrl";
@@ -181,7 +181,6 @@ const isNestedObject = (property: IProperty) => {
 
 
 const onUpdateModelValue = (newDataObj: any, propertyName: string) => {
-    debugger
     props.modelValue[propertyName] = newDataObj
     emits('update:modelValue', props.modelValue)
 }
@@ -242,12 +241,13 @@ const infoIcon =
                 <!-- The dynamic component is found using getComponent -->
                 <component v-if="isNestedObject(property)" :is="getComponent(property)" class="ar-control"
                     :model-value="modelValue[propertyName]" :property="property" :required-arr="property.required"
-                    :updateable-properties="updateableProperties[propertyName]" :form-mode="formMode" :size="size"
+                    :updateable-properties="editPermitted[propertyName]" :form-mode="formMode" :size="size"
                     :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback"
                     @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)">
                 </component>
                 <component v-else :is="getComponent(property)" class="ar-control" :model-value="modelValue[propertyName]"
                     :property="property" :readonly="propertyIsReadonly(formMode, propertyName)"
+                    :required="props.requiredArr.includes(propertyName)" :query-callback="queryCallback"
                     @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)">
                 </component>
             </el-form-item>

@@ -3,7 +3,7 @@ defineProps({
   modelValue: { type: Object, default: () => ({}) },
   property: { type: Object, default: () => ({}) },
   requiredArr: { type: Array, default: () => ([]) },
-  updateableProperties: { type: Object, default: () => ({}) },
+  editPermitted: { type: Object, default: () => ({}) },
   queryCallback: { type: Function },
   formMode: { type: String, default: 'Readonly Full' },
   size: { type: String, default: 'default' },

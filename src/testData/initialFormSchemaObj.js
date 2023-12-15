@@ -91,10 +91,17 @@ export default {
       type: "string",
     },
     //     property.query
-    stringQuery: {
-      title: "Listbox",
-      description: "If there are less than five permitted values, then display as raidobuttons. Otherwise display as listbox.",
+    stringQuerySmall: {
+      title: "Query Small",
+      description: "Execute the query. If there are less than items, then display as raidobuttons",
       type: "string",
+      query: { select: 'small'}
+    },
+    stringQueryLarge: {
+      title: "Query Large",
+      description: "Execute the query. If there are more than four items, then display as listbox.",
+      type: "string",
+      query: { select: 'large'}
     },
     //     property.enum
     stringEnumSmall: {
@@ -127,6 +134,7 @@ export default {
       format: "date-time",
       attrs: {
         type: "datetime",
+        format: "YYYY-MM-DD HH:mm",
         placeholder: "Pick a date - time"
       },
     },

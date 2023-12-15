@@ -3,7 +3,7 @@ defineProps({
     modelValue: { type: Object, default: () => ({}) },
     property: { type: Object, default: () => ({}) },
     requiredArr: { type: Array, default: () => ([]) },
-    updateableProperties: { type: Object, default: () => ({}) },
+    editPermitted: { type: Object, default: () => ({}) },
     queryCallback: { type: Function },
     formMode: { type: String, default: 'Readonly Full' },
     size: { type: String, default: 'default' },
@@ -21,7 +21,7 @@ defineEmits(['update:modelValue']);
 
 <template>
     <JsonschemaForm class="ar-subform-background" :model-value="modelValue" :properties="property.properties"
-        :requiredArr="property.required" :updateable-properties="updateableProperties" :form-mode="formMode" :size="size"
+        :requiredArr="property.required" :updateable-properties="editPermitted" :form-mode="formMode" :size="size"
         :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback"
         @update:modelValue="($event: any) => $emit('update:modelValue', $event)">
     </JsonschemaForm>

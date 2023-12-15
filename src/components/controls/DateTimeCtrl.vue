@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { get } from 'lodash';
+import { get, has } from 'lodash';
 
 const props = defineProps({
-  modelValue: { type: String, default: "" },
+  modelValue: { type: String },
   property: { type: Object, default: () => ({}) },
   readonly: { type: Boolean, default: true },
 });
@@ -21,11 +21,21 @@ const localeDate = computed(() => {
   return date
 });
 
-const mustLayInFuture = (time: Date) => {
-  const date = new Date();
-  const previousDate = date.setDate(date.getDate() - 1);
-  return time.getTime() < previousDate;
-}
+// TODO How to remove seconds: format, don't store. We dont want to interfere with local date formats
+// const format = computed(() => {
+//   if (has(props.property, 'attrs.format')) return get(props.property, 'attrs.format')
+//   const type = get(props.property, 'attrs.type')
+//   if (type === 'date') return 'YYYY-MM-DD'
+//   return 'YYYY-MM-DD HH:mm'
+// });
+
+// TODO disabled date
+// :disabled-date="mustLayInFuture"
+// const mustLayInFuture = (time: Date) => {
+//   const date = new Date();
+//   const previousDate = date.setDate(date.getDate() - 1);
+//   return time.getTime() < previousDate;
+// }
 
 //TODO ranges
 
@@ -33,11 +43,13 @@ const mustLayInFuture = (time: Date) => {
 </script>
 
 <template>
-  <div v-if="readonly" class="ar-lightgrey-background">{{ localeDate }}</div>
+  <div v-if="readonly" class="ar-lightgrey-background">
+    <div v-if="modelValue !== undefined">{{ localeDate }}</div>
+  </div>
 
   <!-- TODO small -->
-  <ElDatePicker v-else autosize :model-value="modelValue" :disabled-date="mustLayInFuture"
-    :placeholder="get(property, 'attrs.placeholder', '')" :type="get(property, 'attrs.type', '')"
-    value-format="YYYY-MM-DDTHH:mm:ss.sssZ" @update:modelValue="($event) => $emit('update:modelValue', $event)">
+  <ElDatePicker v-else autosize :model-value="modelValue" :placeholder="get(property, 'attrs.placeholder', '')"
+    :type="get(property, 'attrs.type', '')" value-format="YYYY-MM-DDTHH:mm:ss.sssZ"
+    @update:modelValue="($event) => $emit('update:modelValue', $event)">
   </ElDatePicker>
 </template>
