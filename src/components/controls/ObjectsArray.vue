@@ -1,15 +1,23 @@
 <script setup lang="ts">
-defineProps({
-    modelValue: { type: Object, default: () => ({}) },
+const props = defineProps({
+    modelValue: { type: Object, default: () => ([{}]) },
     property: { type: Object, default: () => ({}) },
     requiredArr: { type: Array, default: () => ([]) },
-    editPermitted: { type: Object, default: () => ({}) },
+    editPermitted: { type: Object, default: () => ({ items: {} }) },
     queryCallback: { type: Function },
     formMode: { type: String, default: 'Readonly Full' },
     size: { type: String, default: 'default' },
     labelWidth: { type: String, default: 'auto' },
     labelPosition: { type: String, default: 'left' }
 });
+const emits = defineEmits(['update:modelValue'])
+
+
+const onUpdateModelValue = (newDataObj: any, idx: string) => {
+    props.modelValue[idx] = newDataObj
+    emits('update:modelValue', props.modelValue)
+}
+
 const addIcon =
     `<svg viewBox="0 0 100 100" height="12" width="12" >` +
     `   <circle cx="50" cy = "50" r = "50" fill="green"/>` +
@@ -32,10 +40,11 @@ const deleteIcon =
             <!-- <JsonschemaForm v-model="modelValue[idx]" :draggable="formMode.startsWith('Edit') && property.additionalItems"
         :properties="property.items.properties" :requiredArr="property.required" :form-mode="formMode"
         :hash-level="hashLevel"></JsonschemaForm> -->
-            <JsonschemaForm class="ar-subform-background" v-model="modelValue[idx]" :properties="property.items.properties"
-                :requiredArr="property.required" :updateable-properties="editPermitted.items.properties"
-                :form-mode="formMode" :size="size" :label-position="labelPosition" :label-width="labelWidth"
-                :query-callback="queryCallback">
+            <JsonschemaForm class="ar-subform-background" :model-value="modelValue[idx]"
+                :properties="property.items.properties" :requiredArr="property.required"
+                :updateable-properties="editPermitted.items.properties" :form-mode="formMode" :size="size"
+                :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback"
+                @update:modelValue="($event: any) => onUpdateModelValue($event, idx)">
             </JsonschemaForm>
             <!-- Delete icon -->
             <div class="icon-delete" v-if="formMode.startsWith('Edit') && property.additionalItems" v-html="deleteIcon"

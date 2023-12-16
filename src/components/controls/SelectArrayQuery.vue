@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 const props = defineProps({
-    modelValue: { type: String, default: "" },
+    modelValue: { type: Array, default: () => ([]) },
     property: { type: Object, default: () => ({}) },
     readonly: { type: Boolean, default: true },
     queryCallback: { type: Function, default: () => ([]) },
@@ -10,7 +10,7 @@ const props = defineProps({
 defineEmits(['update:modelValue']);
 
 
-const items = [];
+const items = ref([])
 
 
 const readonlyLabels = computed(() => {
@@ -21,11 +21,13 @@ const readonlyLabels = computed(() => {
 });
 
 onMounted(async () => {
-    if (props.queryCallback && props.property.query) {
-        const items = await props.queryCallback(props.property.query)
-        console.log('items', items)
-        //items.value = items
-        //this.$refs.
+    if (props.queryCallback && props.property.items.query) {
+        const results = await props.queryCallback(props.property.items.query)
+        console.log('items', results)
+        // Copy items from results to items using push(). Perserve reactivity!
+        for (let i = 0; i < results.length; i++) {
+            items.value.push(results[i]);
+        }
     }
 })
 </script>
@@ -40,8 +42,11 @@ onMounted(async () => {
 
     <el-checkbox-group class="ar-checkbox-group" v-else-if="items.length < 5" :model-value="modelValue"
         @update:modelValue="($event) => $emit('update:modelValue', $event)">
-        <el-checkbox class="ar-checkbox" v-for="item in items" :key="item.key" :label="item.label"
-            :model-value="item.key"></el-checkbox>
+        <el-checkbox class="ar-checkbox" v-for="item in items" :key="item.key" :label="item.key" :model-value="item.key">
+            <!-- <img :src="item.iconSrc" />
+            <span>{{ item.label }}</span> -->
+            {{ item.label }}
+        </el-checkbox>
     </el-checkbox-group>
 
     <el-select v-else multiple :model-value="modelValue"

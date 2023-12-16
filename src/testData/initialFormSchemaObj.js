@@ -69,53 +69,6 @@ export default {
       title: "Boolean",
       type: "boolean",
     },
-
-
-    //     mediaType === "text/markdown"
-    stringMarkdown: {
-      title: "Markdown",
-      description: "#Dispaly as markdown\nNote that the also description accepts markdown",
-      type: "string",
-      mediaType: "text/markdown",
-      maxLength: 500,
-      attrs: {
-        type: "textarea",
-        placeholder: "Enter your markdown text hier",
-        showWordLimit: true,
-      },
-    },
-    //     mediaType.startsWith("image/")
-    stringImage: {
-      title: "Image",
-      description: "Svg or bse64",
-      type: "string",
-    },
-    //     property.query
-    stringQuerySmall: {
-      title: "Query Small",
-      description: "Execute the query. If there are less than items, then display as raidobuttons",
-      type: "string",
-      query: { select: 'small'}
-    },
-    stringQueryLarge: {
-      title: "Query Large",
-      description: "Execute the query. If there are more than four items, then display as listbox.",
-      type: "string",
-      query: { select: 'large'}
-    },
-    //     property.enum
-    stringEnumSmall: {
-      title: "Enum Small",
-      description: "If there are less than five permitted values, then display as raidobuttons",
-      type: "string",
-      enum: ["Tokyo", "New York", "Paris"],
-    },
-    stringEnumLarge: {
-      title: "Enum Large",
-      description: "If there are more than four permitted values, then display as listbox.",
-      type: "string",
-      enum: ["Tokyo", "New York", "Paris", "Moskow", "Abu Dhabi", "Canberra"],
-    },
     //     property.format === "date-time"
     stringDate: {
       title: "Date",
@@ -140,11 +93,80 @@ export default {
     },
 
 
+    //     mediaType === "text/markdown"
+    stringMarkdown: {
+      title: "Markdown",
+      description: "#Dispaly as markdown\nNote that the also description accepts markdown",
+      type: "string",
+      mediaType: "text/markdown",
+      maxLength: 500,
+      attrs: {
+        type: "textarea",
+        placeholder: "Enter your markdown text hier",
+        showWordLimit: true,
+      },
+    },
+    //     mediaType.startsWith("image/")
+    stringImage: {
+      title: "Image",
+      description: "Svg or bse64",
+      type: "string",
+    },
+    //     property.enum
+    stringEnumSmall: {
+      title: "Enum Small",
+      description: "If there are less than five permitted values, then display as raidobuttons",
+      type: "string",
+      enum: ["Tokyo", "New York", "Paris"],
+    },
+    stringEnumLarge: {
+      title: "Enum Large",
+      description: "If there are more than four permitted values, then display as listbox.",
+      type: "string",
+      enum: ["Tokyo", "New York", "Paris", "Moskow", "Abu Dhabi", "Canberra"],
+    },
+    //     property.query
+    stringQuerySmall: {
+      title: "Query Small",
+      description: "Execute the query. If there are less than items, then display as raidobuttons",
+      type: "string",
+      query: { select: 'small' }
+    },
+    stringQueryLarge: {
+      title: "Query Large",
+      description: "Execute the query. If there are more than four items, then display as listbox.",
+      type: "string",
+      query: { select: 'large' }
+    },
+
+    // multi select
+    //     property.items.type === "array"
+    //     property.items.argoQuery
+    multiSelectSmall: {
+      title: "Mutli Select Small",
+      description: "Select multiple objects checkboxes. Return an array of identifires.",
+      type: "array",
+      items: {
+        type: "string",
+        query: { select: 'small' },
+      }
+    },
+    multiSelectLarge: {
+      title: "Mutli Select Large",
+      description: "Select multiple objects from a list. Return an array of identifires.",
+      type: "array",
+      items: {
+        type: "string",
+        query: { select: 'large' },
+      }
+    },
+
+
 
     // "object"://////////////////////////////////////////////
     //     property.properties
     object: {
-      title: "Object",
+      title: "Nested Objects",
       description: "Nested object",
       type: "object",
       properties: {
@@ -185,17 +207,42 @@ export default {
         },
       },
     },
-    //     else "CodeEditor";
-    objectJson: {
-      title: "CodeEditor",
-      description: "Object with no properties, displayed as CodeEditor",
-      type: "object"
-    },
     // "array"://////////////////////////////////////////////
     //     property.items.type === "object" && property.items.properties
     //     property.displayAs === "Table" // objects in a table
+    //     else "ObjectsArray"; // objects in a subform
+    objectsArray: {
+      title: "Array of Objects",
+      description: "Display an array of objects as subforms",
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          datetime: {
+            type: "string",
+            format: "date-time",
+            title: "Timestamp",
+            default: "now",
+            attrs: {
+              type: "datetime",
+            },
+          },
+          logEntry: {
+            type: "string",
+            maxLength: 500,
+            title: "Log",
+            attrs: {
+              type: "textarea",
+              placeholder: "What happend?",
+            },
+          },
+        },
+      },
+      required: ["logEntry", "datetime"],
+      additionalItems: true,
+    },
     objectsTable: {
-      title: "Objects Table",
+      title: "Objects in Table",
       description: "Display an array objects in a table",
       type: "array",
       displayAs: "Table",
@@ -225,47 +272,11 @@ export default {
       required: ["logEntry", "datetime"],
       additionalItems: true,
     },
-    //     else "ObjectsArray"; // objects in a subform
-    objectsArray: {
-      title: "Array of Subforms",
-      description: "Display an array of objects as subforms",
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          datetime: {
-            type: "string",
-            format: "date-time",
-            title: "Timestamp",
-            default: "now",
-            attrs: {
-              type: "datetime",
-            },
-          },
-          logEntry: {
-            type: "string",
-            maxLength: 500,
-            title: "Log",
-            attrs: {
-              type: "textarea",
-              placeholder: "What happend?",
-            },
-          },
-        },
-      },
-      required: ["logEntry", "datetime"],
-      additionalItems: true,
-    },
-    // multi select
-    //     property.items.type === "string"
-    //     property.items.argoQuery
-    multiSelect: {
-      title: "Mutli Select",
-      description: "Select multiple objects from a list. Return an array of identifires.",
-      type: "object",
-      query: {
-
-      }
+    //     else "CodeEditor";
+    objectJson: {
+      title: "CodeEditor",
+      description: "Object with no properties, displayed as CodeEditor",
+      type: "object"
     }
     //     else "CodeEditor";
 

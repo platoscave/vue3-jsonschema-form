@@ -63,7 +63,6 @@ defineExpose({ validate, resetFields });
 watch(() => props.modelValue, (newDataObj, oldDataObj) => {
 
     console.log('JSFwacth dataObj', newDataObj)
-    //emits('update:modelValue', newDataObj)
 
 }, { deep: true });
 
@@ -165,7 +164,7 @@ const getControlName = (property: IProperty) => {
             }
             // multi select
             else if (property.items.type === "string") {
-                if (property.items.argoQuery) return "SelectArrayQuery";
+                if (property.items.query) return "SelectArrayQuery";
                 return "CodeEditor";
             }
     }

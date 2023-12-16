@@ -12,11 +12,6 @@ defineProps({
 });
 defineEmits(['update:modelValue']);
 
-// watch(() => props.modelValue, (newDataObj, oldDataObj) => {
-
-//   console.log('NestObjectwacth dataObj', newDataObj)
-
-// }, { deep: true });
 </script>
 
 <template>

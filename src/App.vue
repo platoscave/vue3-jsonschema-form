@@ -54,7 +54,7 @@ const queryCallback = (query: any) => {
 
     let data = formQueryData.value
     if (query.select === 'small') data = formQueryData.value.slice(0, 3)
-    debugger
+
     return new Promise(function (resolve, reject) {
         setTimeout(() => resolve(data), 2000);
     });
