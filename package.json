@@ -26,21 +26,9 @@
   "dependencies": {
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/theme-one-dark": "^6.1.2",
+    "@ts-stack/markdown": "^1.5.0",
     "codemirror": "^6.0.1",
     "element-plus": "^2.4.3",
-    "markdown-it": "^13.0.2",
-    "markdown-it-abbr": "^2.0.0",
-    "markdown-it-anchor": "^8.6.7",
-    "markdown-it-deflist": "^3.0.0",
-    "markdown-it-emoji": "^3.0.0",
-    "markdown-it-footnote": "^4.0.0",
-    "markdown-it-highlightjs": "^4.0.1",
-    "markdown-it-ins": "^4.0.0",
-    "markdown-it-mark": "^4.0.0",
-    "markdown-it-sub": "^2.0.0",
-    "markdown-it-sup": "^2.0.0",
-    "markdown-it-task-lists": "^2.1.1",
-    "markdown-it-toc-done-right": "^4.2.0",
     "vue": "^3.3.8"
   },
   "devDependencies": {

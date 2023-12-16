@@ -1,4 +1,6 @@
 export default {
     string: "Hi",
-    Markdown: "# Markdown"
+    markdown: "# Markdown",
+    image: "favicon.svg"
+
 }

@@ -111,6 +111,7 @@ export default {
       title: "Image",
       description: "Svg or bse64",
       type: "string",
+      mediaType: "image/url"
     },
     //     property.enum
     stringEnumSmall: {

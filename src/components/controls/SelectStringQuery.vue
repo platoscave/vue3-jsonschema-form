@@ -37,19 +37,44 @@ onMounted(async () => {
 <template>
     <div v-if="items">
 
-        <div v-if="readonly" class="ar-lightgrey-background">
-            <img v-if="readonlyOutput.iconSrc" :src="readonlyOutput.iconSrc" />
+        <div
+            v-if="readonly"
+            class="ar-lightgrey-background"
+        >
+            <img
+                v-if="readonlyOutput.iconSrc"
+                :src="readonlyOutput.iconSrc"
+            />
             <span>{{ readonlyOutput.label }}</span>
         </div>
 
-        <el-radio-group class="ar-radio-group" v-else-if="items.length < 5" :model-value="modelValue"
-            @update:modelValue="($event) => $emit('update:modelValue', $event)">
-            <el-radio v-for="item in items" :key="item.key" :label="item.label" :model-value="item.key"></el-radio>
+        <el-radio-group
+            class="ar-radio-group"
+            v-else-if="items.length < 5"
+            :model-value="modelValue"
+            @update:modelValue="($event) => $emit('update:modelValue', $event)"
+        >
+            <el-radio
+                v-for="item in items"
+                :key="item.key"
+                :label="item.label"
+                :model-value="item.key"
+            ></el-radio>
         </el-radio-group>
 
-        <el-select v-else class="ar-select" :model-value="modelValue" :clearable="required ? false : true"
-            @update:modelValue="($event) => $emit('update:modelValue', $event)">
-            <el-option v-for="item in items" :key="item.key" :label="item.label" :value="item.key">
+        <el-select
+            v-else
+            class="ar-select"
+            :model-value="modelValue"
+            :clearable="required ? false : true"
+            @update:modelValue="($event) => $emit('update:modelValue', $event)"
+        >
+            <el-option
+                v-for="item in items"
+                :key="item.key"
+                :label="item.label"
+                :value="item.key"
+            >
                 <img :src="item.iconSrc" />
                 <span>{{ item.label }}</span>
             </el-option>

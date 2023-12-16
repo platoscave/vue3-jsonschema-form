@@ -15,10 +15,19 @@ defineEmits(['update:modelValue']);
 </script>
 
 <template>
-    <JsonschemaForm class="ar-subform-background" :model-value="modelValue" :properties="property.properties"
-        :requiredArr="property.required" :updateable-properties="editPermitted" :form-mode="formMode" :size="size"
-        :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback"
-        @update:modelValue="($event: any) => $emit('update:modelValue', $event)">
+    <JsonschemaForm
+        class="ar-subform-background"
+        :model-value="modelValue"
+        :properties="property.properties"
+        :requiredArr="property.required"
+        :updateable-properties="editPermitted"
+        :form-mode="formMode"
+        :size="size"
+        :label-position="labelPosition"
+        :label-width="labelWidth"
+        :query-callback="queryCallback"
+        @update:modelValue="($event: any) => $emit('update:modelValue', $event)"
+    >
     </JsonschemaForm>
 </template>
 

@@ -54,8 +54,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="readonly" class="ar-lightgrey-background">
+  <div
+    v-if="readonly"
+    class="ar-lightgrey-background"
+  >
     {{ modelValue }}
   </div>
-  <textarea v-else v-model="data" id="editor"></textarea>
+  <textarea
+    v-else
+    v-model="data"
+    id="editor"
+  ></textarea>
 </template>

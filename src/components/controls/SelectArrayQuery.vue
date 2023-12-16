@@ -15,14 +15,14 @@ const items = ref([])
 
 const readonlyLabels = computed(() => {
     if (!(props.modelValue && items.value)) return "";
-    return items.value.filter((obj) => {
+    return items.value.filter((obj: any) => {
         return props.modelValue.includes(obj.key);
     });
 });
 
 onMounted(async () => {
     if (props.queryCallback && props.property.items.query) {
-        const results = await props.queryCallback(props.property.items.query)
+        const results: [] = await props.queryCallback(props.property.items.query)
         console.log('items', results)
         // Copy items from results to items using push(). Perserve reactivity!
         for (let i = 0; i < results.length; i++) {
@@ -33,25 +33,49 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div v-if="readonly" class="ar-lightgrey-background">
-        <div v-for="item in readonlyLabels" :key="item.key" :model-value="item.key">
+    <div
+        v-if="readonly"
+        class="ar-lightgrey-background"
+    >
+        <div
+            v-for="item in readonlyLabels"
+            :key="item.key"
+            :model-value="item.key"
+        >
             <img :src="item.iconSrc" />
             <span>{{ item.label }}</span>
         </div>
     </div>
 
-    <el-checkbox-group class="ar-checkbox-group" v-else-if="items.length < 5" :model-value="modelValue"
-        @update:modelValue="($event) => $emit('update:modelValue', $event)">
-        <el-checkbox class="ar-checkbox" v-for="item in items" :key="item.key" :label="item.key" :model-value="item.key">
-            <!-- <img :src="item.iconSrc" />
-            <span>{{ item.label }}</span> -->
+    <el-checkbox-group
+        class="ar-checkbox-group"
+        v-else-if="items.length < 5"
+        :model-value="modelValue"
+        @update:modelValue="($event) => $emit('update:modelValue', $event)"
+    >
+        <el-checkbox
+            class="ar-checkbox"
+            v-for="item in items"
+            :key="item.key"
+            :label="item.key"
+            :model-value="item.key"
+        >
             {{ item.label }}
         </el-checkbox>
     </el-checkbox-group>
 
-    <el-select v-else multiple :model-value="modelValue"
-        @update:modelValue="($event) => $emit('update:modelValue', $event)">
-        <el-option v-for="item in items" :key="item.key" :label="item.label" :value="item.key">
+    <el-select
+        v-else
+        multiple
+        :model-value="modelValue"
+        @update:modelValue="($event) => $emit('update:modelValue', $event)"
+    >
+        <el-option
+            v-for="item in items"
+            :key="item.key"
+            :label="item.label"
+            :value="item.key"
+        >
             <img :src="item.iconSrc" />
             <span>{{ item.label }}</span>
         </el-option>

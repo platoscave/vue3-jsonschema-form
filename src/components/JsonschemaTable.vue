@@ -219,19 +219,42 @@ const infoIcon =
 
 <template>
     <!-- table-layout="auto" -->
-    <el-table v-if="modelValue && properties" class="ar-table" ref="tableEl" :data="modelValue" highlight-current-row border
+    <el-table
+        v-if="modelValue && properties"
+        class="ar-table"
+        ref="tableEl"
+        :data="modelValue"
+        highlight-current-row
+        border
         @current-change="($event) => $emit('current-change', $event)"
-        @header-dragend="($event) => $emit('header-dragend', $event)">
+        @header-dragend="($event) => $emit('header-dragend', $event)"
+    >
         <!--  -->
-        <el-table-column v-for="( property, propertyName ) in  properties.properties " :key="propertyName"
-            :property="propertyName" :width="columWidths[propertyName]" :label="property.title"
+        <el-table-column
+            v-for="( property, propertyName ) in  properties.properties "
+            :key="propertyName"
+            :property="propertyName"
+            :width="columWidths[propertyName]"
+            :label="property.title"
             :sortable="property.type !== 'object' && property.type !== 'array'"
-            :sort-method="(a, b) => sortFunc(property.type, a[propertyName], b[propertyName])" resizable>
+            :sort-method="(a, b) => sortFunc(property.type, a[propertyName], b[propertyName])"
+            resizable
+        >
             <!-- Header with tooltip. -->
             <template #header>
                 <span>{{ property.title + " " }} &nbsp;</span>
-                <el-tooltip v-if="property.description" effect="light" :content="property.description" raw-content>
-                    <div class="icon" v-html="infoIcon" height="1em" width="1em"></div>
+                <el-tooltip
+                    v-if="property.description"
+                    effect="light"
+                    :content="property.description"
+                    raw-content
+                >
+                    <div
+                        class="icon"
+                        v-html="infoIcon"
+                        height="1em"
+                        width="1em"
+                    ></div>
                 </el-tooltip>
             </template>
 
@@ -243,14 +266,30 @@ const infoIcon =
                 </component> -->
                 <!-- Nested objects have different parms than simple controls. Hense isNestedObject -->
                 <!-- The dynamic component is found using getComponent -->
-                <component v-if="isNestedObject(property)" :is="getComponent(property)" class="ar-control"
-                    v-model="modelValue[propertyName]" :property="property.properties" :required-arr="property.required"
-                    :updateable-properties="editPermitted[propertyName]" :form-mode="formMode" :size="size"
-                    :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback">
+                <component
+                    v-if="isNestedObject(property)"
+                    :is="getComponent(property)"
+                    class="ar-control"
+                    v-model="modelValue[propertyName]"
+                    :property="property.properties"
+                    :required-arr="property.required"
+                    :updateable-properties="editPermitted[propertyName]"
+                    :form-mode="formMode"
+                    :size="size"
+                    :label-position="labelPosition"
+                    :label-width="labelWidth"
+                    :query-callback="queryCallback"
+                >
                 </component>
-                <component v-else :is="getComponent(property)" class="ar-control" v-model="modelValue[propertyName]"
-                    :property="property" :readonly="propertyIsReadonly(formMode, propertyName)"
-                    :required="requiredArr.includes(propertyName)">
+                <component
+                    v-else
+                    :is="getComponent(property)"
+                    class="ar-control"
+                    v-model="modelValue[propertyName]"
+                    :property="property"
+                    :readonly="propertyIsReadonly(formMode, propertyName)"
+                    :required="requiredArr.includes(propertyName)"
+                >
                 </component>
             </template>
         </el-table-column>

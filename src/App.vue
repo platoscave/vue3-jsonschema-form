@@ -100,7 +100,11 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
     <div class="header">Vue3 Jsonschema Form/Table</div>
 
     <button @click="toggleDark()">
-        <i inline-block align-middle i="dark:carbon-moon carbon-sun" />
+        <i
+            inline-block
+            align-middle
+            i="dark:carbon-moon carbon-sun"
+        />
         <span class="ml-2">{{ isDark ? 'Dark' : 'Light' }}</span>
     </button>
     <div>
@@ -126,8 +130,13 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
         </el-radio-group>
     </div>
     <div>
-        <el-input v-model="labelWidth" style="width:200px;" placeholder="Label width: e.g. 100 or auto"
-            @input="labelWidth = $event.target.value" size="small"></el-input>
+        <el-input
+            v-model="labelWidth"
+            style="width:200px;"
+            placeholder="Label width: e.g. 100 or auto"
+            @input="labelWidth = $event.target.value"
+            size="small"
+        ></el-input>
     </div>
     <div>
         <button @click="validateForm()">Validate</button>
@@ -136,31 +145,52 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
     </div>
     <el-tabs>
         <el-tab-pane label="Form">
-            <splitpanes vertical class="default-theme">
+            <splitpanes
+                vertical
+                class="default-theme"
+            >
                 <pane size="25">
                     <div class="header">Jsonschema Object</div>
-                    <el-input type="textarea" autosize :value="JSON.stringify(formSchemaObj, null, 2)"></el-input>
+                    <el-input
+                        type="textarea"
+                        autosize
+                        :value="JSON.stringify(formSchemaObj, null, 2)"
+                    ></el-input>
                 </pane>
                 <pane>
                     <div class="header">Jsonschema Form</div>
                     <!-- The form -->
-                    <JsonschemaForm v-model="formDataObj" :properties="formSchemaObj.properties"
-                        :required-arr="formSchemaObj.required" :updateable-properties="formEditPermitted"
-                        :form-mode="formMode" :size="size" :label-position="labelPosition" :label-width="labelWidth"
-                        :query-callback="queryCallback">
+                    <JsonschemaForm
+                        v-model="formDataObj"
+                        :properties="formSchemaObj.properties"
+                        :required-arr="formSchemaObj.required"
+                        :updateable-properties="formEditPermitted"
+                        :form-mode="formMode"
+                        :size="size"
+                        :label-position="labelPosition"
+                        :label-width="labelWidth"
+                        :query-callback="queryCallback"
+                    >
                     </JsonschemaForm>
                 </pane>
                 <pane size="25">
                     <splitpanes horizontal>
                         <pane>
                             <div class="header">Data Object</div>
-                            <el-input type="textarea" autosize :value="JSON.stringify(formDataObj, null, 4)"></el-input>
+                            <el-input
+                                type="textarea"
+                                autosize
+                                :value="JSON.stringify(formDataObj, null, 4)"
+                            ></el-input>
                         </pane>
                         <pane size="20">
                             <div class="header">Edit Permitted Object</div>
                             <!-- <div>Only aplicable in "Edit Permitted" Form Mode</div> -->
-                            <el-input type="textarea" autosize
-                                :value="JSON.stringify(formEditPermitted, null, 4)"></el-input>
+                            <el-input
+                                type="textarea"
+                                autosize
+                                :value="JSON.stringify(formEditPermitted, null, 4)"
+                            ></el-input>
                         </pane>
                     </splitpanes>
                 </pane>
@@ -199,5 +229,4 @@ button {
 
 .header {
     font-weight: bolder;
-}
-</style>
+}</style>

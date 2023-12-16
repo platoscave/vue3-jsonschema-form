@@ -221,33 +221,73 @@ const infoIcon =
 <template>
     <!-- Validation rules are provided by a Computed -->
     <!-- :model and :rules are needed for validation rules. Do not mess with them! You will regret it-->
-    <el-form ref="formEl" :model="modelValue" :rules="validationRules" :size="size" :label-position="labelPosition"
-        :label-width="labelWidth" :show-message="formMode.startsWith('Edit')">
+    <el-form
+        ref="formEl"
+        :model="modelValue"
+        :rules="validationRules"
+        :size="size"
+        :label-position="labelPosition"
+        :label-width="labelWidth"
+        :show-message="formMode.startsWith('Edit')"
+    >
         <!-- For each property in properties -->
-        <div v-for="(property, propertyName) in properties" :key="propertyName">
+        <div
+            v-for="(property, propertyName) in properties"
+            :key="propertyName"
+        >
             <!-- includeThisProperty: Skip form item if formMode is Readonly Dense and value is empty -->
             <!-- :prop is needed for validation rules. Do not mess with it! -->
-            <el-form-item class="ar-form-item" v-if="includeThisProperty(formMode, modelValue[propertyName], property.type)"
-                :prop="propertyName">
+            <el-form-item
+                class="ar-form-item"
+                v-if="includeThisProperty(formMode, modelValue[propertyName], property.type)"
+                :prop="propertyName"
+            >
                 <!-- Use label slot to add label with tooltip info icon -->
                 <template #label>
                     <span>{{ property.title + " " }} &nbsp;</span>
-                    <el-tooltip v-if="property.description" effect="light" :content="property.description" raw-content>
-                        <div class="icon" v-html="infoIcon" height="1em" width="1em"></div>
+                    <el-tooltip
+                        v-if="property.description"
+                        effect="light"
+                        :content="property.description"
+                        raw-content
+                    >
+                        <div
+                            class="icon"
+                            v-html="infoIcon"
+                            height="1em"
+                            width="1em"
+                        ></div>
                     </el-tooltip>
                 </template>
                 <!-- Nested objects have different parms than simple controls. Hense isNestedObject -->
                 <!-- The dynamic component is found using getComponent -->
-                <component v-if="isNestedObject(property)" :is="getComponent(property)" class="ar-control"
-                    :model-value="modelValue[propertyName]" :property="property" :required-arr="property.required"
-                    :updateable-properties="editPermitted[propertyName]" :form-mode="formMode" :size="size"
-                    :label-position="labelPosition" :label-width="labelWidth" :query-callback="queryCallback"
-                    @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)">
+                <component
+                    v-if="isNestedObject(property)"
+                    :is="getComponent(property)"
+                    class="ar-control"
+                    :model-value="modelValue[propertyName]"
+                    :property="property"
+                    :required-arr="property.required"
+                    :updateable-properties="editPermitted[propertyName]"
+                    :form-mode="formMode"
+                    :size="size"
+                    :label-position="labelPosition"
+                    :label-width="labelWidth"
+                    :query-callback="queryCallback"
+                    @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)"
+                >
                 </component>
-                <component v-else :is="getComponent(property)" class="ar-control" :model-value="modelValue[propertyName]"
-                    :property="property" :readonly="propertyIsReadonly(formMode, propertyName)"
-                    :required="props.requiredArr.includes(propertyName)" :query-callback="queryCallback"
-                    @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)">
+                <component
+                    v-else
+                    :is="getComponent(property)"
+                    class="ar-control"
+                    :model-value="modelValue[propertyName]"
+                    :property="property"
+                    :readonly="propertyIsReadonly(formMode, propertyName)"
+                    :required="props.requiredArr.includes(propertyName)"
+                    :query-callback="queryCallback"
+                    @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)"
+                >
                 </component>
             </el-form-item>
         </div>
@@ -267,5 +307,4 @@ const infoIcon =
     display: inline;
     width: 12px;
     height: 12px;
-}
-</style>
+}</style>
