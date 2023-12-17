@@ -19,15 +19,13 @@ const onUpdateModelValue = (newDataObj: any, idx: string) => {
 }
 
 const addIcon =
-    `<svg viewBox="0 0 100 100" height="12" width="12" >` +
-    `   <circle cx="50" cy = "50" r = "50" fill="green"/>` +
-    `   <text fill="rgba(255, 255, 255, 0.87)" x = "33" y = "80" font-size="70" font-weight="1000" >+</text>` +
-    `</svg>`
+    `<svg id="el-icon-plus" viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
+    `<path fill="currentColor" d = "M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm-38.4 409.6H326.4a38.4 38.4 0 1 0 0 76.8h147.2v147.2a38.4 38.4 0 0 0 76.8 0V550.4h147.2a38.4 38.4 0 0 0 0-76.8H550.4V326.4a38.4 38.4 0 1 0-76.8 0v147.2z" > </path>` +
+    `< /svg>`
 const deleteIcon =
-    `<svg viewBox="0 0 100 100" height="12" width="12" >` +
-    `   <circle cx="50" cy = "50" r = "50" fill="red"/>` +
-    `   <text fill="rgba(255, 255, 255, 0.87)" x = "33" y = "80" font-size="70" font-weight="1000" >-</text>` +
-    `</svg>`
+    `<svg id="el-icon-close" viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
+    `<path fill="currentColor" d = "M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm0 393.664L407.936 353.6a38.4 38.4 0 1 0-54.336 54.336L457.664 512 353.6 616.064a38.4 38.4 0 1 0 54.336 54.336L512 566.336 616.064 670.4a38.4 38.4 0 1 0 54.336-54.336L566.336 512 670.4 407.936a38.4 38.4 0 1 0-54.336-54.336L512 457.664z" > </path>` +
+    `< /svg>`
 </script>
 
 <template>
@@ -42,7 +40,7 @@ const deleteIcon =
             }"
         >
             <JsonschemaForm
-                class="ar-subform-background"
+                class="xar-subform-background"
                 :model-value="modelValue[idx]"
                 :properties="property.items.properties"
                 :requiredArr="property.required"
@@ -60,8 +58,8 @@ const deleteIcon =
                 class="icon-delete"
                 v-if="formMode.startsWith('Edit') && property.additionalItems"
                 v-html="deleteIcon"
-                height="1em"
-                width="1em"
+                height="1.5em"
+                width="1.5em"
                 @click="modelValue.splice(idx, 1)"
             ></div>
         </div>
@@ -70,8 +68,8 @@ const deleteIcon =
             class="icon-add"
             v-if="formMode.startsWith('Edit') && property.additionalItems"
             v-html="addIcon"
-            height="1em"
-            width="1em"
+            height="1.5em"
+            width="1.5em"
             @click="modelValue.push({})"
         ></div>
     </div>
@@ -88,13 +86,13 @@ const deleteIcon =
 }
 
 .ar-subform-background:not(:last-child) {
-    margin-bottom: 10px;
+    xmargin-bottom: 10px;
 }
 
 /* Icons */
 .icon-delete {
-    height: 1em;
-    width: 1em;
+    height: 1.5em;
+    width: 1.5em;
     position: absolute;
     margin: 3px;
     top: 0px;
@@ -105,14 +103,22 @@ const deleteIcon =
     border-radius: 50%;
 }
 
+.icon-delete :hover {
+    color: #DA4567;
+}
+
 .icon-add {
-    height: 1em;
-    width: 1em;
+    height: 1.5em;
+    width: 1.5em;
     margin: 3px;
     /* background-color: green; */
     color: green;
     z-index: 20;
     border-radius: 50%;
+}
+
+.icon-add :hover {
+    color: rgb(5, 202, 5);
 }
 
 .not-readonly:hover {

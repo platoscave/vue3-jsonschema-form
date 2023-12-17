@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, watch } from "vue";
 import BooleanCtrl from "./controls/BooleanCtrl.vue";
 import DateTimeCtrl from "./controls/DateTimeCtrl.vue";
-import MarkDown from "./controls/MarkDown.vue";
+import MarkdownCtrl from "./controls/MarkdownCtrl.vue";
 import Image from "./controls/Image.vue";
 import CodeEditor from "./controls/CodeEditor.vue";
 import NestedObject from "./controls/NestedObject.vue";
@@ -141,7 +141,8 @@ const getControlName = (property: IProperty) => {
         case "string":
             const mediaType = property.contentMediaType
             if (mediaType) {
-                if (mediaType === "text/markdown") return "MarkDown";
+                console.log('mediaType', mediaType)
+                if (mediaType === "text/markdown") return "MarkdownCtrl";
                 if (mediaType === "text/html") return "Html";
                 if (mediaType.startsWith("image/")) return "Image";
                 return "CodeEditor";
@@ -190,7 +191,7 @@ const getComponent = (property: IProperty) => {
     const dynamicComp = [
         { name: "BooleanCtrl", comp: BooleanCtrl },
         { name: "DateTimeCtrl", comp: DateTimeCtrl },
-        { name: "MarkDown", comp: MarkDown },
+        { name: "MarkdownCtrl", comp: MarkdownCtrl },
         { name: "Image", comp: Image },
         { name: "CodeEditor", comp: CodeEditor },
         { name: "NestedObject", comp: NestedObject },
@@ -210,10 +211,9 @@ const getComponent = (property: IProperty) => {
     else return CodeEditor.comp
 };
 const infoIcon =
-    `<svg viewBox="0 0 100 100" height="12" width="12" >` +
-    `   <circle cx="50" cy = "50" r = "50" fill="blue"/>` +
-    `   <text fill="rgba(255, 255, 255, 0.87)" x = "33" y = "80" font-size="70" font-style="italic" font-weight="1000" >i</text>` +
-    `</svg>`
+    `<svg viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
+    `<path fill="currentColor" d = "M512 64a448 448 0 1 1 0 896.064A448 448 0 0 1 512 64zm67.2 275.072c33.28 0 60.288-23.104 60.288-57.344s-27.072-57.344-60.288-57.344c-33.28 0-60.16 23.104-60.16 57.344s26.88 57.344 60.16 57.344zM590.912 699.2c0-6.848 2.368-24.64 1.024-34.752l-52.608 60.544c-10.88 11.456-24.512 19.392-30.912 17.28a12.992 12.992 0 0 1-8.256-14.72l87.68-276.992c7.168-35.136-12.544-67.2-54.336-71.296-44.096 0-108.992 44.736-148.48 101.504 0 6.784-1.28 23.68.064 33.792l52.544-60.608c10.88-11.328 23.552-19.328 29.952-17.152a12.8 12.8 0 0 1 7.808 16.128L388.48 728.576c-10.048 32.256 8.96 63.872 55.04 71.04 67.84 0 107.904-43.648 147.456-100.416z" > </path>` +
+    `< /svg>`
 
 </script>
 
@@ -254,8 +254,8 @@ const infoIcon =
                         <div
                             class="icon"
                             v-html="infoIcon"
-                            height="1em"
-                            width="1em"
+                            height="1.5em"
+                            width="1.5em"
                         ></div>
                     </el-tooltip>
                 </template>
@@ -305,6 +305,7 @@ const infoIcon =
 .icon {
     /* force icon next to label */
     display: inline;
-    width: 12px;
-    height: 12px;
-}</style>
+    /* width: 1.5em;
+    height: 1.5em; */
+}
+</style>

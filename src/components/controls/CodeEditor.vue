@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, watch, reactive, toRaw, toRefs, computed, onMounted } from "vue";
 import * as CodeMirror from 'codemirror'
+// import 'codemirror/lib/'
 // import 'codemirror/lib/codemirror.css'
 // import 'codemirror/theme/dracula.css'
 // import 'codemirror/mode/javascript/javascript.js'
 // import 'codemirror/mode/gfm/gfm.js'
 // import 'codemirror/mode/css/css.js'
-
+// https://discuss.codemirror.net/t/module-not-found-error/5510/8
 
 const props = defineProps({
   modelValue: { type: Object, default: {} },
@@ -47,7 +48,7 @@ const data = () => {
 onMounted(() => {
   // CodeMirror.editorFromTextArea(document.getElementById('editor'), {
   //   theme: 'dracula',
-  //   mode: getMode(props.property.mediaType)
+  //   mode: getMode(props.property.contentMediaType)
   // })
 })
 

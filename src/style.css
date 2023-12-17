@@ -79,9 +79,9 @@
   align-items: baseline;
 }
 
-/* .el-form-item:not(:last-child) {
-  margin-bottom: 10px;
-} */
+.el-form-item:not(:last-child) {
+  margin-bottom: 10px !important;
+}
 
 /* .el-form-item {
   margin-bottom: 10px;

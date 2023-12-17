@@ -2,19 +2,16 @@
 import { computed } from 'vue';
 import { Marked } from '@ts-stack/markdown';
 
-const markdown = '# Example'
-const markdownToHtml = computed(() => {
-    return Marked.parse(markdown)
+const props = defineProps({
+    markdownText: { type: String, default: '' }
 });
 
+const markdownToHtml = computed(() => {
+    return Marked.parse(props.markdownText)
+});
 
-debugger
 </script>
 
 <template>
-    <div>markdown</div>
     <div v-html="markdownToHtml"></div>
-    <!-- <div>{{ source }}</div>
-  <div innerHTML="md">
-  </div> -->
 </template>

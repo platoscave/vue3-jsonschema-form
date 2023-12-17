@@ -98,7 +98,7 @@ export default {
       title: "Markdown",
       description: "#Dispaly as markdown\nNote that the also description accepts markdown",
       type: "string",
-      mediaType: "text/markdown",
+      contentMediaType: "text/markdown",
       maxLength: 500,
       attrs: {
         type: "textarea",

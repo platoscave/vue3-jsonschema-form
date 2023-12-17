@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, watch } from "vue";
 import BooleanCtrl from "./controls/BooleanCtrl.vue";
 import DateTimeCtrl from "./controls/DateTimeCtrl.vue";
-import MarkDown from "./controls/MarkDown.vue";
+import MarkDown from "./controls/MarkdownCtrl.vue";
 import Image from "./controls/Image.vue";
 import CodeEditor from "./controls/CodeEditor.vue";
 import NestedObject from "./controls/NestedObject.vue";
@@ -177,7 +177,7 @@ const getComponent = (property: IProperty) => {
     const dynamicComp = [
         { name: "BooleanCtrl", comp: BooleanCtrl },
         { name: "DateTimeCtrl", comp: DateTimeCtrl },
-        { name: "MarkDown", comp: MarkDown },
+        { name: "MarkDown", comp: MarkdownCtrl },
         { name: "Image", comp: Image },
         { name: "CodeEditor", comp: CodeEditor },
         { name: "NestedObject", comp: NestedObject },
