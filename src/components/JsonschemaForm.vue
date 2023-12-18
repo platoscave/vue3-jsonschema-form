@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import BooleanCtrl from "./controls/BooleanCtrl.vue";
-import DateTimeCtrl from "./controls/DateTimeCtrl.vue";
-import MarkdownCtrl from "./controls/MarkdownCtrl.vue";
+import StringDateTimeCtrl from "./controls/StringDateTimeCtrl.vue";
+import StringMarkdownCtrl from "./controls/StringMarkdownCtrl.vue";
 import StringIconCtrl from "./controls/StringIconCtrl.vue";
-import CodeEditorCtrl from "./controls/CodeEditorCtrl.vue";
-import NestedObject from "./controls/NestedObject.vue";
+import StringCodeEditorCtrl from "./controls/StringCodeEditorCtrl.vue";
+import ObjectNested from "./controls/ObjectNested.vue";
 import NumberCtrl from "./controls/NumberCtrl.vue";
-import ObjectsArray from "./controls/ObjectsArray.vue";
+import ArrayObjects from "./controls/ArrayObjects.vue";
 import TableArray from "./controls/TableArray.vue";
-import SelectStringQuery from "./controls/SelectStringQuery.vue";
-import SelectStringEnumCtrl from "./controls/SelectStringEnumCtrl.vue";
-import SelectArrayQuery from "./controls/SelectArrayQuery.vue";
+import StringQueryCtrl from "./controls/StringQueryCtrl.vue";
+import StringEnumCtrl from "./controls/StringEnumCtrl.vue";
+import ArrayQueryCtrl from "./controls/ArrayQueryCtrl.vue";
 import StringCtrl from "./controls/StringCtrl.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
 
@@ -134,40 +134,40 @@ const getControlName = (property: IProperty) => {
             const mediaType = property.contentMediaType
             if (mediaType) {
                 console.log('mediaType', mediaType)
-                if (mediaType === "text/markdown") return "MarkdownCtrl";
-                if (mediaType === "text/html") return "Html";
+                if (mediaType === "text/markdown") return "StringMarkdownCtrl";
+                if (mediaType === "text/html") return "StringHtmlCtrl";
                 if (mediaType.startsWith("image/")) return "StringIconCtrl";
-                return "CodeEditorCtrl";
+                return "StringCodeEditorCtrl";
             }
-            if (property.query) return "SelectStringQuery";
-            if (property.enum) return "SelectStringEnumCtrl";
-            if (property.format === "date-time") return "DateTimeCtrl";
+            if (property.query) return "StringQueryCtrl";
+            if (property.enum) return "StringEnumCtrl";
+            if (property.format === "date-time") return "StringDateTimeCtrl";
             return "StringCtrl";
         case "number": return "NumberCtrl";
         case "integer": return "NumberCtrl";
         case "boolean": return "BooleanCtrl";
         case "object":
-            if (property.properties) return "NestedObject";
-            else return "CodeEditorCtrl";
+            if (property.properties) return "ObjectNested";
+            else return "StringCodeEditorCtrl";
         case "array":
             // objects
             if (property.items.type === "object" && property.items.properties) {
                 if (property.displayAs === "Table") return "TableArray"; // objects in a table
-                return "ObjectsArray"; // objects in a subform
+                return "ArrayObjects"; // objects in a subform
             }
             // multi select
             else if (property.items.type === "string") {
-                if (property.items.query) return "SelectArrayQuery";
-                return "CodeEditorCtrl";
+                if (property.items.query) return "ArrayQueryCtrl";
+                return "StringCodeEditorCtrl";
             }
     }
-    return "CodeEditorCtrl";
+    return "StringCodeEditorCtrl";
 
 };
 // Nested object have different props compared to plain controls, so we find out here 
 const isNestedObject = (property: IProperty) => {
     const controlName = getControlName(property)
-    if (['NestedObject', 'ObjectsArray', 'TableArray'].includes(controlName)) return true
+    if (['ObjectNested', 'ArrayObjects', 'TableArray'].includes(controlName)) return true
     return false
 }
 
@@ -182,16 +182,16 @@ const getComponent = (property: IProperty) => {
 
     const dynamicComp = [
         { name: "BooleanCtrl", comp: BooleanCtrl },
-        { name: "DateTimeCtrl", comp: DateTimeCtrl },
-        { name: "MarkdownCtrl", comp: MarkdownCtrl },
+        { name: "StringDateTimeCtrl", comp: StringDateTimeCtrl },
+        { name: "StringMarkdownCtrl", comp: StringMarkdownCtrl },
         { name: "StringIconCtrl", comp: StringIconCtrl },
-        { name: "CodeEditorCtrl", comp: CodeEditorCtrl },
-        { name: "NestedObject", comp: NestedObject },
+        { name: "StringCodeEditorCtrl", comp: StringCodeEditorCtrl },
+        { name: "ObjectNested", comp: ObjectNested },
         { name: "NumberCtrl", comp: NumberCtrl },
-        { name: "ObjectsArray", comp: ObjectsArray },
-        { name: "SelectArrayQuery", comp: SelectArrayQuery },
-        { name: "SelectStringEnumCtrl", comp: SelectStringEnumCtrl },
-        { name: "SelectStringQuery", comp: SelectStringQuery },
+        { name: "ArrayObjects", comp: ArrayObjects },
+        { name: "ArrayQueryCtrl", comp: ArrayQueryCtrl },
+        { name: "StringEnumCtrl", comp: StringEnumCtrl },
+        { name: "StringQueryCtrl", comp: StringQueryCtrl },
         { name: "StringCtrl", comp: StringCtrl },
         { name: "JsonschemaForm", comp: JsonschemaForm },
         { name: "TableArray", comp: TableArray },
@@ -200,7 +200,7 @@ const getComponent = (property: IProperty) => {
     const controlName = getControlName(property)
     const nameComp = dynamicComp.find((item) => item.name === controlName);
     if (nameComp) return nameComp.comp;
-    else return CodeEditorCtrl.comp
+    else return StringCodeEditorCtrl.comp
 };
 const infoIcon =
     `<svg viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +

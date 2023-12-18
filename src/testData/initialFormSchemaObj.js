@@ -211,7 +211,7 @@ export default {
     // "array"://////////////////////////////////////////////
     //     property.items.type === "object" && property.items.properties
     //     property.displayAs === "Table" // objects in a table
-    //     else "ObjectsArray"; // objects in a subform
+    //     else "ArrayObjects"; // objects in a subform
     objectsArray: {
       title: "Array of Objects",
       description: "Display an array of objects as subforms",
@@ -273,13 +273,13 @@ export default {
       required: ["logEntry", "datetime"],
       additionalItems: true,
     },
-    //     else "CodeEditorCtrl";
+    //     else "StringCodeEditorCtrl";
     objectJson: {
-      title: "CodeEditorCtrl",
-      description: "Object with no properties, displayed as CodeEditorCtrl",
+      title: "StringCodeEditorCtrl",
+      description: "Object with no properties, displayed as StringCodeEditorCtrl",
       type: "object"
     }
-    //     else "CodeEditorCtrl";
+    //     else "StringCodeEditorCtrl";
 
   },
   required: ['string']

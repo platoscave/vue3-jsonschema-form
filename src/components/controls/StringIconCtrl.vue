@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CodeEditorCtrl from "./CodeEditorCtrl.vue";
+import StringCodeEditorCtrl from "./StringCodeEditorCtrl.vue";
 defineProps({
     modelValue: { type: String, default: "" },
     property: { type: Object, default: () => ({}) },
@@ -18,12 +18,12 @@ const emit = defineEmits(["update:modelValue"]);
     />
 
     <div v-if="!readonly">
-        <CodeEditorCtrl
+        <StringCodeEditorCtrl
             :model-value="modelValue"
             :property="property"
             :readonly="readonly"
             @update:modelValue="($event) => $emit('update:modelValue', $event)"
-        ></CodeEditorCtrl>
+        ></StringCodeEditorCtrl>
     </div>
 </template>
 

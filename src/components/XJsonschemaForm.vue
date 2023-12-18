@@ -5,17 +5,17 @@ import { ref, reactive, computed, toRefs, watch } from "vue";
 // import ControlSelector from "./ControlSelector";
 // /* eslint-disable vue/no-unused-components */
 // // on behalf of the control selector
-import DateTimeCtrl from "./controls/DateTimeCtrl.vue";
+import StringDateTimeCtrl from "./controls/StringDateTimeCtrl.vue";
 import MarkDown from "./controls/MarkDown.vue";
 import StringIconCtrl from "./controls/StringIconCtrl.vue";
-import CodeEditorCtrl from "./controls/CodeEditorCtrl.vue";
-import NestedObject from "./controls/NestedObject.vue";
+import StringCodeEditorCtrl from "./controls/StringCodeEditorCtrl.vue";
+import ObjectNested from "./controls/ObjectNested.vue";
 import Number from "./controls/Number.vue";
-import ObjectsArray from "./controls/ObjectsArray.vue";
+import ArrayObjects from "./controls/ArrayObjects.vue";
 import TableArray from "./controls/TableArray.vue";
-import SelectStringQuery from "./controls/SelectStringQuery.vue";
-import SelectStringEnumCtrl from "./controls/SelectStringEnumCtrl.vue";
-import SelectArrayQuery from "./controls/SelectArrayQuery.vue";
+import StringQueryCtrl from "./controls/StringQueryCtrl.vue";
+import StringEnumCtrl from "./controls/StringEnumCtrl.vue";
+import ArrayQueryCtrl from "./controls/ArrayQueryCtrl.vue";
 import String from "./controls/String.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
 
@@ -113,16 +113,16 @@ const notReadonlyDenseAndEmpty = (formMode: string, dataObj: object[], type: str
 };
 
 const dynamicComp = [
-  { name: "DateTimeCtrl", comp: DateTimeCtrl },
+  { name: "StringDateTimeCtrl", comp: StringDateTimeCtrl },
   { name: "MarkDown", comp: MarkDown },
   { name: "StringIconCtrl", comp: StringIconCtrl },
-  { name: "CodeEditorCtrl", comp: CodeEditorCtrl },
-  { name: "NestedObject", comp: NestedObject },
+  { name: "StringCodeEditorCtrl", comp: StringCodeEditorCtrl },
+  { name: "ObjectNested", comp: ObjectNested },
   { name: "Number", comp: Number },
-  { name: "ObjectsArray", comp: ObjectsArray },
-  { name: "SelectArrayQuery", comp: SelectArrayQuery },
-  { name: "SelectStringEnumCtrl", comp: SelectStringEnumCtrl },
-  { name: "SelectStringQuery", comp: SelectStringQuery },
+  { name: "ArrayObjects", comp: ArrayObjects },
+  { name: "ArrayQueryCtrl", comp: ArrayQueryCtrl },
+  { name: "StringEnumCtrl", comp: StringEnumCtrl },
+  { name: "StringQueryCtrl", comp: StringQueryCtrl },
   { name: "String", comp: String },
   { name: "JsonschemaForm", comp: JsonschemaForm },
   { name: "TableArray", comp: TableArray },
@@ -151,35 +151,35 @@ const getComponent = (property: IProperty) => {
       case "string":
         const mediaType = property.contentMediaType
         if (mediaType) {
-          if (mediaType === "text/html") return "Html";
+          if (mediaType === "text/html") return "StringHtmlCtrl";
           if (mediaType.startsWith("image/")) return "StringIconCtrl";
-          return "CodeEditorCtrl";
+          return "StringCodeEditorCtrl";
         }
-        if (property.argoQuery) return "SelectStringQuery";
-        if (property.enum) return "SelectStringEnumCtrl";
-        if (property.format === "date-time") return "DateTimeCtrl";
+        if (property.argoQuery) return "StringQueryCtrl";
+        if (property.enum) return "StringEnumCtrl";
+        if (property.format === "date-time") return "StringDateTimeCtrl";
         return "String";
       case "number": return "Number";
       case "integer": return "Number";
       case "boolean": return "ElCheckbox";
       case "object":
-        if (property.properties) return "NestedObject";
-        return "CodeEditorCtrl";
+        if (property.properties) return "ObjectNested";
+        return "StringCodeEditorCtrl";
       case "array":
         if (property.items) {
           // objects
           if (property.items.type === "object" && property.items.properties) {
             if (property.displayAs === "Table") return "TableArray"; // objects in a table
-            return "ObjectsArray"; // objects in a subform
+            return "ArrayObjects"; // objects in a subform
           }
           // multi select
           else if (property.items.type === "string") {
-            if (property.items.argoQuery) return "SelectArrayQuery";
-            return "CodeEditorCtrl";
+            if (property.items.argoQuery) return "ArrayQueryCtrl";
+            return "StringCodeEditorCtrl";
           }
         }
     }
-    return "CodeEditorCtrl";
+    return "StringCodeEditorCtrl";
 
   };
 

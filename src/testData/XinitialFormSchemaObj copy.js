@@ -180,10 +180,10 @@ export default {
         },
       },
     },
-    //     else "CodeEditorCtrl";
+    //     else "StringCodeEditorCtrl";
     objectJson: {
-      title: "CodeEditorCtrl",
-      description: "Object with no properties, displayed as CodeEditorCtrl",
+      title: "StringCodeEditorCtrl",
+      description: "Object with no properties, displayed as StringCodeEditorCtrl",
       type: "object"
     },
     // "array"://////////////////////////////////////////////
@@ -220,7 +220,7 @@ export default {
       required: ["logEntry", "datetime"],
       additionalItems: true,
     },
-    //     else "ObjectsArray"; // objects in a subform
+    //     else "ArrayObjects"; // objects in a subform
     objectSubform: {
       title: "Objects Subform",
       description: "Display an array objects as subforms",
@@ -262,7 +262,7 @@ export default {
 
       }
     }
-    //     else "CodeEditorCtrl";
+    //     else "StringCodeEditorCtrl";
 
   }
 }
