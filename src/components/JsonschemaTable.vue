@@ -3,8 +3,8 @@ import { ref, computed, onMounted, watch } from "vue";
 import BooleanCtrl from "./controls/BooleanCtrl.vue";
 import DateTimeCtrl from "./controls/DateTimeCtrl.vue";
 import MarkDown from "./controls/MarkdownCtrl.vue";
-import Image from "./controls/Image.vue";
-import CodeEditor from "./controls/CodeEditor.vue";
+import StringIconCtrl from "./controls/StringIconCtrl.vue";
+import CodeEditorCtrl from "./controls/CodeEditorCtrl.vue";
 import NestedObject from "./controls/NestedObject.vue";
 import NumberCtrl from "./controls/NumberCtrl.vue";
 import ObjectsArray from "./controls/ObjectsArray.vue";
@@ -138,8 +138,8 @@ const getControlName = (property: IProperty) => {
             if (mediaType) {
                 if (mediaType === "text/markdown") return "MarkDown";
                 if (mediaType === "text/html") return "Html";
-                if (mediaType.startsWith("image/")) return "Image";
-                return "CodeEditor";
+                if (mediaType.startsWith("image/")) return "StringIconCtrl";
+                return "CodeEditorCtrl";
             }
             if (property.argoQuery) return "SelectStringQuery";
             if (property.enum) return "SelectStringEnumCtrl";
@@ -150,7 +150,7 @@ const getControlName = (property: IProperty) => {
         case "boolean": return "BooleanCtrl";
         case "object":
             if (property.properties) return "NestedObject";
-            else return "CodeEditor";
+            else return "CodeEditorCtrl";
         case "array":
             // objects
             if (property.items.type === "object" && property.items.properties) {
@@ -160,10 +160,10 @@ const getControlName = (property: IProperty) => {
             // multi select
             else if (property.items.type === "string") {
                 if (property.items.argoQuery) return "SelectArrayQuery";
-                return "CodeEditor";
+                return "CodeEditorCtrl";
             }
     }
-    return "CodeEditor";
+    return "CodeEditorCtrl";
 
 };
 const isNestedObject = (property: IProperty) => {
@@ -178,8 +178,8 @@ const getComponent = (property: IProperty) => {
         { name: "BooleanCtrl", comp: BooleanCtrl },
         { name: "DateTimeCtrl", comp: DateTimeCtrl },
         { name: "MarkDown", comp: MarkdownCtrl },
-        { name: "Image", comp: Image },
-        { name: "CodeEditor", comp: CodeEditor },
+        { name: "StringIconCtrl", comp: StringIconCtrl },
+        { name: "CodeEditorCtrl", comp: CodeEditorCtrl },
         { name: "NestedObject", comp: NestedObject },
         { name: "NumberCtrl", comp: NumberCtrl },
         { name: "ObjectsArray", comp: ObjectsArray },
@@ -194,7 +194,7 @@ const getComponent = (property: IProperty) => {
     const controlName = getControlName(property)
     const nameComp = dynamicComp.find((item) => item.name === controlName);
     if (nameComp) return nameComp.comp;
-    else return CodeEditor.comp
+    else return CodeEditorCtrl.comp
 };
 const sortFunc = (type: string, a: any, b: any) => {
     if (type === "string") {
@@ -208,10 +208,9 @@ const sortFunc = (type: string, a: any, b: any) => {
     return 0;
 };
 const infoIcon =
-    `<svg viewBox="0 0 100 100" height="12" width="12" >` +
-    `   <circle cx="50" cy = "50" r = "50" fill="blue"/>` +
-    `   <text fill="rgba(255, 255, 255, 0.87)" x = "33" y = "80" font-size="70" font-style="italic" font-weight="1000" >i</text>` +
-    `</svg>`
+    `<svg viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
+    `<path fill="currentColor" d = "M512 64a448 448 0 1 1 0 896.064A448 448 0 0 1 512 64zm67.2 275.072c33.28 0 60.288-23.104 60.288-57.344s-27.072-57.344-60.288-57.344c-33.28 0-60.16 23.104-60.16 57.344s26.88 57.344 60.16 57.344zM590.912 699.2c0-6.848 2.368-24.64 1.024-34.752l-52.608 60.544c-10.88 11.456-24.512 19.392-30.912 17.28a12.992 12.992 0 0 1-8.256-14.72l87.68-276.992c7.168-35.136-12.544-67.2-54.336-71.296-44.096 0-108.992 44.736-148.48 101.504 0 6.784-1.28 23.68.064 33.792l52.544-60.608c10.88-11.328 23.552-19.328 29.952-17.152a12.8 12.8 0 0 1 7.808 16.128L388.48 728.576c-10.048 32.256 8.96 63.872 55.04 71.04 67.84 0 107.904-43.648 147.456-100.416z" > </path>` +
+    `< /svg>`
 
 </script>
 
@@ -249,7 +248,7 @@ const infoIcon =
                     raw-content
                 >
                     <div
-                        class="icon"
+                        class="infoIcon"
                         v-html="infoIcon"
                         height="1em"
                         width="1em"
@@ -259,10 +258,6 @@ const infoIcon =
 
             <!-- The control -->
             <template #default="scope">
-                <!-- <component :is="getComponent(property)" class="sf-full-width" v-model="scope.row[propertyName]"
-                    :property="property" :readonly="formMode.startsWith('Readonly')" :required="false"
-                    :hash-level="hashLevel" :form-mode="formMode">
-                </component> -->
                 <!-- Nested objects have different parms than simple controls. Hense isNestedObject -->
                 <!-- The dynamic component is found using getComponent -->
                 <component
@@ -301,22 +296,15 @@ const infoIcon =
     margin-bottom: 8px;
 }
 
-
-
-.icon /deep/ circle {
-    fill: var(--el-color-primary-light-7);
-    margin-left: 5px;
-
-}
-
-.icon /deep/ text {
-    fill: var(--el-color-primary);
-}
-
-.icon {
-    /* force icon next to label */
+.infoIcon {
+    /* force infoIcon next to label */
+    color: var(--el-color-primary-light-7);
     display: inline;
-    width: 12px;
-    height: 12px;
+    width: 1em;
+    height: 1em;
+}
+
+.infoIcon :hover {
+    color: var(--el-color-primary-light-3);
 }
 </style>

@@ -124,6 +124,8 @@
 /* align content top, incase label has more than one line*/
 .el-form-item__content {
   align-items: baseline;
+  line-height: unset;
+  /*impacts codemirror*/
 }
 
 /*  Does not work */
@@ -151,6 +153,19 @@ th .cell {
   padding: 10px;
 }
 
+/* CodeMirror overrides */
+.CodeMirror {
+  width: 100%;
+  height: auto;
+}
+
+.cm-s-dracula.CodeMirror {
+  background-color: #ffffff08 !important;
+  border-radius: 6px;
+  border-color: #00adff42;
+  border-style: solid;
+  border-width: 1px;
+}
 
 /* Error success borders: lighter */
 .el-form-item.is-error .el-input__inner,

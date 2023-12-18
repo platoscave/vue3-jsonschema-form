@@ -43,6 +43,9 @@ const handleDragstart = (evt: Event) => {
 const handleDrageover = (evt: Event) => {
     const targetItem = findAncestor(evt.target, "drag-item")
 
+    evt.target.classList.add('fiftyPercent')
+    evt.target.classList.add('dark')
+
     if (targetItem && targetItem !== draggedItem && targetItem.classList.contains('drag-item')) {
         const boundingRect = targetItem.getBoundingClientRect();
         const offset = boundingRect.y + (boundingRect.height / 2);
@@ -153,6 +156,11 @@ const deleteIcon =
 </template>
 
 <style scoped>
+.fiftyPercent {
+    zoom: 0.5;
+    -moz-transform: scale(0.5);
+}
+
 /* subForm background */
 .sf-subform-background {
     position: relative;

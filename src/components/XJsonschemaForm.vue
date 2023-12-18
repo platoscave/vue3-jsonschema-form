@@ -7,8 +7,8 @@ import { ref, reactive, computed, toRefs, watch } from "vue";
 // // on behalf of the control selector
 import DateTimeCtrl from "./controls/DateTimeCtrl.vue";
 import MarkDown from "./controls/MarkDown.vue";
-import Image from "./controls/Image.vue";
-import CodeEditor from "./controls/CodeEditor.vue";
+import StringIconCtrl from "./controls/StringIconCtrl.vue";
+import CodeEditorCtrl from "./controls/CodeEditorCtrl.vue";
 import NestedObject from "./controls/NestedObject.vue";
 import Number from "./controls/Number.vue";
 import ObjectsArray from "./controls/ObjectsArray.vue";
@@ -115,8 +115,8 @@ const notReadonlyDenseAndEmpty = (formMode: string, dataObj: object[], type: str
 const dynamicComp = [
   { name: "DateTimeCtrl", comp: DateTimeCtrl },
   { name: "MarkDown", comp: MarkDown },
-  { name: "Image", comp: Image },
-  { name: "CodeEditor", comp: CodeEditor },
+  { name: "StringIconCtrl", comp: StringIconCtrl },
+  { name: "CodeEditorCtrl", comp: CodeEditorCtrl },
   { name: "NestedObject", comp: NestedObject },
   { name: "Number", comp: Number },
   { name: "ObjectsArray", comp: ObjectsArray },
@@ -152,8 +152,8 @@ const getComponent = (property: IProperty) => {
         const mediaType = property.contentMediaType
         if (mediaType) {
           if (mediaType === "text/html") return "Html";
-          if (mediaType.startsWith("image/")) return "Image";
-          return "CodeEditor";
+          if (mediaType.startsWith("image/")) return "StringIconCtrl";
+          return "CodeEditorCtrl";
         }
         if (property.argoQuery) return "SelectStringQuery";
         if (property.enum) return "SelectStringEnumCtrl";
@@ -164,7 +164,7 @@ const getComponent = (property: IProperty) => {
       case "boolean": return "ElCheckbox";
       case "object":
         if (property.properties) return "NestedObject";
-        return "CodeEditor";
+        return "CodeEditorCtrl";
       case "array":
         if (property.items) {
           // objects
@@ -175,11 +175,11 @@ const getComponent = (property: IProperty) => {
           // multi select
           else if (property.items.type === "string") {
             if (property.items.argoQuery) return "SelectArrayQuery";
-            return "CodeEditor";
+            return "CodeEditorCtrl";
           }
         }
     }
-    return "CodeEditor";
+    return "CodeEditorCtrl";
 
   };
 

@@ -21,7 +21,7 @@ export default {
     },
     //     mediaType.startsWith("image/")
     stringImage: {
-      title: "Image",
+      title: "StringIconCtrl",
       description: "Svg or bse64",
       type: "string",
     },
@@ -180,10 +180,10 @@ export default {
         },
       },
     },
-    //     else "CodeEditor";
+    //     else "CodeEditorCtrl";
     objectJson: {
-      title: "CodeEditor",
-      description: "Object with no properties, displayed as CodeEditor",
+      title: "CodeEditorCtrl",
+      description: "Object with no properties, displayed as CodeEditorCtrl",
       type: "object"
     },
     // "array"://////////////////////////////////////////////
@@ -262,7 +262,7 @@ export default {
 
       }
     }
-//     else "CodeEditor";
+    //     else "CodeEditorCtrl";
 
   }
 }

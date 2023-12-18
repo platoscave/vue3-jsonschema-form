@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed } from "vue";
 import BooleanCtrl from "./controls/BooleanCtrl.vue";
 import DateTimeCtrl from "./controls/DateTimeCtrl.vue";
 import MarkdownCtrl from "./controls/MarkdownCtrl.vue";
-import Image from "./controls/Image.vue";
-import CodeEditor from "./controls/CodeEditor.vue";
+import StringIconCtrl from "./controls/StringIconCtrl.vue";
+import CodeEditorCtrl from "./controls/CodeEditorCtrl.vue";
 import NestedObject from "./controls/NestedObject.vue";
 import NumberCtrl from "./controls/NumberCtrl.vue";
 import ObjectsArray from "./controls/ObjectsArray.vue";
@@ -58,18 +58,10 @@ const resetFields = () => {
 // Expose these methods to parent component
 defineExpose({ validate, resetFields });
 
-// We do our own 'update:modelValue' so we can take advantage of 
-// v-model automatic update of subproperties
-watch(() => props.modelValue, (newDataObj, oldDataObj) => {
-
-    console.log('JSFwacth dataObj', newDataObj)
-
-}, { deep: true });
-
 // Create the validation rules object
 const validationRules = computed(() => {
 
-    let rulesObj = {};
+    let rulesObj: any = {};
     // no rules for readonly
     // TODO formmode Edit Permitted
     if (props.formMode.startsWith('Readonly')) return {};
@@ -144,8 +136,8 @@ const getControlName = (property: IProperty) => {
                 console.log('mediaType', mediaType)
                 if (mediaType === "text/markdown") return "MarkdownCtrl";
                 if (mediaType === "text/html") return "Html";
-                if (mediaType.startsWith("image/")) return "Image";
-                return "CodeEditor";
+                if (mediaType.startsWith("image/")) return "StringIconCtrl";
+                return "CodeEditorCtrl";
             }
             if (property.query) return "SelectStringQuery";
             if (property.enum) return "SelectStringEnumCtrl";
@@ -156,7 +148,7 @@ const getControlName = (property: IProperty) => {
         case "boolean": return "BooleanCtrl";
         case "object":
             if (property.properties) return "NestedObject";
-            else return "CodeEditor";
+            else return "CodeEditorCtrl";
         case "array":
             // objects
             if (property.items.type === "object" && property.items.properties) {
@@ -166,10 +158,10 @@ const getControlName = (property: IProperty) => {
             // multi select
             else if (property.items.type === "string") {
                 if (property.items.query) return "SelectArrayQuery";
-                return "CodeEditor";
+                return "CodeEditorCtrl";
             }
     }
-    return "CodeEditor";
+    return "CodeEditorCtrl";
 
 };
 // Nested object have different props compared to plain controls, so we find out here 
@@ -192,8 +184,8 @@ const getComponent = (property: IProperty) => {
         { name: "BooleanCtrl", comp: BooleanCtrl },
         { name: "DateTimeCtrl", comp: DateTimeCtrl },
         { name: "MarkdownCtrl", comp: MarkdownCtrl },
-        { name: "Image", comp: Image },
-        { name: "CodeEditor", comp: CodeEditor },
+        { name: "StringIconCtrl", comp: StringIconCtrl },
+        { name: "CodeEditorCtrl", comp: CodeEditorCtrl },
         { name: "NestedObject", comp: NestedObject },
         { name: "NumberCtrl", comp: NumberCtrl },
         { name: "ObjectsArray", comp: ObjectsArray },
@@ -208,7 +200,7 @@ const getComponent = (property: IProperty) => {
     const controlName = getControlName(property)
     const nameComp = dynamicComp.find((item) => item.name === controlName);
     if (nameComp) return nameComp.comp;
-    else return CodeEditor.comp
+    else return CodeEditorCtrl.comp
 };
 const infoIcon =
     `<svg viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
@@ -241,7 +233,7 @@ const infoIcon =
                 v-if="includeThisProperty(formMode, modelValue[propertyName], property.type)"
                 :prop="propertyName"
             >
-                <!-- Use label slot to add label with tooltip info icon -->
+                <!-- Use label slot to add label with tooltip info infoIcon -->
                 <template #label>
                     <span>{{ property.title + " " }} &nbsp;</span>
                     <el-tooltip
@@ -251,10 +243,8 @@ const infoIcon =
                         raw-content
                     >
                         <div
-                            class="icon"
+                            class="infoIcon"
                             v-html="infoIcon"
-                            height="1.5em"
-                            width="1.5em"
                         ></div>
                     </el-tooltip>
                 </template>
@@ -273,7 +263,7 @@ const infoIcon =
                     :label-position="labelPosition"
                     :label-width="labelWidth"
                     :query-callback="queryCallback"
-                    @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)"
+                    @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
                 >
                 </component>
                 <component
@@ -285,7 +275,7 @@ const infoIcon =
                     :readonly="propertyIsReadonly(formMode, propertyName)"
                     :required="props.requiredArr.includes(propertyName)"
                     :query-callback="queryCallback"
-                    @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)"
+                    @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
                 >
                 </component>
             </el-form-item>
@@ -293,23 +283,15 @@ const infoIcon =
     </el-form>
 </template>
 <style scoped>
-.icon /deep/ circle {
-    fill: var(--el-color-primary-light-7);
-}
-
-.icon /deep/ text {
-    fill: var(--el-color-primary);
-}
-
-.icon {
-    /* force icon next to label */
+.infoIcon {
+    /* force infoIcon next to label */
     color: var(--el-color-primary-light-7);
     display: inline;
     width: 1.5em;
     height: 1.5em;
 }
 
-.icon :hover {
+.infoIcon :hover {
     color: var(--el-color-primary-light-3);
 }
 </style>
