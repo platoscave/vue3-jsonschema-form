@@ -12,7 +12,7 @@ defineEmits(['update:modelValue']);
     <div>
         <div
             v-if="readonly"
-            class="ar-lightgrey-background"
+            class="sf-readonly-wide"
         >{{ modelValue }}</div>
         <el-input
             v-else

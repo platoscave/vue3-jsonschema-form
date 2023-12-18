@@ -35,7 +35,7 @@ onMounted(async () => {
 <template>
     <div
         v-if="readonly"
-        class="ar-lightgrey-background"
+        class="sf-readonly-wide"
     >
         <div
             v-for="item in readonlyLabels"
@@ -48,13 +48,11 @@ onMounted(async () => {
     </div>
 
     <el-checkbox-group
-        class="ar-checkbox-group"
         v-else-if="items.length < 5"
         :model-value="modelValue"
         @update:modelValue="($event) => $emit('update:modelValue', $event)"
     >
         <el-checkbox
-            class="ar-checkbox"
             v-for="item in items"
             :key="item.key"
             :label="item.key"
@@ -83,23 +81,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.el-checkbox.ar-checkbox {
-    height: 24px
-}
-
-/* checkbox background*/
-.ar-checkbox-group {
-    background-color: #ffffff08;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 4px;
-    border-color: #00adff42;
-    border-style: solid;
-    border-width: 1px;
-    font-size: 16px;
-    line-height: 24px;
-}
-
 img {
     height: 20px;
     width: 20px;

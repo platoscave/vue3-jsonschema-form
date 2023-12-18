@@ -70,7 +70,7 @@ onBeforeUnmount(() => {
 <template>
     <div
         v-if="readonly"
-        class="ar-lightgrey-background"
+        class="sf-readonly-wide"
         v-html="modelValue"
     />
     <div v-else>

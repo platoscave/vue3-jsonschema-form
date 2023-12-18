@@ -13,18 +13,13 @@ defineProps({
 </script>
 
 <template>
-  <!-- <ar-sub-table class="ar-subform-background" value="modelValue" :properties="property.items.properties"
-    :requiredArr="property.required" :form-mode="formMode" :hash-level="hashLevel"></ar-sub-table> -->
+  <!-- <JsonschemaTable class="sf-subform-background" value="modelValue" :properties="property.items.properties"
+    :requiredArr="property.required" :form-mode="formMode" :hash-level="hashLevel"></JsonschemaTable> -->
 </template>
 
 <style scoped>
 /* subForm background */
-.ar-subform-background {
-  background-color: #ffffff08;
-  padding: 10px 10px 10px 15px;
-  border-radius: 4px;
-  border-style: none;
-  margin-bottom: 10px;
+.sf-subform-background {
   position: relative;
 }
 </style>

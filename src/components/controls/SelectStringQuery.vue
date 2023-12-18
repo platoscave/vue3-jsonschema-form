@@ -39,7 +39,7 @@ onMounted(async () => {
 
         <div
             v-if="readonly"
-            class="ar-lightgrey-background"
+            class="sf-readonly-wide"
         >
             <img
                 v-if="readonlyOutput.iconSrc"
@@ -49,7 +49,6 @@ onMounted(async () => {
         </div>
 
         <el-radio-group
-            class="ar-radio-group"
             v-else-if="items.length < 5"
             :model-value="modelValue"
             @update:modelValue="($event) => $emit('update:modelValue', $event)"
@@ -64,7 +63,6 @@ onMounted(async () => {
 
         <el-select
             v-else
-            class="ar-select"
             :model-value="modelValue"
             :clearable="required ? false : true"
             @update:modelValue="($event) => $emit('update:modelValue', $event)"
@@ -84,22 +82,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.el-radio.ar-radio {
-    height: 24px
-}
-
-.ar-radio-group {
-    background-color: #ffffff08;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 4px;
-    border-color: #00adff42;
-    border-style: solid;
-    border-width: 1px;
-    font-size: 16px;
-    line-height: 24px;
-}
-
 img {
     height: 20px;
     width: 20px;

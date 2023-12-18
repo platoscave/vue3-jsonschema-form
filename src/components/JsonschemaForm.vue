@@ -238,7 +238,6 @@ const infoIcon =
             <!-- includeThisProperty: Skip form item if formMode is Readonly Dense and value is empty -->
             <!-- :prop is needed for validation rules. Do not mess with it! -->
             <el-form-item
-                class="ar-form-item"
                 v-if="includeThisProperty(formMode, modelValue[propertyName], property.type)"
                 :prop="propertyName"
             >
@@ -264,7 +263,7 @@ const infoIcon =
                 <component
                     v-if="isNestedObject(property)"
                     :is="getComponent(property)"
-                    class="ar-control"
+                    class="sf-full-width"
                     :model-value="modelValue[propertyName]"
                     :property="property"
                     :required-arr="property.required"
@@ -280,7 +279,7 @@ const infoIcon =
                 <component
                     v-else
                     :is="getComponent(property)"
-                    class="ar-control"
+                    class="sf-full-width"
                     :model-value="modelValue[propertyName]"
                     :property="property"
                     :readonly="propertyIsReadonly(formMode, propertyName)"
@@ -304,8 +303,13 @@ const infoIcon =
 
 .icon {
     /* force icon next to label */
+    color: var(--el-color-primary-light-7);
     display: inline;
-    /* width: 1.5em;
-    height: 1.5em; */
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.icon :hover {
+    color: var(--el-color-primary-light-3);
 }
 </style>

@@ -17,18 +17,18 @@ const emit = defineEmits(["update:modelValue"]);
 
 <template>
     <img
+        class="sf-readonly-wide"
         :src="modelValue"
-        class="ar-lightgrey-background"
         height="24"
         width="40"
     />
 
     <div
         v-if="!readonly"
-        class="ar-full-width"
+        class="sf-full-width"
     >
         <el-input
-            class="ar-control"
+            class="sf-full-width"
             :value="modelValue"
             @input="$emit('update:modelValue', $event)"
         ></el-input>
@@ -36,10 +36,6 @@ const emit = defineEmits(["update:modelValue"]);
 </template>
 
 <style scoped>
-.ar-full-width {
-    width: 100%;
-}
-
 img {
     height: 24px;
     width: 24px;

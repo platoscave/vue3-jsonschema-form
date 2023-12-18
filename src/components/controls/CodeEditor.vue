@@ -8,6 +8,8 @@ import * as CodeMirror from 'codemirror'
 // import 'codemirror/mode/gfm/gfm.js'
 // import 'codemirror/mode/css/css.js'
 // https://discuss.codemirror.net/t/module-not-found-error/5510/8
+// FIrstly, run - npm config set legacy-peer-deps true
+// then try to run - npm i codemirror @version5
 
 const props = defineProps({
   modelValue: { type: Object, default: {} },
@@ -19,7 +21,6 @@ const getMode = (mediaType) => {
   const mediaTypeArr = mediaType.split('/')
   const simpleMime = mediaTypeArr[1].replace("x-", "");
   switch (simpleMime) {
-    case 'x-markdown': return 'gfm'
     case 'markdown': return 'gfm'
     case 'xml': return 'xml'
     case 'html': return 'xml'
@@ -57,7 +58,7 @@ onMounted(() => {
 <template>
   <div
     v-if="readonly"
-    class="ar-lightgrey-background"
+    class="sf-readonly-wide"
   >
     {{ modelValue }}
   </div>

@@ -14,7 +14,7 @@ defineProps({
     <div>
         <div
             v-if="readonly"
-            class="ar-lightgrey-background"
+            class="sf-readonly-wide"
         >
             <Markdown2Html :markdownText="modelValue"></Markdown2Html>
         </div>

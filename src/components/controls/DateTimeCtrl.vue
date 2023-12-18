@@ -45,7 +45,7 @@ const localeDate = computed(() => {
 <template>
     <div
         v-if="readonly"
-        class="ar-lightgrey-background"
+        class="sf-readonly-wide"
     >
         <div v-if="modelValue !== undefined">{{ localeDate }}</div>
     </div>

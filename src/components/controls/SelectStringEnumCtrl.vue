@@ -11,19 +11,17 @@ defineEmits(['update:modelValue']);
 <template>
 	<div
 		v-if="readonly || property.enum.length < 2"
-		class="ar-lightgrey-background"
+		class="sf-readonly-wide"
 	>
 		{{ modelValue }}
 	</div>
 
 	<el-radio-group
-		class="ar-radio-group"
 		v-else-if="property.enum.length < 5"
 		:model-value="modelValue"
 		@update:modelValue="($event) => $emit('update:modelValue', $event)"
 	>
 		<el-radio
-			class="ar-radio"
 			v-for="item in property.enum"
 			:key="item"
 			:label="item"
@@ -33,7 +31,6 @@ defineEmits(['update:modelValue']);
 
 	<el-select
 		v-else
-		class="ar-select"
 		:model-value="modelValue"
 		@update:modelValue="($event) => $emit('update:modelValue', $event)"
 	>
@@ -46,22 +43,4 @@ defineEmits(['update:modelValue']);
 	</el-select>
 </template>
 
-<style scoped>
-/* Radiobuttons */
-
-.el-radio.ar-radio {
-	height: 24px
-}
-
-.ar-radio-group {
-	background-color: #ffffff08;
-	padding-left: 10px;
-	padding-right: 10px;
-	border-radius: 4px;
-	border-color: #00adff42;
-	border-style: solid;
-	border-width: 1px;
-	font-size: 16px;
-	line-height: 24px;
-}
-</style>
+<style scoped></style>

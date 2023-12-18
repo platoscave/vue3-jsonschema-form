@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, getCurrentInstance } from "vue";
+
 const props = defineProps({
     modelValue: { type: Object, default: () => ([{}]) },
     property: { type: Object, default: () => ({}) },
@@ -12,11 +14,78 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue'])
 
-
 const onUpdateModelValue = (newDataObj: any, idx: string) => {
     props.modelValue[idx] = newDataObj
     emits('update:modelValue', props.modelValue)
 }
+
+// Drag and drop subforms
+let draggedItem: any;
+
+const findAncestor = (el: Element, cls: string) => {
+    while ((el = el.parentElement) && !el.classList.contains(cls));
+    return el;
+}
+
+const handleDragstart = (evt: Event) => {
+    console.log('handleDragstart event:', evt.target)
+    //const targetItem = findAncestor(evt.target, "drag-item")
+    if (evt.target) {
+        evt.target.classList.add("dark")
+        //evt.target.style("margin: 10px")
+        draggedItem = evt.target;
+        setTimeout(function () {
+            evt.target.style.visibility = "hidden";
+        }, 0);
+    }
+}
+
+const handleDrageover = (evt: Event) => {
+    const targetItem = findAncestor(evt.target, "drag-item")
+
+    if (targetItem && targetItem !== draggedItem && targetItem.classList.contains('drag-item')) {
+        const boundingRect = targetItem.getBoundingClientRect();
+        const offset = boundingRect.y + (boundingRect.height / 2);
+        if (evt.clientY - offset > 0) {
+            //console.log('DraggableItem, below:', targetItem.getAttribute("idx"))
+            targetItem.parentNode.insertBefore(draggedItem, targetItem.nextSibling);
+        } else {
+            //console.log('DraggableItem, above:', targetItem.getAttribute("idx"))
+            targetItem.parentNode.insertBefore(draggedItem, targetItem);
+        }
+    }
+};
+const handleDragend = (evt: Event) => {
+    //console.log('DraggableItem, handleDragsend event:', evt)
+    const parentElement = findAncestor(evt.target, "dndParent")
+
+
+    console.log('parentElement:', evt.target.parentElement)
+
+    let allChildren = parentElement.querySelectorAll(".drag-item");
+    console.log('allChildren:', allChildren)
+
+    const modelValueReordered = []
+
+    allChildren.forEach((dragItem) => {
+        console.log('New order:', dragItem.getAttribute("idx"))
+        const oldIdx = dragItem.getAttribute("idx")
+        modelValueReordered.push(props.modelValue[oldIdx])
+    })
+
+    emits('update:modelValue', modelValueReordered)
+    evt.target.style.visibility = "visible";
+
+    // None of this works
+    // setTimeout(function () {
+    // emits('update:modelValue', modelValueReordered)
+    // }, 0);
+    // const instance = getCurrentInstance();
+    // instance?.proxy?.$forceUpdate();
+};
+const handleDrop = (evt: Event) => {
+    console.log('DraggableItem, handleDragstart event:', evt)
+};
 
 const addIcon =
     `<svg id="el-icon-plus" viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
@@ -26,68 +95,69 @@ const deleteIcon =
     `<svg id="el-icon-close" viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
     `<path fill="currentColor" d = "M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm0 393.664L407.936 353.6a38.4 38.4 0 1 0-54.336 54.336L457.664 512 353.6 616.064a38.4 38.4 0 1 0 54.336 54.336L512 566.336 616.064 670.4a38.4 38.4 0 1 0 54.336-54.336L566.336 512 670.4 407.936a38.4 38.4 0 1 0-54.336-54.336L512 457.664z" > </path>` +
     `< /svg>`
+
 </script>
 
 <template>
-    <div>
+    <div class="dndParent">
         <!-- Create a subForm for each of the items in the modelValue array -->
         <div
             v-for="(item, idx) in modelValue"
             :key="idx"
-            :class="{
-                'ar-subform-background': true,
-                'not-readonly': formMode.startsWith('Edit') && property.additionalItems,
-            }"
         >
-            <JsonschemaForm
-                class="xar-subform-background"
-                :model-value="modelValue[idx]"
-                :properties="property.items.properties"
-                :requiredArr="property.required"
-                :updateable-properties="editPermitted.items.properties"
-                :form-mode="formMode"
-                :size="size"
-                :label-position="labelPosition"
-                :label-width="labelWidth"
-                :query-callback="queryCallback"
-                @update:modelValue="($event: any) => onUpdateModelValue($event, idx)"
-            >
-            </JsonschemaForm>
-            <!-- Delete icon -->
             <div
-                class="icon-delete"
+                :class="{
+                    'dark': true,
+                    'drag-item': true,
+                    'sf-subform-background': true,
+                    'not-readonly': formMode.startsWith('Edit') && property.additionalItems,
+                }"
+                :idx="idx"
+                :draggable="formMode.startsWith('Edit') && property.additionalItems"
+                @dragstart.stop="handleDragstart"
+                @dragover.stop="handleDrageover"
+                @dragend.stop="handleDragend"
+                @drop.stop="handleDrop"
+            >
+                <JsonschemaForm
+                    :model-value="item"
+                    :properties="property.items.properties"
+                    :requiredArr="property.required"
+                    :updateable-properties="editPermitted.items.properties"
+                    :form-mode="formMode"
+                    :size="size"
+                    :label-position="labelPosition"
+                    :label-width="labelWidth"
+                    :query-callback="queryCallback"
+                    draggable="false"
+                    @update:modelValue="($event: any) => onUpdateModelValue($event, idx)"
+                >
+                </JsonschemaForm>
+                <!-- Delete icon -->
+                <div
+                    v-if="formMode.startsWith('Edit') && property.additionalItems"
+                    class="icon-delete"
+                    v-html="deleteIcon"
+                    @click="modelValue.splice(idx, 1)"
+                ></div>
+            </div>
+            <!-- Add icon -->
+            <div
                 v-if="formMode.startsWith('Edit') && property.additionalItems"
-                v-html="deleteIcon"
-                height="1.5em"
-                width="1.5em"
-                @click="modelValue.splice(idx, 1)"
+                class="icon-add"
+                v-html="addIcon"
+                @click="modelValue.push({})"
             ></div>
         </div>
-        <!-- Add icon -->
-        <div
-            class="icon-add"
-            v-if="formMode.startsWith('Edit') && property.additionalItems"
-            v-html="addIcon"
-            height="1.5em"
-            width="1.5em"
-            @click="modelValue.push({})"
-        ></div>
     </div>
 </template>
 
 <style scoped>
 /* subForm background */
-.ar-subform-background {
-    background-color: #ffffff08;
-    padding: 10px 10px 10px 15px;
-    border-radius: 4px;
-    border-style: none;
+.sf-subform-background {
     position: relative;
 }
 
-.ar-subform-background:not(:last-child) {
-    xmargin-bottom: 10px;
-}
 
 /* Icons */
 .icon-delete {
@@ -97,28 +167,27 @@ const deleteIcon =
     margin: 3px;
     top: 0px;
     right: 0;
-    /* background-color: #ff4000a3; */
-    color: #ff4000a3;
+    color: var(--el-color-error-light-5);
     z-index: 20;
     border-radius: 50%;
 }
 
 .icon-delete :hover {
-    color: #DA4567;
+    /* color: var(--el-color-error); */
+    color: red;
 }
 
 .icon-add {
     height: 1.5em;
     width: 1.5em;
     margin: 3px;
-    /* background-color: green; */
-    color: green;
+    color: var(--el-color-success-light-5);
     z-index: 20;
     border-radius: 50%;
 }
 
 .icon-add :hover {
-    color: rgb(5, 202, 5);
+    color: var(--el-color-success);
 }
 
 .not-readonly:hover {

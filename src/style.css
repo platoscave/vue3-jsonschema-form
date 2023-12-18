@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   /* color: rgba(255, 255, 255, 0.87); */
-  background-color: #758bf9;
+  background-color: #404040;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -22,11 +22,12 @@
   max-width: 750px;
 }
 
-.ar-control {
+.sf-full-width {
   width: 100%
 }
 
-.ar-lightgrey-background {
+/* Readonly background wide */
+.sf-readonly-wide {
   background-color: #ffffff08;
   padding: 1px 7px;
   border-radius: 4px;
@@ -37,6 +38,52 @@
 }
 
 
+/* Readonly background narrow */
+.sf-readonly-narrow {
+  background-color: #ffffff08;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 4px;
+  border-style: none;
+  font-size: 16px;
+  line-height: 24px;
+  min-height: 24px;
+  width: 200px;
+  text-align: right;
+}
+
+/* subForm background */
+.sf-subform-background {
+  background-color: #ffffff08;
+  padding: 10px 10px 10px 15px;
+  border-radius: 4px;
+  border-style: none;
+  margin-bottom: 10px;
+}
+
+.sf-subform-background:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+/* radio button, checkbox background*/
+.el-radio-group,
+.el-checkbox-group {
+  background-color: #ffffff08;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 4px;
+  border-color: #00adff42;
+  border-style: solid;
+  border-width: 1px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* radio button, checkbox height */
+.el-radio,
+.el-checkbox {
+  height: 24px
+}
 
 /* Input background and border */
 .el-input__wrapper {
@@ -79,6 +126,7 @@
   align-items: baseline;
 }
 
+/*  Does not work */
 .el-form-item:not(:last-child) {
   margin-bottom: 10px !important;
 }
@@ -86,6 +134,23 @@
 /* .el-form-item {
   margin-bottom: 10px;
 } */
+
+/* Table overrides. Make it more dense*/
+.el-table__cell {
+  padding: 4px;
+  border-bottom: unset;
+}
+
+.cell {
+  padding: unset;
+  word-break: unset;
+  /* line-height: 23px; */
+}
+
+th .cell {
+  padding: 10px;
+}
+
 
 /* Error success borders: lighter */
 .el-form-item.is-error .el-input__inner,
@@ -103,6 +168,25 @@
   border-color: none;
 }
 
+/* Placeholder color */
+.el-input__inner::placeholder {
+  color: var(--el-color-primary-light-3);
+}
+
+/* google */
+.el-input__inner::-webkit-input-placeholder {
+  color: var(--el-color-primary-light-3);
+}
+
+/* firefox */
+.el-input__inner:-moz-placeholder {
+  color: var(--el-color-primary-light-3);
+}
+
+/*ie*/
+.el-input__inner:-ms-input-placeholder {
+  color: var(--el-color-primary-light-3);
+}
 
 
 

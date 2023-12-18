@@ -25,7 +25,7 @@ const precision = computed(() => {
 <template>
     <div
         v-if="readonly"
-        class="ar-number-div"
+        class="sf-readonly-narrow"
     >
         <div v-if="modelValue !== undefined">{{ Number.parseFloat(modelValue.toString()).toFixed(precision) }}</div>
     </div>
@@ -42,20 +42,6 @@ const precision = computed(() => {
 </template>
 
 <style scoped>
-/* Readonly div */
-.ar-number-div {
-    background-color: #ffffff08;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 4px;
-    border-style: none;
-    font-size: 16px;
-    line-height: 24px;
-    min-height: 24px;
-    width: 200px;
-    text-align: right;
-}
-
 .el-input-number {
     width: 220px;
 }

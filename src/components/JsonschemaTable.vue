@@ -221,7 +221,6 @@ const infoIcon =
     <!-- table-layout="auto" -->
     <el-table
         v-if="modelValue && properties"
-        class="ar-table"
         ref="tableEl"
         :data="modelValue"
         highlight-current-row
@@ -260,7 +259,7 @@ const infoIcon =
 
             <!-- The control -->
             <template #default="scope">
-                <!-- <component :is="getComponent(property)" class="ar-control" v-model="scope.row[propertyName]"
+                <!-- <component :is="getComponent(property)" class="sf-full-width" v-model="scope.row[propertyName]"
                     :property="property" :readonly="formMode.startsWith('Readonly')" :required="false"
                     :hash-level="hashLevel" :form-mode="formMode">
                 </component> -->
@@ -269,7 +268,7 @@ const infoIcon =
                 <component
                     v-if="isNestedObject(property)"
                     :is="getComponent(property)"
-                    class="ar-control"
+                    class="sf-full-width"
                     v-model="modelValue[propertyName]"
                     :property="property.properties"
                     :required-arr="property.required"
@@ -284,7 +283,7 @@ const infoIcon =
                 <component
                     v-else
                     :is="getComponent(property)"
-                    class="ar-control"
+                    class="sf-full-width"
                     v-model="modelValue[propertyName]"
                     :property="property"
                     :readonly="propertyIsReadonly(formMode, propertyName)"
@@ -296,31 +295,13 @@ const infoIcon =
     </el-table>
 </template>
 <style scoped>
-.ar-json-schema-form {
-    max-width: 750px;
-}
-
-
 /* Item bottom margin */
 .el-form-item {
     /* to make the form more dense */
     margin-bottom: 8px;
 }
 
-.ar-table>>>.el-table__cell {
-    padding: 4px;
-    border-bottom: unset;
-}
 
-.ar-table>>>.cell {
-    padding: unset;
-    word-break: unset;
-    /* line-height: 23px; */
-}
-
-.ar-table>>>th .cell {
-    padding: 10px;
-}
 
 .icon /deep/ circle {
     fill: var(--el-color-primary-light-7);

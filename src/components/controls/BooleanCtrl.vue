@@ -11,7 +11,7 @@ defineEmits(['update:modelValue']);
   <div>
     <div
       v-if="readonly"
-      class="ar-lightgrey-background"
+      class="sf-readonly-wide"
     >{{ modelValue !== undefined ? (modelValue ? 'True' : 'False') :
       ''
     }}</div>
