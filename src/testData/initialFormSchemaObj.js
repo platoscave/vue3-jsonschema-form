@@ -55,6 +55,9 @@ export default {
       minimum: 10,
       maximum: 100,
       multipleOf: 0.01,
+      attrs: {
+        placeholder: "Enter amount",
+      },
     },
     // "integer"://////////////////////////////////////////////
     integer: {
@@ -63,6 +66,9 @@ export default {
       type: "integer",
       minimum: 10,
       maximum: 100,
+      attrs: {
+        placeholder: "Enter number between 10 and 100",
+      },
     },
     // "boolean"://////////////////////////////////////////////
     boolean: {
@@ -106,12 +112,12 @@ export default {
         showWordLimit: true,
       },
     },
-    //     mediaType.startsWith("image/")
+    //     contentMediaType.startsWith("image/")
     stringImage: {
-      title: "StringIconCtrl",
+      title: "Icon",
       description: "Svg or bse64",
       type: "string",
-      mediaType: "image/url"
+      contentMediaType: "image/svg"
     },
     //     property.enum
     stringEnumSmall: {

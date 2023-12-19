@@ -6,6 +6,8 @@ import initialFormDataObj from './testData/initialFormDataObj'
 import initialEditPermittedObj from './testData/initialEditPermittedObj'
 import initialFormQueryData from './testData/formQueryData'
 
+import StringCodeEditorCtrl from './components/controls/StringCodeEditorCtrl.vue'
+
 import { Codemirror } from 'vue-codemirror'
 
 import { Splitpanes, Pane } from 'splitpanes'
@@ -30,7 +32,7 @@ let labelPosition = ref("left")
 let labelWidth = ref("auto")
 let valid = ref(true)
 
-let formSchemaObj = { properties: {}, required: [] }
+let formSchemaObj = ref(initialFormSchemaObj)
 let formDataObj = ref(initialFormDataObj)
 let formEditPermitted = ref(initialEditPermittedObj)
 let formQueryData = ref(initialFormQueryData)
@@ -50,16 +52,31 @@ const resetForm = () => {
     formSchemaObj = initialFormSchemaObj
     formEditPermitted = initialEditPermittedObj
 };
+
+// Query callback for dropdown listbox. Returns a promise 
+// the list is filled when the promise is resolved
 const queryCallback = (query: any) => {
 
     let data = formQueryData.value
     if (query.select === 'small') data = formQueryData.value.slice(0, 3)
-
-    return new Promise(function (resolve, reject) {
+    // artitificial delay 2 sec
+    return new Promise(function (resolve) {
         setTimeout(() => resolve(data), 2000);
     });
 }
 
+// Copy properties, perserve reactivity
+const copyToRef = (sourceStr: string, destObj: any) => {
+    try {
+        const sourceObj = JSON.parse(sourceStr)
+        // delete properties one by one
+        Object.keys(destObj).forEach(key => delete destObj[key]);
+        Object.keys(sourceObj).forEach(key => destObj[key] = sourceObj[key]);
+    }
+    catch (err: any) {
+        console.log(err.message)
+    }
+}
 
 onMounted(() => {
     resetForm()
@@ -69,31 +86,9 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
 
     console.log('App dataObj', newDataObj)
 
-    // Get rid of false updates (otherwise we will loop)
-    //   if (previousDataObj === JSON.stringify(newDataObj)) return;
-    //   previousDataObj = JSON.stringify(newDataObj)
-
-    //   if (!formMode.value.startsWith("Edit")) return;
-    //   if (!oldDataObj) return; // will be empty first time
-    //   subFormEl.value.validate().then((valid) => {
-    //     console.log("valid", valid);
-    //     if (valid) {
-    //       db.state.put(toRaw(newDataObj)).catch(function (e) {
-    //         alert("Failed update: " + e);
-    //       })
-    //     }
-    //   });
 }, { deep: true });
 
-// const highlightedCode = computed(() => {
-//   if (props.modelValue) {
-//     const res = hljs.highlightAuto(
-//       JSON.stringify(props.modelValue, null, 2)
-//     );
-//     return toHtml(res);
-//   }
-//   return "";
-// });
+
 </script>
 
 <template>
@@ -151,14 +146,14 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
             >
                 <pane size="25">
                     <div class="header">Jsonschema Object</div>
-                    <el-input
-                        type="textarea"
-                        autosize
-                        :value="JSON.stringify(formSchemaObj, null, 2)"
-                    ></el-input>
+                    <StringCodeEditorCtrl
+                        :model-value="JSON.stringify(formSchemaObj, null, 2)"
+                        :readonly=false
+                        @update:modelValue="($event) => copyToRef($event, formSchemaObj)"
+                    ></StringCodeEditorCtrl>
                 </pane>
                 <pane>
-                    <div class="header">Jsonschema Form</div>
+                    <h2>Jsonschema Form</h2>
                     <!-- The form -->
                     <JsonschemaForm
                         v-model="formDataObj"
@@ -174,25 +169,19 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
                     </JsonschemaForm>
                 </pane>
                 <pane size="25">
-                    <splitpanes horizontal>
-                        <pane>
-                            <div class="header">Data Object</div>
-                            <el-input
-                                type="textarea"
-                                autosize
-                                :value="JSON.stringify(formDataObj, null, 4)"
-                            ></el-input>
-                        </pane>
-                        <pane size="20">
-                            <div class="header">Edit Permitted Object</div>
-                            <!-- <div>Only aplicable in "Edit Permitted" Form Mode</div> -->
-                            <el-input
-                                type="textarea"
-                                autosize
-                                :value="JSON.stringify(formEditPermitted, null, 4)"
-                            ></el-input>
-                        </pane>
-                    </splitpanes>
+                    <div class="header">Data Object</div>
+                    <StringCodeEditorCtrl
+                        :model-value="JSON.stringify(formDataObj, null, 2)"
+                        :readonly=false
+                        @update:modelValue="($event) => copyToRef($event, formDataObj)"
+                    ></StringCodeEditorCtrl>
+                    <div class="header">Edit Permitted Object</div>
+                    <!-- <div>Only aplicable in "Edit Permitted" Form Mode</div> -->
+                    <StringCodeEditorCtrl
+                        :model-value="JSON.stringify(formEditPermitted, null, 2)"
+                        :readonly=false
+                        @update:modelValue="($event) => copyToRef($event, formEditPermitted)"
+                    ></StringCodeEditorCtrl>
                 </pane>
             </splitpanes>
         </el-tab-pane>
@@ -229,4 +218,5 @@ button {
 
 .header {
     font-weight: bolder;
-}</style>
+}
+</style>

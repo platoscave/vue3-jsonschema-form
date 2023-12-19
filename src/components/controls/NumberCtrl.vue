@@ -35,6 +35,7 @@ const precision = computed(() => {
         :min="property.minimum"
         :max="property.maximum"
         :precision="precision"
+        :placeholder="property.attrs.placeholder"
         :controls=false
         @input="($event) => $emit('update:modelValue', $event)"
     >

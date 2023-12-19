@@ -32,6 +32,7 @@
     "vue": "^3.3.8"
   },
   "devDependencies": {
+    "@types/codemirror": "^5.60.15",
     "@vitejs/plugin-vue": "^4.5.0",
     "@vueuse/core": "^10.7.0",
     "rollup-plugin-typescript2": "^0.36.0",

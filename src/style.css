@@ -76,7 +76,7 @@
   border-style: solid;
   border-width: 1px;
   font-size: 16px;
-  line-height: 24px;
+  min-height: -webkit-fill-available;
 }
 
 /* radio button, checkbox height */
@@ -124,18 +124,13 @@
 /* align content top, incase label has more than one line*/
 .el-form-item__content {
   align-items: baseline;
-  line-height: unset;
-  /*impacts codemirror*/
 }
 
-/*  Does not work */
-.el-form-item:not(:last-child) {
-  margin-bottom: 10px !important;
+/* for some reason must specify .el-form-item twice */
+/*  adding  :not(:last-child) causes major problems */
+.el-form-item .el-form-item {
+  margin-bottom: 20px;
 }
-
-/* .el-form-item {
-  margin-bottom: 10px;
-} */
 
 /* Table overrides. Make it more dense*/
 .el-table__cell {
@@ -159,12 +154,17 @@ th .cell {
   height: auto;
 }
 
+.CodeMirror-code {
+  line-height: 1.5;
+}
+
 .cm-s-dracula.CodeMirror {
   background-color: #ffffff08 !important;
   border-radius: 6px;
   border-color: #00adff42;
   border-style: solid;
   border-width: 1px;
+  min-height: -webkit-fill-available;
 }
 
 /* Error success borders: lighter */

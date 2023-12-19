@@ -10,20 +10,26 @@ const emit = defineEmits(["update:modelValue"]);
 </script>
 
 <template>
-    <img
-        class="sf-readonly-wide"
-        :src="modelValue"
-        height="24"
-        width="40"
-    />
+    <div>
+        <!-- <img
+            class="sf-readonly-wide"
+            :src="modelValue"
+            height="24"
+            width="40"
+        /> -->
+        <div
+            class="infoIcon"
+            v-html="modelValue"
+        ></div>
 
-    <div v-if="!readonly">
-        <StringCodeEditorCtrl
-            :model-value="modelValue"
-            :property="property"
-            :readonly="readonly"
-            @update:modelValue="($event) => $emit('update:modelValue', $event)"
-        ></StringCodeEditorCtrl>
+        <div v-if="true">
+            <StringCodeEditorCtrl
+                :model-value="modelValue"
+                :property="property"
+                :readonly="readonly"
+                @update:modelValue="($event) => $emit('update:modelValue', $event)"
+            ></StringCodeEditorCtrl>
+        </div>
     </div>
 </template>
 

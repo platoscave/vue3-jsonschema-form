@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, watch, reactive, toRaw, toRefs, computed, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
+// https://discuss.codemirror.net/t/module-not-found-error/5510/8
+// FIrstly, run - npm config set legacy-peer-deps true
+// then try to run - npm i codemirror @version5
 import * as CodeMirror from 'codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/dracula.css'
 import 'codemirror/mode/javascript/javascript.js'
 import 'codemirror/mode/gfm/gfm.js'
 import 'codemirror/mode/css/css.js'
-// https://discuss.codemirror.net/t/module-not-found-error/5510/8
-// FIrstly, run - npm config set legacy-peer-deps true
-// then try to run - npm i codemirror @version5
 
 const props = defineProps({
     modelValue: { type: String, default: "let a = 10" },
@@ -16,8 +16,8 @@ const props = defineProps({
     readonly: { type: Boolean, default: true },
 });
 
-const emit = defineEmits(["update:modelValue"]);
-
+const emits = defineEmits(["update:modelValue"]);
+const editor: any = ref(null);
 
 const getMode = (mediaType: string) => {
     if (!mediaType) return 'javascript'
@@ -25,6 +25,7 @@ const getMode = (mediaType: string) => {
     const simpleMime = mediaTypeArr[1].replace("x-", "");
     switch (simpleMime) {
         case 'markdown': return 'gfm'
+        case 'svg': return 'xml'
         case 'xml': return 'xml'
         case 'html': return 'xml'
         case 'javascript': return 'javascript'
@@ -44,22 +45,36 @@ const getMode = (mediaType: string) => {
     }
 }
 
+let codeMirror: any = null
+watch(() => props.modelValue, (value) => {
+
+    if (codeMirror) {
+        codeMirror.setValue(value)
+        setTimeout(function () {
+            //codeMirror.inputEditor.save()
+        }, 1)
+    }
+});
 onMounted(() => {
-    CodeMirror.fromTextArea(document.getElementById('editor'), {
+    codeMirror = CodeMirror.fromTextArea(editor.value, {
         theme: 'dracula',
         mode: getMode(props.property.contentMediaType),
-        readOnly: props.readonly
-
+        readOnly: props.readonly,
+        //beautify: { initialBeautify: true, autoBeautify: true },
+        // autofocus: true
+        //matchBrackets: true
     })
+    codeMirror.save()
+    codeMirror.on('change', (codeMirror: any) => emits('update:modelValue', codeMirror.getValue()));
 })
+
 
 </script>
 
 <template>
     <textarea
-        id="editor"
+        ref="editor"
         :value="modelValue"
-        @input="($event) => $emit('update:modelValue', $event)"
     >
     </textarea>
 </template>

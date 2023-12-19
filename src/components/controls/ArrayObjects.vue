@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from "vue";
+import { useDark, useToggle } from '@vueuse/core'
 
 const props = defineProps({
     modelValue: { type: Object, default: () => ([{}]) },
@@ -21,6 +22,7 @@ const onUpdateModelValue = (newDataObj: any, idx: string) => {
 
 // Drag and drop subforms
 let draggedItem: any;
+let dndParentItem: any;
 
 const findAncestor = (el: Element, cls: string) => {
     while ((el = el.parentElement) && !el.classList.contains(cls));
@@ -28,14 +30,26 @@ const findAncestor = (el: Element, cls: string) => {
 }
 
 const handleDragstart = (evt: Event) => {
-    console.log('handleDragstart event:', evt.target)
+
     //const targetItem = findAncestor(evt.target, "drag-item")
     if (evt.target) {
-        evt.target.classList.add("dark")
-        //evt.target.style("margin: 10px")
+        console.log('handleDragsstart :', evt.target)
+
         draggedItem = evt.target;
+
+        //evt.target.classList.add('fiftyPercent')
+
+        dndParentItem = findAncestor(draggedItem, "dndParent")
+        if (useDark().value) dndParentItem.classList.add('dark')
+
+        //evt.target.classList.add('fiftyPercent')
+
+        //evt.target.style("margin: 10px")
+
+        // must be sent to the top of the stack, after handelDragStart
+        // otherwise the hidden elemnt will be copied
         setTimeout(function () {
-            evt.target.style.visibility = "hidden";
+            draggedItem.style.visibility = "hidden";
         }, 0);
     }
 }
@@ -43,41 +57,38 @@ const handleDragstart = (evt: Event) => {
 const handleDrageover = (evt: Event) => {
     const targetItem = findAncestor(evt.target, "drag-item")
 
-    evt.target.classList.add('fiftyPercent')
-    evt.target.classList.add('dark')
-
     if (targetItem && targetItem !== draggedItem && targetItem.classList.contains('drag-item')) {
         const boundingRect = targetItem.getBoundingClientRect();
         const offset = boundingRect.y + (boundingRect.height / 2);
         if (evt.clientY - offset > 0) {
-            //console.log('DraggableItem, below:', targetItem.getAttribute("idx"))
+            console.log('DraggableItem, below:', targetItem.getAttribute("idx"))
             targetItem.parentNode.insertBefore(draggedItem, targetItem.nextSibling);
         } else {
-            //console.log('DraggableItem, above:', targetItem.getAttribute("idx"))
+            console.log('DraggableItem, above:', targetItem.getAttribute("idx"))
             targetItem.parentNode.insertBefore(draggedItem, targetItem);
         }
     }
 };
 const handleDragend = (evt: Event) => {
-    //console.log('DraggableItem, handleDragsend event:', evt)
-    const parentElement = findAncestor(evt.target, "dndParent")
+    dndParentItem.classList.remove('dark')
 
+    //draggedItem.classList.remove('fiftyPercent')
+    //console.log('parentElement:', evt.target.parentElement)
 
-    console.log('parentElement:', evt.target.parentElement)
-
-    let allChildren = parentElement.querySelectorAll(".drag-item");
-    console.log('allChildren:', allChildren)
+    let allChildren = dndParentItem.querySelectorAll(".drag-item");
 
     const modelValueReordered = []
 
-    allChildren.forEach((dragItem) => {
+    allChildren.forEach((dragItem: Element) => {
         console.log('New order:', dragItem.getAttribute("idx"))
         const oldIdx = dragItem.getAttribute("idx")
         modelValueReordered.push(props.modelValue[oldIdx])
     })
+    console.log('modelValueReordered:', modelValueReordered)
+
 
     emits('update:modelValue', modelValueReordered)
-    evt.target.style.visibility = "visible";
+    draggedItem.style.visibility = "visible";
 
     // None of this works
     // setTimeout(function () {
@@ -102,56 +113,55 @@ const deleteIcon =
 </script>
 
 <template>
-    <div class="dndParent">
+    <div>
         <!-- Create a subForm for each of the items in the modelValue array -->
         <div
             v-for="(item, idx) in modelValue"
             :key="idx"
+            class="dndParent"
+        ></div>
+        <div
+            :class="{
+                'drag-item': true,
+                'sf-subform-background': true,
+                'not-readonly': formMode.startsWith('Edit') && property.additionalItems,
+            }"
+            :idx="idx"
+            :draggable="formMode.startsWith('Edit') && property.additionalItems"
+            @dragstart.stop="handleDragstart"
+            @dragover.stop="handleDrageover"
+            @dragend.stop="handleDragend"
+            @drop.stop="handleDrop"
         >
-            <div
-                :class="{
-                    'dark': true,
-                    'drag-item': true,
-                    'sf-subform-background': true,
-                    'not-readonly': formMode.startsWith('Edit') && property.additionalItems,
-                }"
-                :idx="idx"
-                :draggable="formMode.startsWith('Edit') && property.additionalItems"
-                @dragstart.stop="handleDragstart"
-                @dragover.stop="handleDrageover"
-                @dragend.stop="handleDragend"
-                @drop.stop="handleDrop"
+            <JsonschemaForm
+                :model-value="item"
+                :properties="property.items.properties"
+                :requiredArr="property.required"
+                :updateable-properties="editPermitted.items.properties"
+                :form-mode="formMode"
+                :size="size"
+                :label-position="labelPosition"
+                :label-width="labelWidth"
+                :query-callback="queryCallback"
+                draggable="false"
+                @update:modelValue="($event: any) => onUpdateModelValue($event, idx)"
             >
-                <JsonschemaForm
-                    :model-value="item"
-                    :properties="property.items.properties"
-                    :requiredArr="property.required"
-                    :updateable-properties="editPermitted.items.properties"
-                    :form-mode="formMode"
-                    :size="size"
-                    :label-position="labelPosition"
-                    :label-width="labelWidth"
-                    :query-callback="queryCallback"
-                    draggable="false"
-                    @update:modelValue="($event: any) => onUpdateModelValue($event, idx)"
-                >
-                </JsonschemaForm>
-                <!-- Delete icon -->
-                <div
-                    v-if="formMode.startsWith('Edit') && property.additionalItems"
-                    class="icon-delete"
-                    v-html="deleteIcon"
-                    @click="modelValue.splice(idx, 1)"
-                ></div>
-            </div>
-            <!-- Add icon -->
+            </JsonschemaForm>
+            <!-- Delete icon -->
             <div
                 v-if="formMode.startsWith('Edit') && property.additionalItems"
-                class="icon-add"
-                v-html="addIcon"
-                @click="modelValue.push({})"
+                class="icon-delete"
+                v-html="deleteIcon"
+                @click="modelValue.splice(idx, 1)"
             ></div>
         </div>
+        <!-- Add icon -->
+        <div
+            v-if="formMode.startsWith('Edit') && property.additionalItems"
+            class="icon-add"
+            v-html="addIcon"
+            @click="modelValue.push({})"
+        ></div>
     </div>
 </template>
 
