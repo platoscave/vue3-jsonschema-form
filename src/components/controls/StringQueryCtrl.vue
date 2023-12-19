@@ -9,11 +9,11 @@ const props = defineProps({
 });
 defineEmits(['update:modelValue']);
 
-const items = ref([])
+const itemsRef = ref([])
 
 const readonlyOutput = computed(() => {
-    if (!(props.modelValue && items.value)) return { icon: '', label: '' };
-    let valueObj = items.value.find(obj => {
+    if (!(props.modelValue && itemsRef.value)) return { icon: '', label: '' };
+    let valueObj = itemsRef.value.find(obj => {
         return obj.key === props.modelValue;
     })
 
@@ -25,9 +25,9 @@ onMounted(async () => {
     if (props.queryCallback && props.property.query) {
         const results = await props.queryCallback(props.property.query)
 
-        // Copy items from results to items using push(). Perserve reactivity!
+        // Copy itemsRef from results to itemsRef using push(). Perserve reactivity!
         for (let i = 0; i < results.length; i++) {
-            items.value.push(results[i]);
+            itemsRef.value.push(results[i]);
         }
     }
 })
@@ -35,7 +35,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div v-if="items">
+    <div v-if="itemsRef">
 
         <div
             v-if="readonly"
@@ -49,12 +49,12 @@ onMounted(async () => {
         </div>
 
         <el-radio-group
-            v-else-if="items.length < 5"
+            v-else-if="itemsRef.length < 5"
             :model-value="modelValue"
             @update:modelValue="($event) => $emit('update:modelValue', $event)"
         >
             <el-radio
-                v-for="item in items"
+                v-for="item in itemsRef"
                 :key="item.key"
                 :label="item.label"
                 :model-value="item.key"
@@ -68,7 +68,7 @@ onMounted(async () => {
             @update:modelValue="($event) => $emit('update:modelValue', $event)"
         >
             <el-option
-                v-for="item in items"
+                v-for="item in itemsRef"
                 :key="item.key"
                 :label="item.label"
                 :value="item.key"

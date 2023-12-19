@@ -77,7 +77,7 @@ export default {
   name: 'markdown-it',
   props,
   setup(props) {
-    const md = ref();
+    const mdRef = ref();
     const renderMarkdown = () => {
       let markdown = new MarkdownIt()
         // .use(MarkdownItAbbr)
@@ -106,12 +106,12 @@ export default {
         markdown.use(plugin, options);
       });
 
-      md.value = markdown.render(props.source);
+      mdRef.value = markdown.render(props.source);
     };
 
     onMounted(() => renderMarkdown());
     onUpdated(() => renderMarkdown());
 
-    return () => h('div', { innerHTML: md.value });
+    return () => h('div', { innerHTML: mdRef.value });
   }
 };

@@ -36,14 +36,14 @@ const props = defineProps<{
 // })
 const emit = defineEmits(["update:modelValue"]);
 
-const formEl = ref(null);
+const formElRef = ref(null);
 
 // methodes possibly called from outside, so pass on to our form
 const validate = () => {
-  return formEl.value.validate();
+  return formElRef.value.validate();
 };
 const resetFields = () => {
-  formEl.value.resetFields();
+  formElRef.value.resetFields();
 };
 defineExpose({ validate, resetFields });
 
@@ -194,7 +194,7 @@ const getComponent = (property: IProperty) => {
   <!-- Validation rules are provided by a Computed 
   :model and :rules are needed for validation rules. Do not mess with them! You will regret it-->
   <el-form
-    ref="formEl"
+    ref="formElRef"
     :model="modelValue"
     :rules="validationRules"
     labelWidth="100px"

@@ -10,23 +10,23 @@ const props = defineProps({
 defineEmits(['update:modelValue']);
 
 
-const items = ref([])
+const itemsRef = ref([])
 
 
 const readonlyLabels = computed(() => {
-    if (!(props.modelValue && items.value)) return "";
-    return items.value.filter((obj: any) => {
+    if (!(props.modelValue && itemsRef.value)) return "";
+    return itemsRef.value.filter((obj: any) => {
         return props.modelValue.includes(obj.key);
     });
 });
 
 onMounted(async () => {
-    if (props.queryCallback && props.property.items.query) {
-        const results: [] = await props.queryCallback(props.property.items.query)
+    if (props.queryCallback && props.property.itemsRef.query) {
+        const results: [] = await props.queryCallback(props.property.itemsRef.query)
 
-        // Copy items from results to items using push(). Perserve reactivity!
+        // Copy itemsRef from results to itemsRef using push(). Perserve reactivity!
         for (let i = 0; i < results.length; i++) {
-            items.value.push(results[i]);
+            itemsRef.value.push(results[i]);
         }
     }
 })
@@ -48,12 +48,12 @@ onMounted(async () => {
     </div>
 
     <el-checkbox-group
-        v-else-if="items.length < 5"
+        v-else-if="itemsRef.length < 5"
         :model-value="modelValue"
         @update:modelValue="($event) => $emit('update:modelValue', $event)"
     >
         <el-checkbox
-            v-for="item in items"
+            v-for="item in itemsRef"
             :key="item.key"
             :label="item.key"
             :model-value="item.key"
@@ -69,7 +69,7 @@ onMounted(async () => {
         @update:modelValue="($event) => $emit('update:modelValue', $event)"
     >
         <el-option
-            v-for="item in items"
+            v-for="item in itemsRef"
             :key="item.key"
             :label="item.label"
             :value="item.key"

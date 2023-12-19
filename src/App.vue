@@ -4,7 +4,7 @@ import { ref, watch, reactive, toRaw, toRefs, computed, onMounted } from "vue";
 import initialFormSchemaObj from './testData/initialFormSchemaObj'
 import initialFormDataObj from './testData/initialFormDataObj'
 import initialEditPermittedObj from './testData/initialEditPermittedObj'
-import initialFormQueryData from './testData/formQueryData'
+import initialFormQueryData from './testData/formQueryDataRef'
 
 import StringCodeEditorCtrl from './components/controls/StringCodeEditorCtrl.vue'
 
@@ -26,39 +26,39 @@ let isDark = useDark()
 const toggleDark = useToggle(isDark)
 const extensions = [json(), oneDark]
 
-let formMode = ref("Edit Full")
-let size = ref("default")
-let labelPosition = ref("left")
-let labelWidth = ref("auto")
-let valid = ref(true)
+let formModeRef = ref("Edit Full")
+let sizeRef = ref("default")
+let labelPositionRef = ref("left")
+let labelWidtthRef = ref("auto")
+let validRef = ref(true)
 
-let formSchemaObj = ref(initialFormSchemaObj)
-let formDataObj = ref(initialFormDataObj)
-let formEditPermitted = ref(initialEditPermittedObj)
-let formQueryData = ref(initialFormQueryData)
+let formSchemaObjRef = ref(initialFormSchemaObj)
+let formDataObjRef = ref(initialFormDataObj)
+let formEditPermittedRef = ref(initialEditPermittedObj)
+let formQueryDataRef = ref(initialFormQueryData)
 
 
 // const updatedFormDataObj = (newFormDataObj: {}) => {
 //     // validate
 //     // copy
-//     //formDataObj.value = newFormDataObj
+//     //formDataObjRef.value = newFormDataObj
 // }
 const validateForm = () => {
 
 };
 const resetForm = () => {
-    //formDataObj.value = initialFormDataObj
+    //formDataObjRef.value = initialFormDataObj
 
-    formSchemaObj = initialFormSchemaObj
-    formEditPermitted = initialEditPermittedObj
+    formSchemaObjRef = initialFormSchemaObj
+    formEditPermittedRef = initialEditPermittedObj
 };
 
 // Query callback for dropdown listbox. Returns a promise 
 // the list is filled when the promise is resolved
 const queryCallback = (query: any) => {
 
-    let data = formQueryData.value
-    if (query.select === 'small') data = formQueryData.value.slice(0, 3)
+    let data = formQueryDataRef.value
+    if (query.select === 'small') data = formQueryDataRef.value.slice(0, 3)
     // artitificial delay 2 sec
     return new Promise(function (resolve) {
         setTimeout(() => resolve(data), 2000);
@@ -82,7 +82,7 @@ onMounted(() => {
     resetForm()
 })
 // deep watch dataObj, perform pudate
-watch(formDataObj, (newDataObj, oldDataObj) => {
+watch(formDataObjRef, (newDataObj, oldDataObj) => {
 
     console.log('App dataObj', newDataObj)
 
@@ -103,7 +103,7 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
         <span class="ml-2">{{ isDark ? 'Dark' : 'Light' }}</span>
     </button>
     <div>
-        <el-radio-group v-model="formMode">
+        <el-radio-group v-model="formModeRef">
             <el-radio label="Readonly Dense">Readonly Dense</el-radio>
             <el-radio label="Readonly Full">Readonly Full</el-radio>
             <el-radio label="Edit Permitted">Edit Permitted</el-radio>
@@ -111,14 +111,14 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
         </el-radio-group>
     </div>
     <div>
-        <el-radio-group v-model="size">
+        <el-radio-group v-model="sizeRef">
             <el-radio label="large">large</el-radio>
             <el-radio label="default">default</el-radio>
             <el-radio label="small">small</el-radio>
         </el-radio-group>
     </div>
     <div>
-        <el-radio-group v-model="labelPosition">
+        <el-radio-group v-model="labelPositionRef">
             <el-radio label="left">left</el-radio>
             <el-radio label="right">right</el-radio>
             <el-radio label="top">top</el-radio>
@@ -126,17 +126,17 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
     </div>
     <div>
         <el-input
-            v-model="labelWidth"
+            v-model="labelWidtthRef"
             style="width:200px;"
             placeholder="Label width: e.g. 100 or auto"
-            @input="labelWidth = $event.target.value"
-            size="small"
+            @input="labelWidtthRef = $event.target.value"
+            sizeRef="small"
         ></el-input>
     </div>
     <div>
         <button @click="validateForm()">Validate</button>
         <button @click="resetForm()">Reset</button>
-        <span>Is Valid: {{ valid }}</span>
+        <span>Is Valid: {{ validRef }}</span>
     </div>
     <el-tabs>
         <el-tab-pane label="Form">
@@ -144,43 +144,43 @@ watch(formDataObj, (newDataObj, oldDataObj) => {
                 vertical
                 class="default-theme"
             >
-                <pane size="25">
+                <pane sizeRef="25">
                     <div class="header">Jsonschema Object</div>
                     <StringCodeEditorCtrl
-                        :model-value="JSON.stringify(formSchemaObj, null, 2)"
+                        :model-value="JSON.stringify(formSchemaObjRef, null, 2)"
                         :readonly=false
-                        @update:modelValue="($event) => copyToRef($event, formSchemaObj)"
+                        @update:modelValue="($event) => copyToRef($event, formSchemaObjRef)"
                     ></StringCodeEditorCtrl>
                 </pane>
                 <pane>
                     <h2>Jsonschema Form</h2>
                     <!-- The form -->
                     <JsonschemaForm
-                        v-model="formDataObj"
-                        :properties="formSchemaObj.properties"
-                        :required-arr="formSchemaObj.required"
-                        :updateable-properties="formEditPermitted"
-                        :form-mode="formMode"
-                        :size="size"
-                        :label-position="labelPosition"
-                        :label-width="labelWidth"
+                        v-model="formDataObjRef"
+                        :properties="formSchemaObjRef.properties"
+                        :required-arr="formSchemaObjRef.required"
+                        :updateable-properties="formEditPermittedRef"
+                        :form-mode="formModeRef"
+                        :sizeRef="sizeRef"
+                        :label-position="labelPositionRef"
+                        :label-width="labelWidtthRef"
                         :query-callback="queryCallback"
                     >
                     </JsonschemaForm>
                 </pane>
-                <pane size="25">
+                <pane sizeRef="25">
                     <div class="header">Data Object</div>
                     <StringCodeEditorCtrl
-                        :model-value="JSON.stringify(formDataObj, null, 2)"
+                        :model-value="JSON.stringify(formDataObjRef, null, 2)"
                         :readonly=false
-                        @update:modelValue="($event) => copyToRef($event, formDataObj)"
+                        @update:modelValue="($event) => copyToRef($event, formDataObjRef)"
                     ></StringCodeEditorCtrl>
                     <div class="header">Edit Permitted Object</div>
                     <!-- <div>Only aplicable in "Edit Permitted" Form Mode</div> -->
                     <StringCodeEditorCtrl
-                        :model-value="JSON.stringify(formEditPermitted, null, 2)"
+                        :model-value="JSON.stringify(formEditPermittedRef, null, 2)"
                         :readonly=false
-                        @update:modelValue="($event) => copyToRef($event, formEditPermitted)"
+                        @update:modelValue="($event) => copyToRef($event, formEditPermittedRef)"
                     ></StringCodeEditorCtrl>
                 </pane>
             </splitpanes>

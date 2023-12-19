@@ -17,7 +17,7 @@ const props = defineProps({
 });
 
 const emits = defineEmits(["update:modelValue"]);
-const editor: any = ref(null);
+const editorRef: any = ref(null);
 
 const getMode = (mediaType: string) => {
     if (!mediaType) return 'javascript'
@@ -56,7 +56,7 @@ watch(() => props.modelValue, (value) => {
     }
 });
 onMounted(() => {
-    codeMirror = CodeMirror.fromTextArea(editor.value, {
+    codeMirror = CodeMirror.fromTextArea(editorRef.value, {
         theme: 'dracula',
         mode: getMode(props.property.contentMediaType),
         readOnly: props.readonly,
@@ -73,7 +73,7 @@ onMounted(() => {
 
 <template>
     <textarea
-        ref="editor"
+        ref="editorRef"
         :value="modelValue"
     >
     </textarea>

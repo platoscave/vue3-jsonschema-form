@@ -48,12 +48,12 @@ interface IProperty {
 }
 
 // Methodes called from parent comp, so pass on to our form
-const formEl = ref(null);
+const formElRef = ref(null);
 const validate = () => {
-    if (formEl.value) return formEl.value.validate();
+    if (formElRef.value) return formElRef.value.validate();
 };
 const resetFields = () => {
-    if (formEl.value) formEl.value.resetFields();
+    if (formElRef.value) formElRef.value.resetFields();
 };
 // Expose these methods to parent component
 defineExpose({ validate, resetFields });
@@ -214,7 +214,7 @@ const infoIcon =
     <!-- Validation rules are provided by a Computed -->
     <!-- :model and :rules are needed for validation rules. Do not mess with them! You will regret it-->
     <el-form
-        ref="formEl"
+        ref="formElRef"
         :model="modelValue"
         :rules="validationRules"
         :size="size"
