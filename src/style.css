@@ -163,6 +163,7 @@ th .cell {
   border-color: #00adff42;
   border-style: solid;
   border-width: 1px;
+  padding: 5px;
   min-height: -webkit-fill-available;
 }
 

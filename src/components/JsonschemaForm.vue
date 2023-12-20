@@ -8,12 +8,13 @@ import StringCodeEditorCtrl from "./controls/StringCodeEditorCtrl.vue";
 import ObjectNested from "./controls/ObjectNested.vue";
 import NumberCtrl from "./controls/NumberCtrl.vue";
 import ArrayObjects from "./controls/ArrayObjects.vue";
-import TableArray from "./controls/TableArray.vue";
 import StringQueryCtrl from "./controls/StringQueryCtrl.vue";
 import StringEnumCtrl from "./controls/StringEnumCtrl.vue";
 import ArrayQueryCtrl from "./controls/ArrayQueryCtrl.vue";
 import StringCtrl from "./controls/StringCtrl.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
+import JsonschemaTable from "./JsonschemaTable.vue";
+import Markdown2Html from './controls/Markdown2Html.vue'
 
 const props = defineProps({
     modelValue: { type: Object, default: () => ({}) },
@@ -194,7 +195,7 @@ const getComponent = (property: IProperty) => {
         { name: "StringQueryCtrl", comp: StringQueryCtrl },
         { name: "StringCtrl", comp: StringCtrl },
         { name: "JsonschemaForm", comp: JsonschemaForm },
-        { name: "TableArray", comp: TableArray },
+        { name: "JsonschemaTable", comp: JsonschemaTable },
     ];
 
     const controlName = getControlName(property)
@@ -240,13 +241,15 @@ const infoIcon =
                     <el-tooltip
                         v-if="property.description"
                         effect="light"
-                        :content="property.description"
                         raw-content
                     >
                         <div
                             class="infoIcon"
                             v-html="infoIcon"
                         ></div>
+                        <template #content>
+                            <Markdown2Html :model-value="property.description"></Markdown2Html>
+                        </template>
                     </el-tooltip>
                 </template>
                 <!-- Nested objects have different parms than simple controls. Hense isNestedObject -->

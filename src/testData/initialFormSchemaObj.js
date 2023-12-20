@@ -1,7 +1,6 @@
 export default {
 
   title: "Jsonschema Form Generator Demo",
-  description: "#Dispaly as markdown\nNote that the also description accepts markdown",
 
   properties: {
 
@@ -9,7 +8,7 @@ export default {
 
     string: {
       title: "String",
-      description: "Required string with min-max length and placeholder",
+      description: "## String \n- required \n- min-max length \n- placeholder \n\nNote that this popup `description` also accepts [markdown](https://en.wikipedia.org/wiki/Markdown).",
       type: "string",
       minLength: 3,
       maxLength: 10,
@@ -19,7 +18,7 @@ export default {
     },
     stringEmail: {
       title: "Email",
-      description: "Enter valid email address",
+      description: "## String \n format email ",
       type: "string",
       format: "email",
       maxLength: 120,
@@ -30,7 +29,7 @@ export default {
     },
     stringPassword: {
       title: "Password",
-      description: "Hidden input",
+      description: "## String \n hidden input",
       type: "string",
       attrs: {
         placeholder: "Enter your password",
@@ -39,7 +38,7 @@ export default {
     },
     stringRegEx: {
       title: "Regular Expression",
-      description: "String with regular expression",
+      description: "## String \n regular expression: `[a-e]+`",
       type: "string",
       pattern: "[a-e]+",
       attrs: {
@@ -50,7 +49,7 @@ export default {
     // "number"://////////////////////////////////////////////
     number: {
       title: "Number",
-      description: "Number with min - max values and two decimal places",
+      description: "## Number \n- two decimal places \n- min-max values \n- placeholder \n- automatic rounding",
       type: "number",
       minimum: 10,
       maximum: 100,
@@ -62,7 +61,7 @@ export default {
     // "integer"://////////////////////////////////////////////
     integer: {
       title: "Integer",
-      description: "Integer with min - max values",
+      description: "## Integer \n- zero decimal places \n- min-max values \n- placeholder \n- automatic rounding",
       type: "integer",
       minimum: 10,
       maximum: 100,
@@ -252,7 +251,7 @@ export default {
       title: "Objects in Table",
       description: "Display an array objects in a table",
       type: "array",
-      displayAs: "Table",
+      displayAs: "table",
       items: {
         type: "object",
         properties: {
