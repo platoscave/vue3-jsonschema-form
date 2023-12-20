@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import Markdown2Html from './Markdown2Html.vue';
+import StringCodeEditorCtrl from './StringCodeEditorCtrl.vue'
 
 defineProps({
     modelValue: { type: String, default: "" },
     property: { type: Object, default: () => ({}) },
     readonly: { type: Boolean, default: true },
 });
-
 
 </script>
 
@@ -16,8 +16,14 @@ defineProps({
             v-if="readonly"
             class="sf-readonly-wide"
         >
-            <Markdown2Html :markdownText="modelValue"></Markdown2Html>
+            <Markdown2Html :model-value="modelValue"></Markdown2Html>
         </div>
-        <!-- <el-input v-else autosize value="modelValue" @change="$emit('update:modelValue', $event)"></el-input> -->
+        <StringCodeEditorCtrl
+            v-else
+            :model-value="modelValue"
+            :property="property"
+            :readonly="readonly"
+            @update:modelValue="($event: Event) => $emit('update:modelValue', $event)"
+        ></StringCodeEditorCtrl>
     </div>
 </template>

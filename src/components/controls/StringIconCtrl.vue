@@ -22,7 +22,7 @@ const emit = defineEmits(["update:modelValue"]);
             v-html="modelValue"
         ></div>
 
-        <div v-if="true">
+        <div v-if="!readonly">
             <StringCodeEditorCtrl
                 :model-value="modelValue"
                 :property="property"

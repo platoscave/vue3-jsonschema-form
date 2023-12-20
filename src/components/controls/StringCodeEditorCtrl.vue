@@ -60,9 +60,9 @@ onMounted(() => {
     })
 
     // change event, emit update
-    codeMirror.on('change', (codeMirror: any) => emits('update:modelValue', codeMirror.getValue()));
+    codeMirror.on('blur', (codeMirror: any) => emits('update:modelValue', codeMirror.getValue()));
 
-    // Force refresh after delay (top of stack). Otherwise it'll be empty until you click on it.
+    // Force refresh after delay (top of event que). Otherwise it'll be empty until you click on it.
     setTimeout(() => codeMirror.refresh())
 })
 
