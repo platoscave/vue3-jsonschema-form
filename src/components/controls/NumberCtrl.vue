@@ -37,7 +37,7 @@ const precision = computed(() => {
         :precision="precision"
         :placeholder="property.attrs.placeholder"
         :controls=false
-        @input="($event) => $emit('update:modelValue', $event)"
+        @input="($event: any) => $emit('update:modelValue', $event)"
     >
     </el-input-number>
 </template>

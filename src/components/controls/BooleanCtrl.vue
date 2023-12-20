@@ -18,7 +18,7 @@ defineEmits(['update:modelValue']);
     <el-checkbox
       v-else
       model.value="modelValue"
-      @change="($event) => $emit('update:modelValue', $event)
+      @change="($event: any) => $emit('update:modelValue', $event)
           "
     ></el-checkbox>
   </div>

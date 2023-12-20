@@ -1,9 +1,11 @@
 <script setup lang="ts">
-defineProps({
-    modelValue: { type: Object, default: () => ({}) },
+import JsonschemaTable from '../JsonschemaTable.vue'
+
+const props = defineProps({
+    modelValue: { type: Object, default: () => ([{}]) },
     property: { type: Object, default: () => ({}) },
     requiredArr: { type: Array, default: () => ([]) },
-    editPermitted: { type: Object, default: () => ({}) },
+    editPermitted: { type: Object, default: () => ({ items: {} }) },
     queryCallback: { type: Function },
     formMode: { type: String, default: 'Readonly Full' },
     size: { type: String, default: 'default' },
@@ -11,25 +13,25 @@ defineProps({
     labelPosition: { type: String, default: 'left' },
     columWidths: { type: Array, default: () => ([]) }
 });
-defineEmits(['update:modelValue']);
-
+const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
 </script>
 
 <template>
-    <JsonschemaForm
+    <JsonschemaTable
         class="sf-subform-background"
         :model-value="modelValue"
-        :properties="property.properties"
+        :properties="property.items.properties"
         :requiredArr="property.required"
-        :updateable-properties="editPermitted"
+        :updateable-properties="editPermitted.items.properties"
         :form-mode="formMode"
         :size="size"
         :label-position="labelPosition"
         :label-width="labelWidth"
         :query-callback="queryCallback"
-        @update:modelValue="($event: any) => $emit('update:modelValue', $event)"
-    >
-    </JsonschemaForm>
+        draggable="false"
+        @update:modelValue="($event: Event) => $emit('update:modelValue', $event)"
+        value="modelValue"
+    ></JsonschemaTable>
 </template>
 
 <style scoped></style>

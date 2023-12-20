@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, watch, reactive, toRaw, toRefs, computed, onMounted } from "vue";
+import JsonschemaTable from './components/JsonschemaTable.vue'
 
 import initialFormSchemaObj from './testData/initialFormSchemaObj'
 import initialFormDataObj from './testData/initialFormDataObj'
+import initialTableDataObj from './testData/initialTableDataObj'
 import initialEditPermittedObj from './testData/initialEditPermittedObj'
 import initialFormQueryData from './testData/formQueryData'
 
@@ -32,17 +34,12 @@ let validRef = ref(true)
 
 let formSchemaObjRef = ref(initialFormSchemaObj)
 let formDataObjRef = ref(initialFormDataObj)
+let tableDataObjRef = ref(initialTableDataObj)
 let formEditPermittedRef = ref(initialEditPermittedObj)
 let formQueryDataRef = ref(initialFormQueryData)
 
 
-// const updatedFormDataObj = (newFormDataObj: {}) => {
-//     // validate
-//     // copy
-//     //formDataObjRef.value = newFormDataObj
-// }
 const validateForm = () => {
-
 };
 const resetForm = () => {
     //formDataObjRef.value = initialFormDataObj
@@ -80,9 +77,15 @@ onMounted(() => {
     resetForm()
 })
 // deep watch dataObj, perform pudate
-watch(formDataObjRef, (newDataObj, oldDataObj) => {
+watch(formDataObjRef, (newDataObj) => {
 
-    console.log('App dataObj', newDataObj)
+    console.log('App Formm dataObj', newDataObj)
+
+}, { deep: true });
+
+watch(tableDataObjRef, (newDataObj) => {
+
+    console.log('App Table dataObj', newDataObj)
 
 }, { deep: true });
 
@@ -90,7 +93,7 @@ watch(formDataObjRef, (newDataObj, oldDataObj) => {
 </script>
 
 <template>
-    <div class="header">Vue3 Jsonschema Form/Table</div>
+    <h2 class="header">Vue3 Jsonschema Form/Table</h2>
 
     <button @click="toggleDark()">
         <i
@@ -139,7 +142,7 @@ watch(formDataObjRef, (newDataObj, oldDataObj) => {
     <el-tabs>
         <el-tab-pane label="Form">
             <splitpanes
-                vertical
+                horizontal
                 class="default-theme"
             >
                 <pane sizeRef="25">
@@ -184,12 +187,59 @@ watch(formDataObjRef, (newDataObj, oldDataObj) => {
             </splitpanes>
         </el-tab-pane>
         <el-tab-pane label="Table">
-            <el-tabs>
-                <el-tab-pane label="Schema Table">Form</el-tab-pane>
-                <el-tab-pane label="Jsonschema">Table"</el-tab-pane>
-                <el-tab-pane label="Data ">Table"</el-tab-pane>
-                <el-tab-pane label="Edit Permitted">Table"</el-tab-pane>
-            </el-tabs>
+
+            <splitpanes
+                horizontal
+                class="default-theme"
+            >
+                <pane>
+                    <h2>Jsonschema Table</h2>
+                    <!-- The form -->
+                    <JsonschemaTable
+                        v-model="tableDataObjRef"
+                        :properties="formSchemaObjRef.properties"
+                        :required-arr="formSchemaObjRef.required"
+                        :updateable-properties="formEditPermittedRef"
+                        :form-mode="formModeRef"
+                        :sizeRef="sizeRef"
+                        :label-position="labelPositionRef"
+                        :label-width="labelWidtthRef"
+                        :query-callback="queryCallback"
+                    >
+                    </JsonschemaTable>
+                </pane>
+                <splitpanes
+                    vertical
+                    class="default-theme"
+                >
+                    <pane sizeRef="30">
+                        <div class="header">Jsonschema </div>
+                        <StringCodeEditorCtrl
+                            :model-value="JSON.stringify(formSchemaObjRef, null, 2)"
+                            :readonly=false
+                            @update:modelValue="($event) => copyToRef($event, formSchemaObjRef)"
+                        ></StringCodeEditorCtrl>
+                    </pane>
+                    <pane sizeRef="30">
+                        <div class="header">Data </div>
+                        <StringCodeEditorCtrl
+                            :model-value="JSON.stringify(tableDataObjRef, null, 2)"
+                            :readonly=false
+                            @update:modelValue="($event) => copyToRef($event, tableDataObjRef)"
+                        ></StringCodeEditorCtrl>
+                    </pane>
+                    <pane sizeRef="30">
+
+                        <div class="header">Edit Permitted </div>
+                        <!-- <div>Only aplicable in "Edit Permitted" Form Mode</div> -->
+                        <StringCodeEditorCtrl
+                            :model-value="JSON.stringify(formEditPermittedRef, null, 2)"
+                            :readonly=false
+                            @update:modelValue="($event) => copyToRef($event, formEditPermittedRef)"
+                        ></StringCodeEditorCtrl>
+                    </pane>
+                </splitpanes>
+            </splitpanes>
         </el-tab-pane>
     </el-tabs>
 </template>

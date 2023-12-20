@@ -24,7 +24,7 @@ defineEmits(['update:modelValue']);
             :show-word-limit="get(property, 'attrs.showWordLimit', '')"
             :maxlength="property.maxLength"
             :minlength="property.minLength"
-            @input="($event) => $emit('update:modelValue', $event)"
+            @input="($event: any) => $emit('update:modelValue', $event)"
         ></el-input>
     </div>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from "vue";
-import { useDark, useToggle } from '@vueuse/core'
+import { useDark } from '@vueuse/core'
 
 const props = defineProps({
     modelValue: { type: Object, default: () => ([{}]) },
@@ -11,9 +11,10 @@ const props = defineProps({
     formMode: { type: String, default: 'Readonly Full' },
     size: { type: String, default: 'default' },
     labelWidth: { type: String, default: 'auto' },
-    labelPosition: { type: String, default: 'left' }
+    labelPosition: { type: String, default: 'left' },
+    columWidths: { type: Array, default: () => ([]) }
 });
-const emits = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
 
 const onUpdateModelValue = (newDataObj: any, idx: string) => {
     props.modelValue[idx] = newDataObj
@@ -144,7 +145,7 @@ const deleteIcon =
                 :label-width="labelWidth"
                 :query-callback="queryCallback"
                 draggable="false"
-                @update:modelValue="($event: any) => onUpdateModelValue($event, idx)"
+                @update:modelValue="($event: Event) => onUpdateModelValue($event, idx)"
             >
             </JsonschemaForm>
             <!-- Delete icon -->

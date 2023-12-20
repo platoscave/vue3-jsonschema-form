@@ -126,6 +126,12 @@
   margin-bottom: 20px;
 }
 
+/* Popup */
+.el-popper {
+  font-size: 14px;
+  background: #213d5b;
+}
+
 /* Table overrides. Make it more dense*/
 .el-table__cell {
   padding: 4px;

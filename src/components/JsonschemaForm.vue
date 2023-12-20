@@ -7,13 +7,13 @@ import StringIconCtrl from "./controls/StringIconCtrl.vue";
 import StringCodeEditorCtrl from "./controls/StringCodeEditorCtrl.vue";
 import ObjectNested from "./controls/ObjectNested.vue";
 import NumberCtrl from "./controls/NumberCtrl.vue";
-import ArrayObjects from "./controls/ArrayObjects.vue";
+import ArrayObjectsForm from "./controls/ArrayObjectsForm.vue";
+import ArrayObjectsTable from "./controls/ArrayObjectsTable.vue";
 import StringQueryCtrl from "./controls/StringQueryCtrl.vue";
 import StringEnumCtrl from "./controls/StringEnumCtrl.vue";
 import ArrayQueryCtrl from "./controls/ArrayQueryCtrl.vue";
 import StringCtrl from "./controls/StringCtrl.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
-import JsonschemaTable from "./JsonschemaTable.vue";
 import Markdown2Html from './controls/Markdown2Html.vue'
 
 const props = defineProps({
@@ -25,10 +25,11 @@ const props = defineProps({
     formMode: { type: String, default: 'Readonly Full' },
     size: { type: String, default: 'default' },
     labelWidth: { type: String, default: 'auto' },
-    labelPosition: { type: String, default: 'left' }
+    labelPosition: { type: String, default: 'left' },
+    columWidths: { type: Array, default: () => ([]) }
 });
 
-const emits = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
 
 
 interface IProperty {
@@ -153,8 +154,8 @@ const getControlName = (property: IProperty) => {
         case "array":
             // objects
             if (property.items.type === "object" && property.items.properties) {
-                if (property.displayAs === "table") return "JsonschemaTable"; // objects in a table
-                return "ArrayObjects"; // objects in a subform
+                if (property.displayAs === "table") return "ArrayObjectsTable"; // objects in a table
+                return "ArrayObjectsForm"; // objects in a subform
             }
             // multi select
             else if (property.items.type === "string") {
@@ -168,7 +169,7 @@ const getControlName = (property: IProperty) => {
 // Nested object have different props compared to plain controls, so we find out here 
 const isNestedObject = (property: IProperty) => {
     const controlName = getControlName(property)
-    if (['ObjectNested', 'ArrayObjects', 'TableArray'].includes(controlName)) return true
+    if (['ObjectNested', 'ArrayObjectsForm', 'ArrayObjectsTable'].includes(controlName)) return true
     return false
 }
 
@@ -189,13 +190,13 @@ const getComponent = (property: IProperty) => {
         { name: "StringCodeEditorCtrl", comp: StringCodeEditorCtrl },
         { name: "ObjectNested", comp: ObjectNested },
         { name: "NumberCtrl", comp: NumberCtrl },
-        { name: "ArrayObjects", comp: ArrayObjects },
+        { name: "ArrayObjectsForm", comp: ArrayObjectsForm },
+        { name: "ArrayObjectsTable", comp: ArrayObjectsTable },
         { name: "ArrayQueryCtrl", comp: ArrayQueryCtrl },
         { name: "StringEnumCtrl", comp: StringEnumCtrl },
         { name: "StringQueryCtrl", comp: StringQueryCtrl },
         { name: "StringCtrl", comp: StringCtrl },
         { name: "JsonschemaForm", comp: JsonschemaForm },
-        { name: "JsonschemaTable", comp: JsonschemaTable },
     ];
 
     const controlName = getControlName(property)

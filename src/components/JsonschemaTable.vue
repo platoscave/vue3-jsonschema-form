@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed } from "vue";
 import BooleanCtrl from "./controls/BooleanCtrl.vue";
 import StringDateTimeCtrl from "./controls/StringDateTimeCtrl.vue";
-import MarkDown from "./controls/StringMarkdownCtrl.vue";
+import StringMarkdownCtrl from "./controls/StringMarkdownCtrl.vue";
 import StringIconCtrl from "./controls/StringIconCtrl.vue";
 import StringCodeEditorCtrl from "./controls/StringCodeEditorCtrl.vue";
 import ObjectNested from "./controls/ObjectNested.vue";
 import NumberCtrl from "./controls/NumberCtrl.vue";
-import ArrayObjects from "./controls/ArrayObjects.vue";
-import TableArray from "./controls/TableArray.vue";
+import ArrayObjectsForm from "./controls/ArrayObjectsForm.vue";
+import ArrayObjectsTable from "./controls/ArrayObjectsTable.vue";
 import StringQueryCtrl from "./controls/StringQueryCtrl.vue";
 import StringEnumCtrl from "./controls/StringEnumCtrl.vue";
 import ArrayQueryCtrl from "./controls/ArrayQueryCtrl.vue";
 import StringCtrl from "./controls/StringCtrl.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
+import Markdown2Html from './controls/Markdown2Html.vue'
 
 const props = defineProps({
-    modelValue: { type: Object, default: () => ([]) },
+    modelValue: { type: Array, default: () => ([{}]) },
     properties: { type: Object, default: () => ({}) },
     requiredArr: { type: Array, default: () => ([]) },
     editPermitted: { type: Object, default: () => ({}) },
@@ -36,7 +37,7 @@ interface IProperty {
     decription: string;
     type: string;
     contentMediaType: string;
-    argoQuery: object;
+    query: object;
     enum: string[];
     format: string;
     properties: object;
@@ -57,11 +58,6 @@ const resetFields = () => {
     if (formElRef.value) formElRef.value.resetFields();
 };
 defineExpose({ validate, resetFields });
-
-watch(props.modelValue, (newDataObj, oldDataObj) => {
-
-    console.log('JSF dataObj', newDataObj)
-}, { deep: true });
 
 const validationRules = computed(() => {
 
@@ -136,12 +132,13 @@ const getControlName = (property: IProperty) => {
         case "string":
             const mediaType = property.contentMediaType
             if (mediaType) {
-                if (mediaType === "text/markdown") return "MarkDown";
+                console.log('mediaType', mediaType)
+                if (mediaType === "text/markdown") return "StringMarkdownCtrl";
                 if (mediaType === "text/html") return "StringHtmlCtrl";
                 if (mediaType.startsWith("image/")) return "StringIconCtrl";
                 return "StringCodeEditorCtrl";
             }
-            if (property.argoQuery) return "StringQueryCtrl";
+            if (property.query) return "StringQueryCtrl";
             if (property.enum) return "StringEnumCtrl";
             if (property.format === "date-time") return "StringDateTimeCtrl";
             return "StringCtrl";
@@ -154,21 +151,22 @@ const getControlName = (property: IProperty) => {
         case "array":
             // objects
             if (property.items.type === "object" && property.items.properties) {
-                if (property.displayAs === "Table") return "TableArray"; // objects in a table
-                return "ArrayObjects"; // objects in a subform
+                if (property.displayAs === "table") return "ArrayObjectsTable"; // objects in a table
+                return "ArrayObjectsForm"; // objects in a subform
             }
             // multi select
             else if (property.items.type === "string") {
-                if (property.items.argoQuery) return "ArrayQueryCtrl";
+                if (property.items.query) return "ArrayQueryCtrl";
                 return "StringCodeEditorCtrl";
             }
     }
     return "StringCodeEditorCtrl";
 
+
 };
 const isNestedObject = (property: IProperty) => {
     const controlName = getControlName(property)
-    if (controlName in ['ObjectNested', 'ArrayObjects', 'TableArray']) return true
+    if (['ObjectNested', 'ArrayObjectsForm', 'ArrayObjectsTable'].includes(controlName)) return true
     return false
 }
 
@@ -177,18 +175,18 @@ const getComponent = (property: IProperty) => {
     const dynamicComp = [
         { name: "BooleanCtrl", comp: BooleanCtrl },
         { name: "StringDateTimeCtrl", comp: StringDateTimeCtrl },
-        { name: "MarkDown", comp: StringMarkdownCtrl },
+        { name: "StringMarkdownCtrl", comp: StringMarkdownCtrl },
         { name: "StringIconCtrl", comp: StringIconCtrl },
         { name: "StringCodeEditorCtrl", comp: StringCodeEditorCtrl },
         { name: "ObjectNested", comp: ObjectNested },
         { name: "NumberCtrl", comp: NumberCtrl },
-        { name: "ArrayObjects", comp: ArrayObjects },
+        { name: "ArrayObjectsForm", comp: ArrayObjectsForm },
+        { name: "ArrayObjectsTable", comp: ArrayObjectsTable },
         { name: "ArrayQueryCtrl", comp: ArrayQueryCtrl },
         { name: "StringEnumCtrl", comp: StringEnumCtrl },
         { name: "StringQueryCtrl", comp: StringQueryCtrl },
         { name: "StringCtrl", comp: StringCtrl },
         { name: "JsonschemaForm", comp: JsonschemaForm },
-        { name: "TableArray", comp: TableArray },
     ];
 
     const controlName = getControlName(property)
@@ -238,21 +236,21 @@ const infoIcon =
             :sort-method="(a, b) => sortFunc(property.type, a[propertyName], b[propertyName])"
             resizable
         >
-            <!-- Header with tooltip. -->
-            <template #header>
+            <!-- Use label slot to add label with tooltip info infoIcon -->
+            <template #label>
                 <span>{{ property.title + " " }} &nbsp;</span>
                 <el-tooltip
                     v-if="property.description"
                     effect="light"
-                    :content="property.description"
                     raw-content
                 >
                     <div
                         class="infoIcon"
                         v-html="infoIcon"
-                        height="1em"
-                        width="1em"
                     ></div>
+                    <template #content>
+                        <Markdown2Html :model-value="property.description"></Markdown2Html>
+                    </template>
                 </el-tooltip>
             </template>
 
@@ -264,8 +262,8 @@ const infoIcon =
                     v-if="isNestedObject(property)"
                     :is="getComponent(property)"
                     class="sf-full-width"
-                    v-model="modelValue[propertyName]"
-                    :property="property.properties"
+                    :model-value="modelValue[propertyName]"
+                    :property="property"
                     :required-arr="property.required"
                     :updateable-properties="editPermitted[propertyName]"
                     :form-mode="formMode"
@@ -273,16 +271,19 @@ const infoIcon =
                     :label-position="labelPosition"
                     :label-width="labelWidth"
                     :query-callback="queryCallback"
+                    @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
                 >
                 </component>
                 <component
                     v-else
                     :is="getComponent(property)"
                     class="sf-full-width"
-                    v-model="modelValue[propertyName]"
+                    :model-value="modelValue[propertyName]"
                     :property="property"
                     :readonly="propertyIsReadonly(formMode, propertyName)"
-                    :required="requiredArr.includes(propertyName)"
+                    :required="props.requiredArr.includes(propertyName)"
+                    :query-callback="queryCallback"
+                    @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
                 >
                 </component>
             </template>
@@ -290,12 +291,6 @@ const infoIcon =
     </el-table>
 </template>
 <style scoped>
-/* Item bottom margin */
-.el-form-item {
-    /* to make the form more dense */
-    margin-bottom: 8px;
-}
-
 .infoIcon {
     /* force infoIcon next to label */
     color: var(--el-color-primary-light-7);
