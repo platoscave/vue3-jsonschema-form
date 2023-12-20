@@ -21,8 +21,8 @@ const readonlyLabels = computed(() => {
 });
 
 onMounted(async () => {
-    if (props.queryCallback && props.property.itemsRef.query) {
-        const results: [] = await props.queryCallback(props.property.itemsRef.query)
+    if (props.queryCallback && props.property.items.query) {
+        const results: [] = await props.queryCallback(props.property.items.query)
 
         // Copy itemsRef from results to itemsRef using push(). Perserve reactivity!
         for (let i = 0; i < results.length; i++) {

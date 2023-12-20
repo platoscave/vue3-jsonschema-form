@@ -4,11 +4,9 @@ import { ref, watch, reactive, toRaw, toRefs, computed, onMounted } from "vue";
 import initialFormSchemaObj from './testData/initialFormSchemaObj'
 import initialFormDataObj from './testData/initialFormDataObj'
 import initialEditPermittedObj from './testData/initialEditPermittedObj'
-import initialFormQueryData from './testData/formQueryDataRef'
+import initialFormQueryData from './testData/formQueryData'
 
 import StringCodeEditorCtrl from './components/controls/StringCodeEditorCtrl.vue'
-
-import { Codemirror } from 'vue-codemirror'
 
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
@@ -145,7 +143,7 @@ watch(formDataObjRef, (newDataObj, oldDataObj) => {
                 class="default-theme"
             >
                 <pane sizeRef="25">
-                    <div class="header">Jsonschema Object</div>
+                    <div class="header">Jsonschema </div>
                     <StringCodeEditorCtrl
                         :model-value="JSON.stringify(formSchemaObjRef, null, 2)"
                         :readonly=false
@@ -169,13 +167,13 @@ watch(formDataObjRef, (newDataObj, oldDataObj) => {
                     </JsonschemaForm>
                 </pane>
                 <pane sizeRef="25">
-                    <div class="header">Data Object</div>
+                    <div class="header">Data </div>
                     <StringCodeEditorCtrl
                         :model-value="JSON.stringify(formDataObjRef, null, 2)"
                         :readonly=false
                         @update:modelValue="($event) => copyToRef($event, formDataObjRef)"
                     ></StringCodeEditorCtrl>
-                    <div class="header">Edit Permitted Object</div>
+                    <div class="header">Edit Permitted </div>
                     <!-- <div>Only aplicable in "Edit Permitted" Form Mode</div> -->
                     <StringCodeEditorCtrl
                         :model-value="JSON.stringify(formEditPermittedRef, null, 2)"
@@ -189,7 +187,7 @@ watch(formDataObjRef, (newDataObj, oldDataObj) => {
             <el-tabs>
                 <el-tab-pane label="Schema Table">Form</el-tab-pane>
                 <el-tab-pane label="Jsonschema">Table"</el-tab-pane>
-                <el-tab-pane label="Data Object">Table"</el-tab-pane>
+                <el-tab-pane label="Data ">Table"</el-tab-pane>
                 <el-tab-pane label="Edit Permitted">Table"</el-tab-pane>
             </el-tabs>
         </el-tab-pane>

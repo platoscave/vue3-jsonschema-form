@@ -79,12 +79,6 @@
   min-height: -webkit-fill-available;
 }
 
-/* radio button, checkbox height */
-.el-radio,
-.el-checkbox {
-  height: 24px
-}
-
 /* Input background and border */
 .el-input__wrapper {
   background-color: #ffffff08;
@@ -158,6 +152,11 @@ th .cell {
   line-height: 1.5;
 }
 
+/* no boarder on read only mode. couldn't get ot to work */
+/* textarea[readonly]>.cm-s-dracula.CodeMirror {
+  border-style: none !important;
+} */
+
 .cm-s-dracula.CodeMirror {
   background-color: #ffffff08 !important;
   border-radius: 6px;
@@ -166,6 +165,7 @@ th .cell {
   border-width: 1px;
   min-height: -webkit-fill-available;
 }
+
 
 /* Error success borders: lighter */
 .el-form-item.is-error .el-input__inner,

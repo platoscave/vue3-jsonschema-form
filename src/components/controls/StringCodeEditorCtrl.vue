@@ -17,7 +17,8 @@ const props = defineProps({
 });
 
 const emits = defineEmits(["update:modelValue"]);
-const editorRef: any = ref(null);
+const editorRef: any = ref(null)
+let codeMirror: any = null
 
 const getMode = (mediaType: string) => {
     if (!mediaType) return 'javascript'
@@ -45,36 +46,35 @@ const getMode = (mediaType: string) => {
     }
 }
 
-let codeMirror: any = null
-watch(() => props.modelValue, (value) => {
 
-    if (codeMirror) {
-        codeMirror.setValue(value)
-        setTimeout(function () {
-            //codeMirror.inputEditor.save()
-        }, 1)
-    }
+watch(() => props.modelValue, (value) => {
+    if (codeMirror) codeMirror.setValue(value)
 });
+
 onMounted(() => {
     codeMirror = CodeMirror.fromTextArea(editorRef.value, {
         theme: 'dracula',
         mode: getMode(props.property.contentMediaType),
-        readOnly: props.readonly,
+        readOnly: props.readonly ? 'nocursor' : false,
         //beautify: { initialBeautify: true, autoBeautify: true },
-        // autofocus: true
-        //matchBrackets: true
     })
-    codeMirror.save()
+
+    // change event, emit update
     codeMirror.on('change', (codeMirror: any) => emits('update:modelValue', codeMirror.getValue()));
+
+    // Force refresh after delay (top of stack). Otherwise it'll be empty until you click on it.
+    setTimeout(() => codeMirror.refresh())
 })
 
 
 </script>
 
 <template>
+    <!-- readonly is used to omit boarder on readonly mode -->
     <textarea
         ref="editorRef"
         :value="modelValue"
+        readonly
     >
     </textarea>
 </template>
