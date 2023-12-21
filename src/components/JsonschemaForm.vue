@@ -268,7 +268,10 @@ const infoIcon =
                     :label-position="labelPosition"
                     :label-width="labelWidth"
                     :query-callback="queryCallback"
+                    :colum-widths="columWidths"
                     @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
+                    @current-change="($event: Event) => $emit('current-change', $event)"
+                    @header-dragend="($event: Event) => $emit('header-dragend', $event)"
                 >
                 </component>
                 <component
@@ -280,6 +283,7 @@ const infoIcon =
                     :readonly="propertyIsReadonly(formMode, propertyName)"
                     :required="props.requiredArr.includes(propertyName)"
                     :query-callback="queryCallback"
+                    :colum-widths="columWidths"
                     @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
                 >
                 </component>

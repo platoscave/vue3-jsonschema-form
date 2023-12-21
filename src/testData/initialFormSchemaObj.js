@@ -8,7 +8,7 @@ export default {
 
     string: {
       title: "String",
-      description: "## String \n- required \n- min-max length \n- placeholder \n\nNote that this popup `description` also accepts [markdown](https://en.wikipedia.org/wiki/Markdown).",
+      description: "### String \n- required \n- min-max length \n- placeholder \n\nNote that this popup `description` also accepts [markdown](https://en.wikipedia.org/wiki/Markdown).",
       type: "string",
       minLength: 3,
       maxLength: 10,
@@ -18,7 +18,7 @@ export default {
     },
     stringEmail: {
       title: "Email",
-      description: "## String \n format email ",
+      description: "### String - email\n Format email ",
       type: "string",
       format: "email",
       maxLength: 120,
@@ -29,7 +29,7 @@ export default {
     },
     stringPassword: {
       title: "Password",
-      description: "## String \n hidden input",
+      description: "### String - password\n Hidden input",
       type: "string",
       attrs: {
         placeholder: "Enter your password",
@@ -38,7 +38,7 @@ export default {
     },
     stringRegEx: {
       title: "Regular Expression",
-      description: "## String \n regular expression: `[a-e]+`",
+      description: "### String - regex\n Regular expression: `[a-e]+`",
       type: "string",
       pattern: "[a-e]+",
       attrs: {
@@ -49,7 +49,7 @@ export default {
     // "number"://////////////////////////////////////////////
     number: {
       title: "Number",
-      description: "## Number \n- two decimal places \n- min-max values \n- placeholder \n- automatic rounding",
+      description: "### Number \n- two decimal places \n- min-max values \n- placeholder \n- automatic rounding",
       type: "number",
       minimum: 10,
       maximum: 100,
@@ -61,7 +61,7 @@ export default {
     // "integer"://////////////////////////////////////////////
     integer: {
       title: "Integer",
-      description: "## Integer \n- zero decimal places \n- min-max values \n- placeholder \n- automatic rounding",
+      description: "### String - integer \n- zero decimal places \n- min-max values \n- placeholder \n- automatic rounding",
       type: "integer",
       minimum: 10,
       maximum: 100,
@@ -77,7 +77,7 @@ export default {
     //     property.format === "date-time"
     stringDate: {
       title: "Date",
-      description: "Dispaly localized date",
+      description: "### String - date \n Dispaly localized date",
       type: "string",
       format: "date-time",
       attrs: {
@@ -87,7 +87,7 @@ export default {
     },
     stringDateTime: {
       title: "Date Time",
-      description: "Display localized date-time",
+      description: "### String - date-time \n Display localized date-time",
       type: "string",
       format: "date-time",
       attrs: {
@@ -101,7 +101,7 @@ export default {
     //     mediaType === "text/markdown"
     stringMarkdown: {
       title: "Markdown",
-      description: "#Dispaly as markdown\nNote that the also description accepts markdown",
+      description: "### String - markdown \nDispaly as markdown",
       type: "string",
       contentMediaType: "text/markdown",
       maxLength: 500,
@@ -114,33 +114,33 @@ export default {
     //     contentMediaType.startsWith("image/")
     stringImage: {
       title: "Icon",
-      description: "Svg or bse64",
+      description: "### String - svg icon",
       type: "string",
       contentMediaType: "image/svg"
     },
     //     property.enum
     stringEnumSmall: {
       title: "Enum Small",
-      description: "If there are less than five permitted values, then display as raidobuttons",
+      description: "### String - enum \nIf there are less than five permitted values, then display as raidobuttons",
       type: "string",
       enum: ["Tokyo", "New York", "Paris"],
     },
     stringEnumLarge: {
       title: "Enum Large",
-      description: "If there are more than four permitted values, then display as listbox.",
+      description: "### String - enum \nIf there are more than four permitted values, then display as listbox.",
       type: "string",
       enum: ["Tokyo", "New York", "Paris", "Moskow", "Abu Dhabi", "Canberra"],
     },
     //     property.query
     stringQuerySmall: {
       title: "Query Small",
-      description: "Execute the query. If there are less than items, then display as raidobuttons",
+      description: "### String - query \nExecute the query. If there are less than five items, then display as raidobuttons",
       type: "string",
       query: { select: 'small' }
     },
     stringQueryLarge: {
       title: "Query Large",
-      description: "Execute the query. If there are more than four items, then display as listbox.",
+      description: "### String - query \nExecute the query. If there are more than four items, then display as listbox.",
       type: "string",
       query: { select: 'large' }
     },
@@ -150,7 +150,7 @@ export default {
     //     property.items.argoQuery
     multiSelectSmall: {
       title: "Mutli Select Small",
-      description: "Select multiple objects checkboxes. Return an array of identifires.",
+      description: "### Array - query \nSelect multiple objects checkboxes. Return an array of identifires.",
       type: "array",
       items: {
         type: "string",
@@ -159,7 +159,7 @@ export default {
     },
     multiSelectLarge: {
       title: "Mutli Select Large",
-      description: "Select multiple objects from a list. Return an array of identifires.",
+      description: "### Array - query \nSelect multiple objects from a list. Return an array of identifires.",
       type: "array",
       items: {
         type: "string",
@@ -173,7 +173,7 @@ export default {
     //     property.properties
     object: {
       title: "Nested Objects",
-      description: "Nested object",
+      description: "### Object \nNested object",
       type: "object",
       properties: {
         first: {
@@ -196,6 +196,7 @@ export default {
         },
         nestedObject: {
           title: "Nested Object",
+          description: "### Object \nDubble nested object",
           type: "object",
           properties: {
             petName: {
@@ -218,8 +219,8 @@ export default {
     //     property.displayAs === "Table" // objects in a table
     //     else "ArrayObjects"; // objects in a subform
     objectsArray: {
-      title: "Array of Objects",
-      description: "Display an array of objects as subforms",
+      title: "Objects in Forms",
+      description: "### Array - objects\nDisplay an array of objects in subforms",
       type: "array",
       items: {
         type: "object",
@@ -249,7 +250,7 @@ export default {
     },
     objectsTable: {
       title: "Objects in Table",
-      description: "Display an array objects in a table",
+      description: "### Array - objects\nDisplay an array of objects in a table",
       type: "array",
       displayAs: "table",
       items: {
@@ -280,8 +281,8 @@ export default {
     },
     //     else "StringCodeEditorCtrl";
     objectJson: {
-      title: "StringCodeEditorCtrl",
-      description: "Object with no properties, displayed as StringCodeEditorCtrl",
+      title: "Code Editor",
+      description: "### String\nObject with no properties, displayed as code editor",
       type: "object"
     }
     //     else "StringCodeEditorCtrl";

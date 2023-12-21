@@ -144,8 +144,10 @@ const deleteIcon =
                 :label-position="labelPosition"
                 :label-width="labelWidth"
                 :query-callback="queryCallback"
-                draggable="false"
+                :colum-widths="columWidths"
                 @update:modelValue="($event: Event) => onUpdateModelValue($event, idx)"
+                @current-change="($event: Event) => $emit('current-change', $event)"
+                @header-dragend="($event: Event) => $emit('header-dragend', $event)"
             >
             </JsonschemaForm>
             <!-- Delete icon -->

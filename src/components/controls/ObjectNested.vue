@@ -11,7 +11,7 @@ defineProps({
     labelPosition: { type: String, default: 'left' },
     columWidths: { type: Array, default: () => ([]) }
 });
-defineEmits(['update:modelValue']);
+defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
 
 </script>
 
@@ -27,7 +27,10 @@ defineEmits(['update:modelValue']);
         :label-position="labelPosition"
         :label-width="labelWidth"
         :query-callback="queryCallback"
+        :colum-widths="columWidths"
         @update:modelValue="($event: any) => $emit('update:modelValue', $event)"
+        @current-change="($event: Event) => $emit('current-change', $event)"
+        @header-dragend="($event: Event) => $emit('header-dragend', $event)"
     >
     </JsonschemaForm>
 </template>

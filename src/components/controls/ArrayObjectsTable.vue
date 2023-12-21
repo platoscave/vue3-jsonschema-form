@@ -28,9 +28,10 @@ const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragen
         :label-position="labelPosition"
         :label-width="labelWidth"
         :query-callback="queryCallback"
-        draggable="false"
+        :colum-widths="columWidths"
         @update:modelValue="($event: Event) => $emit('update:modelValue', $event)"
-        value="modelValue"
+        @current-change="($event) => $emit('current-change', $event)"
+        @header-dragend="($event) => $emit('header-dragend', $event)"
     ></JsonschemaTable>
 </template>
 

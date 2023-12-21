@@ -29,7 +29,7 @@ const props = defineProps({
     columWidths: { type: Array, default: () => ([]) }
 });
 
-const emit = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
+const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
 
 
 interface IProperty {
@@ -170,6 +170,12 @@ const isNestedObject = (property: IProperty) => {
     return false
 }
 
+
+const onUpdateModelValue = (newDataObj: any, propertyName: any) => {
+    props.modelValue[propertyName] = newDataObj
+    emits('update:modelValue', props.modelValue)
+}
+
 const getComponent = (property: IProperty) => {
 
     const dynamicComp = [
@@ -218,7 +224,7 @@ const infoIcon =
     <!-- table-layout="auto" -->
     <el-table
         v-if="modelValue && properties"
-        ref="tableEl"
+        ref="tableElRef"
         :data="modelValue"
         highlight-current-row
         border
@@ -271,7 +277,10 @@ const infoIcon =
                     :label-position="labelPosition"
                     :label-width="labelWidth"
                     :query-callback="queryCallback"
+                    :colum-widths="columWidths"
                     @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
+                    @current-change="($event: Event) => $emit('current-change', $event)"
+                    @header-dragend="($event: Event) => $emit('header-dragend', $event)"
                 >
                 </component>
                 <component
@@ -283,6 +292,7 @@ const infoIcon =
                     :readonly="propertyIsReadonly(formMode, propertyName)"
                     :required="props.requiredArr.includes(propertyName)"
                     :query-callback="queryCallback"
+                    :colum-widths="columWidths"
                     @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
                 >
                 </component>
