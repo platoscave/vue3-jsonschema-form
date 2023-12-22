@@ -135,7 +135,6 @@ const getControlName = (property: IProperty) => {
         case "string":
             const mediaType = property.contentMediaType
             if (mediaType) {
-                console.log('mediaType', mediaType)
                 if (mediaType === "text/markdown") return "StringMarkdownCtrl";
                 if (mediaType === "text/html") return "StringHtmlCtrl";
                 if (mediaType.startsWith("image/")) return "StringIconCtrl";
@@ -295,7 +294,7 @@ const infoIcon =
 .infoIcon {
     /* force infoIcon next to label */
     color: var(--el-color-primary-light-7);
-    display: inline;
+    display: inline-block;
     width: 1.5em;
     height: 1.5em;
 }

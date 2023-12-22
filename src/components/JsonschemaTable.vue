@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import BooleanCtrl from "./controls/BooleanCtrl.vue";
 import StringDateTimeCtrl from "./controls/StringDateTimeCtrl.vue";
 import StringMarkdownCtrl from "./controls/StringMarkdownCtrl.vue";
@@ -26,7 +26,10 @@ const props = defineProps({
     size: { type: String, default: 'default' },
     labelWidth: { type: String, default: 'auto' },
     labelPosition: { type: String, default: 'left' },
-    columWidths: { type: Array, default: () => ([]) }
+    columWidths: { type: Array, default: () => ([]) },
+    // TODO
+    currentRow: { type: String, default: '' },
+
 });
 
 const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
@@ -169,12 +172,6 @@ const isNestedObject = (property: IProperty) => {
     return false
 }
 
-
-const onUpdateModelValue = (newDataObj: any, propertyName: any) => {
-    props.modelValue[propertyName] = newDataObj
-    emits('update:modelValue', props.modelValue)
-}
-
 const getComponent = (property: IProperty) => {
 
     const dynamicComp = [
@@ -214,14 +211,14 @@ const infoIcon =
     `<svg viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
     `<path fill="currentColor" d = "M512 64a448 448 0 1 1 0 896.064A448 448 0 0 1 512 64zm67.2 275.072c33.28 0 60.288-23.104 60.288-57.344s-27.072-57.344-60.288-57.344c-33.28 0-60.16 23.104-60.16 57.344s26.88 57.344 60.16 57.344zM590.912 699.2c0-6.848 2.368-24.64 1.024-34.752l-52.608 60.544c-10.88 11.456-24.512 19.392-30.912 17.28a12.992 12.992 0 0 1-8.256-14.72l87.68-276.992c7.168-35.136-12.544-67.2-54.336-71.296-44.096 0-108.992 44.736-148.48 101.504 0 6.784-1.28 23.68.064 33.792l52.544-60.608c10.88-11.328 23.552-19.328 29.952-17.152a12.8 12.8 0 0 1 7.808 16.128L388.48 728.576c-10.048 32.256 8.96 63.872 55.04 71.04 67.84 0 107.904-43.648 147.456-100.416z" > </path>` +
     `< /svg>`
-
-
-// deep watch dataObj, perform pudate
-watch(props.modelValue, (newDataObj) => {
-
-    console.log('JsonschemaTable dataObj', newDataObj)
-
-}, { deep: true, immediate: true });
+const addIcon =
+    `<svg viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
+    `<path fill="currentColor" d = "M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm-38.4 409.6H326.4a38.4 38.4 0 1 0 0 76.8h147.2v147.2a38.4 38.4 0 0 0 76.8 0V550.4h147.2a38.4 38.4 0 0 0 0-76.8H550.4V326.4a38.4 38.4 0 1 0-76.8 0v147.2z" > </path>` +
+    `< /svg>`
+const deleteIcon =
+    `<svg viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
+    `<path fill="currentColor" d = "M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm0 393.664L407.936 353.6a38.4 38.4 0 1 0-54.336 54.336L457.664 512 353.6 616.064a38.4 38.4 0 1 0 54.336 54.336L512 566.336 616.064 670.4a38.4 38.4 0 1 0 54.336-54.336L566.336 512 670.4 407.936a38.4 38.4 0 1 0-54.336-54.336L512 457.664z" > </path>` +
+    `< /svg>`
 
 </script>
 
@@ -233,6 +230,7 @@ watch(props.modelValue, (newDataObj) => {
         ref="tableElRef"
         :data="modelValue"
         highlight-current-row
+        current-row-key="currentRow"
         border
         @current-change="($event) => $emit('current-change', $event)"
         @header-dragend="($event) => $emit('header-dragend', $event)"
@@ -241,24 +239,25 @@ watch(props.modelValue, (newDataObj) => {
         <el-table-column
             v-for="( property, propertyName) in properties"
             :column-key="propertyName"
-            :property="propertyName"
+            :prop="propertyName"
             :label="property.title"
             :sortable="property.type !== 'object' && property.type !== 'array'"
             :sort-method="(a, b) => sortFunc(property.type, a[propertyName], b[propertyName])"
             resizable
         >
             <!-- Use label slot to add label with tooltip info infoIcon -->
-            <template #label>
+            <template #header>
                 <span>{{ property.title }} &nbsp;</span>
                 <el-tooltip
                     v-if="property.description"
                     effect="light"
                     raw-content
                 >
-                    <div
+                    <span
                         class="infoIcon"
                         v-html="infoIcon"
-                    ></div>
+                    >
+                    </span>
                     <template #content>
                         <Markdown2Html :model-value="property.description"></Markdown2Html>
                     </template>
@@ -273,7 +272,7 @@ watch(props.modelValue, (newDataObj) => {
                     v-if="isNestedObject(property)"
                     :is="getComponent(property)"
                     class="sf-full-width"
-                    :model-value="modelValue[propertyName]"
+                    v-model="scope.row[propertyName]"
                     :property="property"
                     :required-arr="property.required"
                     :updateable-properties="editPermitted[propertyName]"
@@ -283,7 +282,6 @@ watch(props.modelValue, (newDataObj) => {
                     :label-width="labelWidth"
                     :query-callback="queryCallback"
                     :colum-widths="columWidths"
-                    @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
                     @current-change="($event: Event) => $emit('current-change', $event)"
                     @header-dragend="($event: Event) => $emit('header-dragend', $event)"
                 >
@@ -292,15 +290,35 @@ watch(props.modelValue, (newDataObj) => {
                     v-else
                     :is="getComponent(property)"
                     class="sf-full-width"
-                    :model-value="modelValue[propertyName]"
+                    v-model="scope.row[propertyName]"
                     :property="property"
                     :readonly="propertyIsReadonly(formMode, propertyName)"
                     :required="props.requiredArr.includes(propertyName)"
                     :query-callback="queryCallback"
                     :colum-widths="columWidths"
-                    @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
                 >
                 </component>
+            </template>
+        </el-table-column>
+        <el-table-column
+            label=""
+            width="40"
+        >
+            <!-- Use label slot to add label with tooltip info infoIcon -->
+            <template #header>
+                <div
+                    class="icon-add"
+                    v-html="addIcon"
+                    @click="modelValue.push({})"
+                ></div>
+            </template>
+            <template #default="scope">
+                <div
+                    class="icon-delete"
+                    v-html="deleteIcon"
+                    @click="modelValue.splice(idx, 1)"
+                >
+                </div>
             </template>
         </el-table-column>
         <!-- </div> -->
@@ -312,12 +330,43 @@ watch(props.modelValue, (newDataObj) => {
 .infoIcon {
     /* force infoIcon next to label */
     color: var(--el-color-primary-light-7);
-    display: inline;
-    width: 1em;
-    height: 1em;
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
 }
 
 .infoIcon :hover {
     color: var(--el-color-primary-light-3);
+}
+
+/* Icons */
+.icon-delete {
+    height: 1.5em;
+    width: 1.5em;
+    margin: 3px;
+    color: var(--el-color-error-light-5);
+    z-index: 20;
+}
+
+.icon-delete :hover {
+    /* color: var(--el-color-error); */
+    color: red;
+}
+
+.icon-add {
+    height: 1.5em;
+    width: 1.5em;
+    margin: 3px;
+    color: var(--el-color-success-light-5);
+    z-index: 20;
+    border-radius: 50%;
+}
+
+.icon-add :hover {
+    color: var(--el-color-success);
+}
+
+.not-readonly:hover {
+    cursor: pointer;
 }
 </style>

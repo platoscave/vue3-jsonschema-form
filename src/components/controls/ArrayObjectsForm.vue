@@ -16,10 +16,6 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
 
-const onUpdateModelValue = (newDataObj: any, idx: string) => {
-    props.modelValue[idx] = newDataObj
-    emits('update:modelValue', props.modelValue)
-}
 
 // Drag and drop subforms
 let draggedItem: any;
@@ -103,11 +99,11 @@ const handleDrop = (evt: Event) => {
 };
 
 const addIcon =
-    `<svg id="el-icon-plus" viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
+    `<svg viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
     `<path fill="currentColor" d = "M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm-38.4 409.6H326.4a38.4 38.4 0 1 0 0 76.8h147.2v147.2a38.4 38.4 0 0 0 76.8 0V550.4h147.2a38.4 38.4 0 0 0 0-76.8H550.4V326.4a38.4 38.4 0 1 0-76.8 0v147.2z" > </path>` +
     `< /svg>`
 const deleteIcon =
-    `<svg id="el-icon-close" viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
+    `<svg viewBox = "0 0 1024 1024" xmlns = "http://www.w3.org/2000/svg">` +
     `<path fill="currentColor" d = "M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896zm0 393.664L407.936 353.6a38.4 38.4 0 1 0-54.336 54.336L457.664 512 353.6 616.064a38.4 38.4 0 1 0 54.336 54.336L512 566.336 616.064 670.4a38.4 38.4 0 1 0 54.336-54.336L566.336 512 670.4 407.936a38.4 38.4 0 1 0-54.336-54.336L512 457.664z" > </path>` +
     `< /svg>`
 
@@ -120,43 +116,44 @@ const deleteIcon =
             v-for="(item, idx) in modelValue"
             :key="idx"
             class="dndParent"
-        ></div>
-        <div
-            :class="{
-                'drag-item': true,
-                'sf-subform-background': true,
-                'not-readonly': formMode.startsWith('Edit') && property.additionalItems,
-            }"
-            :idx="idx"
-            :draggable="formMode.startsWith('Edit') && property.additionalItems"
-            @dragstart.stop="handleDragstart"
-            @dragover.stop="handleDrageover"
-            @dragend.stop="handleDragend"
-            @drop.stop="handleDrop"
         >
-            <JsonschemaForm
-                :model-value="item"
-                :properties="property.items.properties"
-                :requiredArr="property.required"
-                :updateable-properties="editPermitted.items.properties"
-                :form-mode="formMode"
-                :size="size"
-                :label-position="labelPosition"
-                :label-width="labelWidth"
-                :query-callback="queryCallback"
-                :colum-widths="columWidths"
-                @update:modelValue="($event: Event) => onUpdateModelValue($event, idx)"
-                @current-change="($event: Event) => $emit('current-change', $event)"
-                @header-dragend="($event: Event) => $emit('header-dragend', $event)"
-            >
-            </JsonschemaForm>
-            <!-- Delete icon -->
             <div
-                v-if="formMode.startsWith('Edit') && property.additionalItems"
-                class="icon-delete"
-                v-html="deleteIcon"
-                @click="modelValue.splice(idx, 1)"
-            ></div>
+                :class="{
+                    'drag-item': true,
+                    'sf-subform-background': true,
+                    'not-readonly': formMode.startsWith('Edit') && property.additionalItems,
+                }"
+                :idx="idx"
+                :draggable="formMode.startsWith('Edit') && property.additionalItems"
+                @dragstart.stop="handleDragstart"
+                @dragover.stop="handleDrageover"
+                @dragend.stop="handleDragend"
+                @drop.stop="handleDrop"
+            >
+                <JsonschemaForm
+                    :model-value="item"
+                    :properties="property.items.properties"
+                    :requiredArr="property.required"
+                    :updateable-properties="editPermitted.items.properties"
+                    :form-mode="formMode"
+                    :size="size"
+                    :label-position="labelPosition"
+                    :label-width="labelWidth"
+                    :query-callback="queryCallback"
+                    :colum-widths="columWidths"
+                    @update:modelValue="($event: Event) => modelValue[idx] = $event"
+                    @current-change="($event: Event) => $emit('current-change', $event)"
+                    @header-dragend="($event: Event) => $emit('header-dragend', $event)"
+                >
+                </JsonschemaForm>
+                <!-- Delete icon -->
+                <div
+                    v-if="formMode.startsWith('Edit') && property.additionalItems"
+                    class="icon-delete"
+                    v-html="deleteIcon"
+                    @click="modelValue.splice(idx, 1)"
+                ></div>
+            </div>
         </div>
         <!-- Add icon -->
         <div

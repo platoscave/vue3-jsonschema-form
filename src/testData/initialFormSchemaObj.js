@@ -250,7 +250,7 @@ export default {
     },
     objectsTable: {
       title: "Objects in Table",
-      description: "### Array - objects\nDisplay an array of objects in a table.\nUse Drag and Drop to reorder the objects",
+      description: "### Array - objects\nDisplay an array of objects in a table.\n Use Drag and Drop to reorder the objects",
       type: "array",
       displayAs: "table",
       items: {
@@ -267,6 +267,7 @@ export default {
           },
           logEntry: {
             title: "Log Entry",
+            description: "### Log Entry\n Describe notable event which took place.",
             type: "string",
             maxLength: 500,
             attrs: {

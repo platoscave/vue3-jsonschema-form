@@ -63,20 +63,8 @@ export default {
         showWordLimit: true,
       },
     },
-    //     contentMediaType.startsWith("image/")
-    stringImage: {
-      title: "Icon",
-      description: "### String - svg icon",
-      type: "string",
-      contentMediaType: "image/svg"
-    },
     //     property.enum
-    stringEnumSmall: {
-      title: "Enum Small",
-      description: "### String - enum \nIf there are less than five permitted values, then display as raidobuttons",
-      type: "string",
-      enum: ["Tokyo", "New York", "Paris"],
-    },
+
     stringEnumLarge: {
       title: "Enum Large",
       description: "### String - enum \nIf there are more than four permitted values, then display as listbox.",
@@ -84,36 +72,6 @@ export default {
       enum: ["Tokyo", "New York", "Paris", "Moskow", "Abu Dhabi", "Canberra"],
     },
 
-
-    // multi select
-    //     property.items.type === "array"
-    //     property.items.argoQuery
-    multiSelectSmall: {
-      title: "Mutli Select Small",
-      description: "### Array - query \nSelect multiple objects checkboxes. Return an array of identifires.",
-      type: "array",
-      items: {
-        type: "string",
-        query: { select: 'small' },
-      }
-    },
-    multiSelectLarge: {
-      title: "Mutli Select Large",
-      description: "### Array - query \nSelect multiple objects from a list. Return an array of identifires.",
-      type: "array",
-      items: {
-        type: "string",
-        query: { select: 'large' },
-      }
-    },
-
-    //     else "StringCodeEditorCtrl";
-    objectJson: {
-      title: "Code Editor",
-      description: "### String\nObject with no properties, displayed as code editor",
-      type: "object"
-    }
-    //     else "StringCodeEditorCtrl";
 
   },
   required: ['string']

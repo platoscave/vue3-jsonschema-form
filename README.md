@@ -1,7 +1,7 @@
-# Vue3 JsonSchema Form
+# Vue3 JsonSchema Form/Table
 Use the same schema that you use for server-side validation, to generate client-side forms.
-## 1 Demo
-
+## 1 Playground
+	Try it in our playground. Past your favorite Json Schema, See what happens. 
 ## 2 Install
 ```
 npm i vue3-jsonschema-form --save
@@ -22,12 +22,12 @@ app.mount("#app");
 ...or in the script tag of your component:
 ```javascript
 <script setup lang="ts">
-	import JsonSchemaForm from "./components/JsonSchemaForm.vue";
+	import JsonSchemaForm from "JsonSchemaForm.vue";
 </script>
 ```
 
 ## 4 Description
-**Vue3 JsonSchema Form** takes a [JsonSchema draft v6](https://json-schema.org/) object and generates a a  form based on [Element Plus](https://element-plus.org/en-US/) input controls. The updated data object is returned as an update event.
+**Vue3 JsonSchema Form/Table** takes a [JsonSchema draft v7](https://json-schema.org/) [JSON Schema: A Media Type for Describing JSON Documents](https://json-schema.org/draft/2020-12/json-schema-core) object and generates a form based on [Element Plus](https://element-plus.org/en-US/) input controls. The updated data object is returned as an update event.
 
 ### 4.1 Key features
 - **Four modes**: JsonSchema Form can be presented in four different modes:
