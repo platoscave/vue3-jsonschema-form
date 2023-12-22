@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   /* color: rgba(255, 255, 255, 0.87); */
-  background-color: #404040;
+  background-color: #F8F8FF;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -79,6 +79,11 @@
   min-height: -webkit-fill-available;
 }
 
+.el-radio-group:hover,
+.el-checkbox-group:hover {
+  border-color: #409eff;
+}
+
 /* Input background and border */
 .el-input__wrapper {
   background-color: #ffffff08;
@@ -133,20 +138,42 @@
 }
 
 /* Table overrides. Make it more dense*/
-.el-table__cell {
+.el-table {
+  --el-table-header-bg-color: #ffffff08;
+  --el-table-tr-bg-color: #ffffff08;
+  --el-table-border-color: unset;
+  border-radius: 4px;
+}
+
+.el-table .el-table__cell {
+  vertical-align: top;
+  padding: 4;
+}
+
+.el-table .cell {
+  padding: 0 4px;
+}
+
+.el-table .el-date-editor.el-input,
+.el-date-editor.el-input__wrapper {
+  width: 100%;
+
+}
+
+/* .el-table__cell {
   padding: 4px;
   border-bottom: unset;
-}
+} */
 
-.cell {
-  padding: unset;
+/* .cell {
+  padding: 4px;
   word-break: unset;
-  /* line-height: 23px; */
-}
+  /* line-height: 23px; * /
+} */
 
-th .cell {
+/* th .cell {
   padding: 10px;
-}
+} */
 
 /* CodeMirror overrides */
 .CodeMirror {
@@ -171,6 +198,10 @@ th .cell {
   border-width: 1px;
   padding: 5px;
   min-height: -webkit-fill-available;
+}
+
+.cm-s-dracula.CodeMirror:hover {
+  border-color: #409eff;
 }
 
 
@@ -225,7 +256,7 @@ th .cell {
 
 
 
-
+/* 
 
 a {
   font-weight: 500;
@@ -239,16 +270,14 @@ a:hover {
 
 body {
   margin: 0;
-  /* display: flex; */
-  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
 
-h1 {
+xh1 {
   font-size: 3.2em;
   line-height: 1.1;
-}
+} */
 
 /* button {
   border-radius: 8px;
@@ -261,7 +290,7 @@ h1 {
   cursor: pointer;
   transition: border-color 0.25s;
 } */
-
+/* 
 button:hover {
   border-color: #646cff;
 }
@@ -271,18 +300,14 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-.card {
-  padding: 2em;
-}
-
 #app {
-  /* max-width: 1280px; */
+
   margin: 0 auto;
   padding: .5em;
-  /* text-align: center; */
-}
 
-@media (prefers-color-scheme: light) {
+} */
+
+/* @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
@@ -295,4 +320,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

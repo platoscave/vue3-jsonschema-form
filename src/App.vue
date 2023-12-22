@@ -3,6 +3,7 @@ import { ref, watch, onMounted } from "vue";
 import JsonschemaTable from './components/JsonschemaTable.vue'
 
 import initialFormSchemaObj from './testData/initialFormSchemaObj'
+import initialTableSchemaObj from './testData/initialTableSchemaObj'
 import initialFormDataObj from './testData/initialFormDataObj'
 import initialTableDataObj from './testData/initialTableDataObj'
 import initialEditPermittedObj from './testData/initialEditPermittedObj'
@@ -26,8 +27,10 @@ let sizeRef = ref("default")
 let labelPositionRef = ref("left")
 let labelWidtthRef = ref("auto")
 let validRef = ref(true)
+let columWidthsRef = ref([])
 
 let formSchemaObjRef = ref(initialFormSchemaObj)
+let tableSchemaObjRef = ref(initialTableSchemaObj)
 let formDataObjRef = ref(initialFormDataObj)
 let tableDataObjRef = ref(initialTableDataObj)
 let formEditPermittedRef = ref(initialEditPermittedObj)
@@ -39,8 +42,8 @@ const validateForm = () => {
 const resetForm = () => {
     //formDataObjRef.value = initialFormDataObj
 
-    formSchemaObjRef = initialFormSchemaObj
-    formEditPermittedRef = initialEditPermittedObj
+    // formSchemaObjRef = initialFormSchemaObj
+    // formEditPermittedRef = initialEditPermittedObj
 };
 
 // Query callback for dropdown listbox. Returns a promise 
@@ -68,9 +71,7 @@ const copyToRef = (sourceStr: string, destObj: any) => {
     }
 }
 
-onMounted(() => {
-    resetForm()
-})
+
 // deep watch dataObj, perform pudate
 watch(formDataObjRef, (newDataObj) => {
 
@@ -161,7 +162,7 @@ watch(tableDataObjRef, (newDataObj) => {
                         :label-position="labelPositionRef"
                         :label-width="labelWidtthRef"
                         :query-callback="queryCallback"
-                        :colum-widths="columWidths"
+                        :colum-widths="columWidthsRef"
                         @current-change="($event) => $emit('current-change', $event)"
                         @header-dragend="($event) => $emit('header-dragend', $event)"
                     >
@@ -189,15 +190,15 @@ watch(tableDataObjRef, (newDataObj) => {
             <!-- The form -->
             <JsonschemaTable
                 v-model="tableDataObjRef"
-                :properties="formSchemaObjRef.properties"
-                :required-arr="formSchemaObjRef.required"
+                :properties="tableSchemaObjRef.properties"
+                :required-arr="tableSchemaObjRef.required"
                 :updateable-properties="formEditPermittedRef"
                 :form-mode="formModeRef"
                 :sizeRef="sizeRef"
                 :label-position="labelPositionRef"
                 :label-width="labelWidtthRef"
                 :query-callback="queryCallback"
-                :colum-widths="columWidths"
+                :colum-widths="columWidthsRef"
                 @current-change="($event) => $emit('current-change', $event)"
                 @header-dragend="($event) => $emit('header-dragend', $event)"
             >
@@ -210,9 +211,9 @@ watch(tableDataObjRef, (newDataObj) => {
                 <pane size="30">
                     <div class="header">Jsonschema </div>
                     <StringCodeEditorCtrl
-                        :model-value="JSON.stringify(formSchemaObjRef, null, 2)"
+                        :model-value="JSON.stringify(tableSchemaObjRef, null, 2)"
                         :readonly=false
-                        @update:modelValue="($event) => copyToRef($event, formSchemaObjRef)"
+                        @update:modelValue="($event) => copyToRef($event, tableSchemaObjRef)"
                     ></StringCodeEditorCtrl>
                 </pane>
                 <pane>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import JsonschemaTable from '../JsonschemaTable.vue'
 
-const props = defineProps({
+defineProps({
     modelValue: { type: Object, default: () => ([{}]) },
     property: { type: Object, default: () => ({}) },
     requiredArr: { type: Array, default: () => ([]) },
@@ -18,7 +18,6 @@ const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragen
 
 <template>
     <JsonschemaTable
-        class="sf-subform-background"
         :model-value="modelValue"
         :properties="property.items.properties"
         :requiredArr="property.required"

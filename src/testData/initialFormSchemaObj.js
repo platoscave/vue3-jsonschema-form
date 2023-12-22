@@ -220,7 +220,7 @@ export default {
     //     else "ArrayObjects"; // objects in a subform
     objectsArray: {
       title: "Objects in Forms",
-      description: "### Array - objects\nDisplay an array of objects in subforms",
+      description: "### Array - objects\nDisplay an array of objects in subforms.\nUse Drag and Drop to reorder the objects",
       type: "array",
       items: {
         type: "object",
@@ -250,7 +250,7 @@ export default {
     },
     objectsTable: {
       title: "Objects in Table",
-      description: "### Array - objects\nDisplay an array of objects in a table",
+      description: "### Array - objects\nDisplay an array of objects in a table.\nUse Drag and Drop to reorder the objects",
       type: "array",
       displayAs: "table",
       items: {
