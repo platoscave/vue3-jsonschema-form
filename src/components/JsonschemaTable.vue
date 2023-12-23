@@ -124,9 +124,25 @@ const includeThisProperty = (formMode: string, dataObj: object[] = [], type: str
 }
 const propertyIsReadonly = (formMode: string, propertyName: string) => {
     if (formMode.startsWith('Readonly')) return true
+    // TODO work with editPermittedObj
     if (formMode === 'Edit Permitted') return false
     return false
 }
+
+const addIsAllowed = computed(() => {
+    if (props.formMode.startsWith('Readonly')) return false
+    // TODO work with editPermittedObj
+    if (props.formMode === 'Edit Permitted') return 'bottom'
+    return 'bottom'
+})
+
+const deleteIsAllowed = computed(() => {
+    if (props.formMode.startsWith('Readonly')) return false
+    // TODO work with editPermittedObj
+    if (props.formMode === 'Edit Permitted') return 'true'
+    return 'true'
+})
+
 
 // Determin the control type
 const getControlName = (property: IProperty) => {
@@ -235,7 +251,6 @@ const deleteIcon =
         @current-change="($event) => $emit('current-change', $event)"
         @header-dragend="($event) => $emit('header-dragend', $event)"
     >
-        <!-- <div v-for="( property, propertyName ) in  properties "> -->
         <el-table-column
             v-for="( property, propertyName) in properties"
             :column-key="propertyName"
@@ -245,19 +260,19 @@ const deleteIcon =
             :sort-method="(a, b) => sortFunc(property.type, a[propertyName], b[propertyName])"
             resizable
         >
-            <!-- Use label slot to add label with tooltip info infoIcon -->
+            <!-- Use header slot to add label with tooltip info infoIcon -->
             <template #header>
-                <span>{{ property.title }} &nbsp;</span>
+                <span class="label-span">{{ property.title }} &nbsp;</span>
                 <el-tooltip
                     v-if="property.description"
                     effect="light"
                     raw-content
                 >
-                    <span
+                    <div
                         class="infoIcon"
                         v-html="infoIcon"
                     >
-                    </span>
+                    </div>
                     <template #content>
                         <Markdown2Html :model-value="property.description"></Markdown2Html>
                     </template>
@@ -300,19 +315,24 @@ const deleteIcon =
                 </component>
             </template>
         </el-table-column>
+        <!-- Colum for the delete/add icon -->
         <el-table-column
+            v-if="addIsAllowed"
             label=""
-            width="40"
+            width="35"
         >
-            <!-- Use label slot to add label with tooltip info infoIcon -->
+            <!-- Use header slot to add label with tooltip info infoIcon -->
             <template #header>
                 <div
                     class="icon-add"
                     v-html="addIcon"
-                    @click="modelValue.push({})"
+                    @click="addIsAllowed ? 'top' : modelValue.unshift({}); modelValue.push({})"
                 ></div>
             </template>
-            <template #default="scope">
+            <template
+                v-if="deleteIsAllowed"
+                #default="scope"
+            >
                 <div
                     class="icon-delete"
                     v-html="deleteIcon"
@@ -327,6 +347,10 @@ const deleteIcon =
     </el-table>
 </template>
 <style scoped>
+.label-span {
+    padding-left: 10px;
+}
+
 .infoIcon {
     /* force infoIcon next to label */
     color: var(--el-color-primary-light-7);

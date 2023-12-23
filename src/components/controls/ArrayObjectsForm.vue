@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance } from "vue";
+import { ref, computed } from "vue";
 import { useDark } from '@vueuse/core'
 
 const props = defineProps({
@@ -16,6 +16,28 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
 
+// used to forece update after reorder
+const componentKey = ref(0)
+
+const addIsAllowed = computed(() => {
+    if (props.formMode.startsWith('Readonly')) return false
+    // TODO work with editPermittedObj
+    if (props.formMode === 'Edit Permitted') return 'bottom'
+    return 'bottom'
+})
+const deleteIsAllowed = computed(() => {
+    if (props.formMode.startsWith('Readonly')) return false
+    // TODO work with editPermittedObj
+    if (props.formMode === 'Edit Permitted') return 'true'
+    return 'true'
+})
+const reorderIsAllowed = computed(() => {
+    if (props.formMode.startsWith('Readonly')) return false
+    // TODO work with editPermittedObj
+    if (props.formMode === 'Edit Permitted') return 'true'
+    return 'true'
+})
+
 
 // Drag and drop subforms
 let draggedItem: any;
@@ -28,22 +50,14 @@ const findAncestor = (el: Element, cls: string) => {
 
 const handleDragstart = (evt: Event) => {
 
-    //const targetItem = findAncestor(evt.target, "drag-item")
     if (evt.target) {
-        console.log('handleDragsstart :', evt.target)
-
+        // get the drag item
         draggedItem = evt.target;
-
-        //evt.target.classList.add('fiftyPercent')
-
         dndParentItem = findAncestor(draggedItem, "dndParent")
+        // Set dark mode for item to be copied (if applicable)
         if (useDark().value) dndParentItem.classList.add('dark')
-
-        //evt.target.classList.add('fiftyPercent')
-
-        //evt.target.style("margin: 10px")
-
-        // must be sent to the top of the stack, after handelDragStart
+        // Hide the draggedItem. 
+        // This must be sent to the top of the event stack, after handelDragStart
         // otherwise the hidden elemnt will be copied
         setTimeout(function () {
             draggedItem.style.visibility = "hidden";
@@ -67,35 +81,22 @@ const handleDrageover = (evt: Event) => {
     }
 };
 const handleDragend = (evt: Event) => {
+    // restore class
     dndParentItem.classList.remove('dark')
-
-    //draggedItem.classList.remove('fiftyPercent')
-    //console.log('parentElement:', evt.target.parentElement)
-
+    // get children that have the new order
     let allChildren = dndParentItem.querySelectorAll(".drag-item");
-
+    // create a new array in the correct order
     const modelValueReordered = []
-
     allChildren.forEach((dragItem: Element) => {
-        console.log('New order:', dragItem.getAttribute("idx"))
         const oldIdx = dragItem.getAttribute("idx")
         modelValueReordered.push(props.modelValue[oldIdx])
     })
-    console.log('modelValueReordered:', modelValueReordered)
-
-
+    // send the new array
     emits('update:modelValue', modelValueReordered)
+    // force rerender. The new order does not do this automaticly
+    componentKey.value += 1
+    // restore visibility
     draggedItem.style.visibility = "visible";
-
-    // None of this works
-    // setTimeout(function () {
-    // emits('update:modelValue', modelValueReordered)
-    // }, 0);
-    // const instance = getCurrentInstance();
-    // instance?.proxy?.$forceUpdate();
-};
-const handleDrop = (evt: Event) => {
-    console.log('DraggableItem, handleDragstart event:', evt)
 };
 
 const addIcon =
@@ -110,12 +111,14 @@ const deleteIcon =
 </script>
 
 <template>
-    <div>
+    <div
+        class="dndParent"
+        :key="componentKey"
+    >
         <!-- Create a subForm for each of the items in the modelValue array -->
         <div
             v-for="(item, idx) in modelValue"
             :key="idx"
-            class="dndParent"
         >
             <div
                 :class="{
@@ -124,7 +127,7 @@ const deleteIcon =
                     'not-readonly': formMode.startsWith('Edit') && property.additionalItems,
                 }"
                 :idx="idx"
-                :draggable="formMode.startsWith('Edit') && property.additionalItems"
+                :draggable="reorderIsAllowed"
                 @dragstart.stop="handleDragstart"
                 @dragover.stop="handleDrageover"
                 @dragend.stop="handleDragend"
@@ -148,7 +151,7 @@ const deleteIcon =
                 </JsonschemaForm>
                 <!-- Delete icon -->
                 <div
-                    v-if="formMode.startsWith('Edit') && property.additionalItems"
+                    v-if="deleteIsAllowed"
                     class="icon-delete"
                     v-html="deleteIcon"
                     @click="modelValue.splice(idx, 1)"
@@ -157,7 +160,7 @@ const deleteIcon =
         </div>
         <!-- Add icon -->
         <div
-            v-if="formMode.startsWith('Edit') && property.additionalItems"
+            v-if="addIsAllowed"
             class="icon-add"
             v-html="addIcon"
             @click="modelValue.push({})"
