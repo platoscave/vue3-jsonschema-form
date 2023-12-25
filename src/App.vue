@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// @ts-nocheck
 import { ref, watch, onMounted } from "vue";
 import JsonschemaTable from './components/JsonschemaTable.vue'
 

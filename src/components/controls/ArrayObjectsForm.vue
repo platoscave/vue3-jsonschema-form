@@ -44,7 +44,7 @@ let draggedItem: any;
 let dndParentItem: any;
 
 const findAncestor = (el: Element, cls: string) => {
-    while ((el = el.parentElement) && !el.classList.contains(cls));
+    while (el.parentElement && (el = el.parentElement) && !el.classList.contains(cls));
     return el;
 }
 
@@ -65,8 +65,8 @@ const handleDragstart = (evt: Event) => {
     }
 }
 
-const handleDrageover = (evt: Event) => {
-    const targetItem = findAncestor(evt.target, "drag-item")
+const handleDrageover = (evt: any) => {
+    const targetItem: any = findAncestor(evt.target, "drag-item")
 
     if (targetItem && targetItem !== draggedItem && targetItem.classList.contains('drag-item')) {
         const boundingRect = targetItem.getBoundingClientRect();
@@ -80,16 +80,16 @@ const handleDrageover = (evt: Event) => {
         }
     }
 };
-const handleDragend = (evt: Event) => {
+const handleDragend = () => {
     // restore class
     dndParentItem.classList.remove('dark')
     // get children that have the new order
     let allChildren = dndParentItem.querySelectorAll(".drag-item");
     // create a new array in the correct order
-    const modelValueReordered = []
+    const modelValueReordered: any = []
     allChildren.forEach((dragItem: Element) => {
         const oldIdx = dragItem.getAttribute("idx")
-        modelValueReordered.push(props.modelValue[oldIdx])
+        if (oldIdx) modelValueReordered.push(props.modelValue[oldIdx])
     })
     // send the new array
     emits('update:modelValue', modelValueReordered)
@@ -131,7 +131,6 @@ const deleteIcon =
                 @dragstart.stop="handleDragstart"
                 @dragover.stop="handleDrageover"
                 @dragend.stop="handleDragend"
-                @drop.stop="handleDrop"
             >
                 <JsonschemaForm
                     :model-value="item"

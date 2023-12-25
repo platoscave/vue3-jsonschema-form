@@ -2,7 +2,7 @@
 Use the same schema that you use for server-side validation, to generate a client-side form or table.
 ## 1 Playground
 Try it in our [playground](). 
-Past your favorite Json Schema and see what happens. 
+Paste your favorite Json Schema and see what happens. 
 ## 2 Install
 ```
 npm i vue3-jsonschema-form --save
@@ -45,7 +45,7 @@ import 'jsonschema-form.css'
 - **Automatic listbox - radiobuttons**: If the number of options is less the 5, radiobuttons are presented rather than a listbox. If there is only one option then that value is presented as read only.
 - **Validate before save:** We apply el-form validations before returning data. Required properties have a red asterix  next to the label.
 - **Info Icon:** If a description is provided then a hover-over info icon is displayed next to the label. The pop-up text accepts markdown.
-- **Subforms for nested objects:** Nested object are displayed in subforms on a mostly transparent grey background. With multiple nesting levels the subform backgrounds become lighter, making them easy to distinguish.
+- **Subforms for nested objects:** Nested object are displayed as nested subforms on a mostly transparent grey background. With each nesting level the subform backgrounds become lighter, making them easy to distinguish.
 - **Array of subforms for arrays containing objects:** If the property describes an array of objects then an array of subforms is displayed. Use the '+' icon to add a new object or the '-' icon to remove one. The order of the objects in the array can be changed through drag and drop.
 - **Table in Form**: Embed a table in in your form or vice versa. 
 - **Row click event**: Supports row click event in tables or array of sub-forms so that they can be used for page navigation.

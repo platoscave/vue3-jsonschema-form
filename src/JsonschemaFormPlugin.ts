@@ -5,7 +5,7 @@ import JsonschemaForm from "./components/JsonschemaForm.vue";
 // Install hook. Allows us to do global import in main.ts
 // e.g. app.use(ViewerPlugin);
 export default {
-    install: (app, options) => {
+    install: (app: any) => {
         app.component("JsonschemaForm", JsonschemaForm);
     },
 };

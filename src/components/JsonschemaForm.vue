@@ -142,7 +142,7 @@ const getControlName = (property: IProperty) => {
             }
             if (property.query) return "StringQueryCtrl";
             if (property.enum) return "StringEnumCtrl";
-            if (property.format === "date-time") return "StringDateTimeCtrl";
+            if (property.format === "date-time" || property.format === "date") return "StringDateTimeCtrl";
             return "StringCtrl";
         case "number": return "NumberCtrl";
         case "integer": return "NumberCtrl";

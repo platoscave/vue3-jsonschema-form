@@ -1,7 +1,9 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import ElementPlus from 'element-plus'
-import locale from 'element-plus/dist/locale/en.min.js'
+// @ts-expect-error
+// import locale from 'element-plus/dist/locale/en.min.js'
+import locale from 'element-plus/dist/locale/nl.min.js'
 import JsonschemaForm from "./JsonschemaFormPlugin.ts";
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'

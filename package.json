@@ -1,6 +1,6 @@
 {
-  "name": "jsonschema-form",
-  "version": "0.0.1",
+  "name": "jsonschema-form-table",
+  "version": "0.1.0",
   "author": "platoscave",
   "description": "A Vue3 plugin that generates Element Plus forms based on a Jsonschema",
   "license": "MIT",
@@ -14,7 +14,7 @@
   "browser": {
     "./styles.css": "./dist/style.css"
   },
-  "types": "dist/ViewerPlugin.d.ts",
+  "types": "dist/JsonschemaForm.d.ts",
   "files": [
     "dist"
   ],

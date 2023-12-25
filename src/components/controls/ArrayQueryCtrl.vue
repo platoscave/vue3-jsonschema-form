@@ -30,6 +30,11 @@ onMounted(async () => {
         }
     }
 })
+interface IItems {
+    key: any;
+    label: string;
+    iconSrc: string;
+}
 </script>
 
 <template>
@@ -38,7 +43,7 @@ onMounted(async () => {
         class="sf-readonly-wide"
     >
         <div
-            v-for="item in readonlyLabels"
+            v-for="item in (readonlyLabels as IItems)"
             :key="item.key"
             :model-value="item.key"
         >

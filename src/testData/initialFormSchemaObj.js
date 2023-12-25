@@ -77,9 +77,9 @@ export default {
     //     property.format === "date-time"
     stringDate: {
       title: "Date",
-      description: "### String - date \n Dispaly localized date",
+      description: "### String - date \n Returns date without time/time zone <br>Readonly displays localized format.",
       type: "string",
-      format: "date-time",
+      format: "date",
       attrs: {
         type: "date",
         placeholder: "Pick a day"
@@ -87,11 +87,10 @@ export default {
     },
     stringDateTime: {
       title: "Date Time",
-      description: "### String - date-time \n Display localized date-time",
+      description: "### String - date-time \n Displays date-time in local time zone. <br>Returns ISO date-time in GMT",
       type: "string",
       format: "date-time",
       attrs: {
-        type: "datetime",
         format: "YYYY-MM-DD HH:mm",
         placeholder: "Pick a date - time"
       },
@@ -189,9 +188,8 @@ export default {
         birthday: {
           title: "Date of Birth",
           type: "string",
-          format: "date-time",
+          format: "date",
           attrs: {
-            type: "date",
           },
         },
         nestedObject: {
@@ -231,7 +229,7 @@ export default {
             title: "Timestamp",
             default: "now",
             attrs: {
-              type: "datetime",
+              format: "YYYY-MM-DD HH:mm",
             },
           },
           logEntry: {
@@ -262,7 +260,7 @@ export default {
             format: "date-time",
             default: "now",
             attrs: {
-              type: "datetime",
+              format: "YYYY-MM-DD HH:mm",
             },
           },
           logEntry: {
