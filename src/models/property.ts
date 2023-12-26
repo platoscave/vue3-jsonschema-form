@@ -8,6 +8,7 @@ export interface IProperty {
     maximum?: number
     multipleOf?: number
     format?: string
+    pattern?: string
     contentMediaType?: string
     displayAs?: string
     query?: Object
@@ -20,7 +21,7 @@ export interface IProperty {
     }
     items?: {
         query?: Object
-        properties?: Object
+        properties?: Record<string, IProperty>
         type?: string
     }
     required?: string[]

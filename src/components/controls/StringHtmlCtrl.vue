@@ -1,4 +1,5 @@
 <script setup lang="ts">
+//@ts-nocheck
 import { ref, watch, onBeforeUnmount } from "vue";
 import StarterKit from "@tiptap/starter-kit";
 import { Editor, EditorContent, VueNodeViewRenderer } from "@tiptap/vue-3";
@@ -15,7 +16,7 @@ export interface IProps {
     property?: IProperty
     readonly?: boolean
 }
-withDefaults(defineProps<IProps>(), {
+const props = withDefaults(defineProps<IProps>(), {
     modelValue: '',
     property: () => ({}),
     readonly: true

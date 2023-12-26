@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { ElForm } from 'element-plus' // for elFormRef
 import BooleanCtrl from "./controls/BooleanCtrl.vue";
 import StringDateTimeCtrl from "./controls/StringDateTimeCtrl.vue";
 import StringMarkdownCtrl from "./controls/StringMarkdownCtrl.vue";
@@ -15,6 +16,7 @@ import ArrayQueryCtrl from "./controls/ArrayQueryCtrl.vue";
 import StringCtrl from "./controls/StringCtrl.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
 import Markdown2Html from './controls/Markdown2Html.vue'
+import type { IProperty } from '../models/property'
 import type { INestedObject } from '../models/nestedObject'
 
 const props = withDefaults(defineProps<INestedObject>(), {
@@ -35,45 +37,8 @@ const emit = defineEmits<{
     (e: 'header-dragend', columWidths: number[]): void
 }>()
 
-// const props = defineProps({
-//     modelValue: { type: Array, default: () => ([{}]) },
-//     properties: { type: Object, default: () => ({}) },
-//     requiredArr: { type: Array, default: () => ([]) },
-//     editPermitted: { type: Object, default: () => ({}) },
-//     queryCallback: { type: Function },
-//     formMode: { type: String, default: 'Readonly Full' },
-//     size: { type: String, default: 'default' },
-//     labelWidth: { type: String, default: 'auto' },
-//     labelPosition: { type: String, default: 'left' },
-//     columWidths: { type: Array, default: () => ([]) },
-//     // TODO
-//     currentRow: { type: String, default: '' },
-
-// });
-
-// const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
-
-
-// interface IProperty {
-//     tile: string;
-//     decription: string;
-//     type: string;
-//     contentMediaType: string;
-//     query: object;
-//     enum: string[];
-//     format: string;
-//     properties: object;
-//     items: {
-//         type: string;
-//         properties: object;
-//         argoQuery: object;
-//     };
-//     displayAs: string;
-// }
-
 // methodes called from outside, so pass on to our form
-//<IItem[]>([])
-const formElRef = ref(null);
+const formElRef = ref<InstanceType<typeof ElForm> | null>(null);
 const validate = () => {
     if (formElRef.value) return formElRef.value.validate();
 };
@@ -85,7 +50,7 @@ defineExpose({ validate, resetFields });
 //@ts-expect-error
 const validationRules = computed(() => {
 
-    let rulesObj = {};
+    let rulesObj: any = {};
     // no rules for readonly
     if (props.formMode.startsWith('Readonly')) return {};
 
@@ -133,6 +98,7 @@ const validationRules = computed(() => {
     return rulesObj;
 });
 
+//@ts-expect-error
 const includeThisProperty = (formMode: string, dataObj: object[] = [], type: string) => {
     if (
         formMode === "Readonly Dense" &&
@@ -168,7 +134,7 @@ const deleteIsAllowed = computed(() => {
 
 
 // Determin the control type
-const getControlName = (property: INestedObject['property']) => {
+const getControlName = (property: IProperty) => {
     if (!property) return "StringCodeEditorCtrl";
 
     switch (property.type) {
@@ -206,13 +172,13 @@ const getControlName = (property: INestedObject['property']) => {
 
 
 };
-const isNestedObject = (property: INestedObject['property']) => {
+const isNestedObject = (property: IProperty) => {
     const controlName = getControlName(property)
     if (['ObjectNested', 'ArrayObjectsForm', 'ArrayObjectsTable'].includes(controlName)) return true
     return false
 }
 
-const getComponent = (property: INestedObject['property']) => {
+const getComponent = (property: IProperty) => {
 
     const dynamicComp = [
         { name: "BooleanCtrl", comp: BooleanCtrl },
@@ -236,13 +202,13 @@ const getComponent = (property: INestedObject['property']) => {
     if (nameComp) return nameComp.comp;
     else return StringCodeEditorCtrl.comp
 };
-const sortFunc = (type?: string, a: any, b: any) => {
+const sortFunc = (type: string = '', a: any, b: any) => {
     if (type === "string") {
         if (a.toUpperCase() < b.toUpperCase()) return -1;
         if (a.toUpperCase() > b.toUpperCase()) return 1;
         return 0;
     } else if (type === "number") {
-        const toFloat = (num) => parseFloat(num.replace(".", "").replace(",", "."));
+        const toFloat = (num: string) => parseFloat(num.replace(".", "").replace(",", "."));
         return toFloat(a) - toFloat(b);
     }
     return 0;
@@ -360,7 +326,7 @@ const deleteIcon =
                 <div
                     class="icon-delete"
                     v-html="deleteIcon"
-                    @click="modelValue.splice(idx, 1)"
+                    @click="modelValue.splice(scope, 1)"
                 >
                 </div>
             </template>

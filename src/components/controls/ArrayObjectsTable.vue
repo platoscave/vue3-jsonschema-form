@@ -34,7 +34,7 @@ defineEmits<{
         :label-width="labelWidth"
         :query-callback="queryCallback"
         :colum-widths="columWidths"
-        @update:modelValue="($event: Event) => $emit('update:modelValue', $event)"
+        @update:modelValue="($event: any) => $emit('update:modelValue', $event)"
         @current-change="($event) => $emit('current-change', $event)"
         @header-dragend="($event) => $emit('header-dragend', $event)"
     ></JsonschemaTable>

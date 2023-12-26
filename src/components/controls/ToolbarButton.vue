@@ -1,7 +1,7 @@
 <script setup lang="ts">
 //import toolbarSymbols from "./toolbar-symbols.svg";
 
-const props = defineProps({
+defineProps({
 	isActive: { type: Boolean, default: false },
 	popupText: { type: String, default: '' },
 	iconName: { type: String, default: '' },

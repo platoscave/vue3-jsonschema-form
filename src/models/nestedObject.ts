@@ -10,7 +10,7 @@ export interface INestedObject {
         }
     }
     queryCallback?: Function
-    formMode?: string
+    formMode?: ("Readonly Full" | "Readonly Dense" | "Edit Permitted" | "Edit Full")
     size?: ("" | "default" | "small" | "large")
     labelWidth?: string
     labelPosition?: ("left" | "top" | "right")

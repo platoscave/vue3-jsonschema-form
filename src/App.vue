@@ -1,31 +1,30 @@
 <script setup lang="ts">
-// @ts-nocheck
-import { ref, watch, onMounted } from "vue";
-import JsonschemaTable from './components/JsonschemaTable.vue'
-
+import { ref, watch, } from "vue";
+//@ts-expect-error
 import initialFormSchemaObj from './testData/initialFormSchemaObj'
+//@ts-expect-error
 import initialTableSchemaObj from './testData/initialTableSchemaObj'
+//@ts-expect-error
 import initialFormDataObj from './testData/initialFormDataObj'
+//@ts-expect-error
 import initialTableDataObj from './testData/initialTableDataObj'
+//@ts-expect-error
 import initialEditPermittedObj from './testData/initialEditPermittedObj'
+//@ts-expect-error
 import initialFormQueryData from './testData/formQueryData'
 
+import JsonschemaTable from './components/JsonschemaTable.vue'
 import StringCodeEditorCtrl from './components/controls/StringCodeEditorCtrl.vue'
-
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-
-import { json } from '@codemirror/lang-json'
-import { oneDark } from '@codemirror/theme-one-dark'
 import { useDark, useToggle } from '@vueuse/core'
 
 let isDark = useDark()
 const toggleDark = useToggle(isDark)
-const extensions = [json(), oneDark]
 
-let formModeRef = ref("Edit Full")
+let formModeRef = ref<("Readonly Full" | "Readonly Dense" | "Edit Permitted" | "Edit Full")>("Edit Full")
 let sizeRef = ref("default")
-let labelPositionRef = ref("left")
+let labelPositionRef = ref<("left" | "top" | "right")>("left")
 let labelWidtthRef = ref("auto")
 let validRef = ref(true)
 let columWidthsRef = ref([])
@@ -41,16 +40,11 @@ let formQueryDataRef = ref(initialFormQueryData)
 const validateForm = () => {
 };
 const resetForm = () => {
-    //formDataObjRef.value = initialFormDataObj
-
-    // formSchemaObjRef = initialFormSchemaObj
-    // formEditPermittedRef = initialEditPermittedObj
 };
 
 // Query callback for dropdown listbox. Returns a promise 
 // the list is filled when the promise is resolved
 const queryCallback = (query: any) => {
-
     let data = formQueryDataRef.value
     if (query.select === 'small') data = formQueryDataRef.value.slice(0, 3)
     // artitificial delay 2 sec
@@ -68,22 +62,18 @@ const copyToRef = (sourceStr: string, destObj: any) => {
         Object.keys(sourceObj).forEach(key => destObj[key] = sourceObj[key]);
     }
     catch (err: any) {
-        console.log(err.message)
+        console.log('Invalid JSON' + err.message)
     }
 }
 
 
 // deep watch dataObj, perform pudate
 watch(formDataObjRef, (newDataObj) => {
-
-    console.log('App Formm dataObj', newDataObj)
-
+    console.log('Formm dataObj', newDataObj)
 }, { deep: true });
 
 watch(tableDataObjRef, (newDataObj) => {
-
-    console.log('App Table dataObj', newDataObj)
-
+    console.log('Table dataObj', newDataObj)
 }, { deep: true });
 
 
@@ -127,7 +117,7 @@ watch(tableDataObjRef, (newDataObj) => {
             v-model="labelWidtthRef"
             style="width:200px;"
             placeholder="Label width: e.g. 100 or auto"
-            @input="labelWidtthRef = $event.target.value"
+            @input="($event: any) => labelWidtthRef = $event.target.value"
             sizeRef="small"
         ></el-input>
     </div>
@@ -164,8 +154,8 @@ watch(tableDataObjRef, (newDataObj) => {
                         :label-width="labelWidtthRef"
                         :query-callback="queryCallback"
                         :colum-widths="columWidthsRef"
-                        @current-change="($event) => $emit('current-change', $event)"
-                        @header-dragend="($event) => $emit('header-dragend', $event)"
+                        @current-change="($event: any) => $emit('current-change', $event)"
+                        @header-dragend="($event: any) => $emit('header-dragend', $event)"
                     >
                     </JsonschemaForm>
                 </pane>

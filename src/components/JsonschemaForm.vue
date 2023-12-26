@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { ElForm, ElFormItem } from 'element-plus'
+import { ElForm, ElFormItem } from 'element-plus' // for elFormRef
 import BooleanCtrl from "./controls/BooleanCtrl.vue";
 import StringDateTimeCtrl from "./controls/StringDateTimeCtrl.vue";
 import StringMarkdownCtrl from "./controls/StringMarkdownCtrl.vue";
@@ -16,6 +16,7 @@ import ArrayQueryCtrl from "./controls/ArrayQueryCtrl.vue";
 import StringCtrl from "./controls/StringCtrl.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
 import Markdown2Html from './controls/Markdown2Html.vue'
+import type { IProperty } from '../models/property'
 import type { INestedObject } from '../models/nestedObject'
 
 const props = withDefaults(defineProps<INestedObject>(), {
@@ -36,40 +37,7 @@ const emit = defineEmits<{
     (e: 'header-dragend', columWidths: number[]): void
 }>()
 
-// const props = defineProps({
-//     modelValue: { type: Object, default: () => ({}) },
-//     properties: { type: Object, default: () => ({}) },
-//     requiredArr: { type: Array, default: () => ([]) },
-//     editPermitted: { type: Object, default: () => ({}) },
-//     queryCallback: { type: Function },
-//     formMode: { type: String, default: 'Readonly Full' },
-//     size: { type: String, default: 'default' },
-//     labelWidth: { type: String, default: 'auto' },
-//     labelPosition: { type: String, default: 'left' },
-//     columWidths: { type: Array, default: () => ([]) }
-// });
-
-// const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
-
-
-// interface INestedObject['property'] {
-//     tile: string;
-//     decription: string;
-//     type: string;
-//     contentMediaType: string;
-//     query: object;
-//     enum: string[];
-//     format: string;
-//     properties: object;
-//     items: {
-//         type: string;
-//         properties: object;
-//         query: object;
-//     };
-//     displayAs: string;
-// }
-
-// Methodes called from parent comp, so pass on to our form
+// Methods called from parent comp, so pass on to our form
 const formElRef = ref<InstanceType<typeof ElForm> | null>(null);
 const validate = () => {
     if (formElRef.value) return formElRef.value.validate();
@@ -151,7 +119,7 @@ const propertyIsReadonly = (formMode: string, propertyName: string) => {
 }
 
 // Determin the control name based on property type
-const getControlName = (property: INestedObject['property']) => {
+const getControlName = (property: IProperty) => {
     if (!property) return "StringCodeEditorCtrl";
     switch (property.type) {
         case "string":
@@ -188,7 +156,7 @@ const getControlName = (property: INestedObject['property']) => {
 
 };
 // Nested object have different props compared to plain controls, so we find out here 
-const isNestedObject = (property: INestedObject['property']) => {
+const isNestedObject = (property: IProperty) => {
     const controlName = getControlName(property)
     if (['ObjectNested', 'ArrayObjectsForm', 'ArrayObjectsTable'].includes(controlName)) return true
     return false
@@ -201,7 +169,7 @@ const onUpdateModelValue = (newDataObj: any, propertyName: string) => {
 }
 
 // Get the control component based on name 
-const getComponent = (property: INestedObject['property']) => {
+const getComponent = (property: IProperty) => {
 
     const dynamicComp = [
         { name: "BooleanCtrl", comp: BooleanCtrl },
