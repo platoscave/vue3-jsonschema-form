@@ -15,44 +15,64 @@ import ArrayQueryCtrl from "./controls/ArrayQueryCtrl.vue";
 import StringCtrl from "./controls/StringCtrl.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
 import Markdown2Html from './controls/Markdown2Html.vue'
+import type { INestedObject } from '../models/nestedObject'
 
-const props = defineProps({
-    modelValue: { type: Array, default: () => ([{}]) },
-    properties: { type: Object, default: () => ({}) },
-    requiredArr: { type: Array, default: () => ([]) },
-    editPermitted: { type: Object, default: () => ({}) },
-    queryCallback: { type: Function },
-    formMode: { type: String, default: 'Readonly Full' },
-    size: { type: String, default: 'default' },
-    labelWidth: { type: String, default: 'auto' },
-    labelPosition: { type: String, default: 'left' },
-    columWidths: { type: Array, default: () => ([]) },
-    // TODO
-    currentRow: { type: String, default: '' },
+const props = withDefaults(defineProps<INestedObject>(), {
+    modelValue: () => ({}),
+    properties: () => ({}),
+    requiredArr: () => ([]),
+    editPermitted: () => ({}),
+    queryCallback: () => ({}),
+    formMode: 'Readonly Full',
+    size: 'default',
+    labelWidth: 'auto',
+    labelPosition: 'left',
+    columWidths: () => ([]),
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: Object): void
+    (e: 'current-change', id: string): void
+    (e: 'header-dragend', columWidths: number[]): void
+}>()
 
-});
+// const props = defineProps({
+//     modelValue: { type: Array, default: () => ([{}]) },
+//     properties: { type: Object, default: () => ({}) },
+//     requiredArr: { type: Array, default: () => ([]) },
+//     editPermitted: { type: Object, default: () => ({}) },
+//     queryCallback: { type: Function },
+//     formMode: { type: String, default: 'Readonly Full' },
+//     size: { type: String, default: 'default' },
+//     labelWidth: { type: String, default: 'auto' },
+//     labelPosition: { type: String, default: 'left' },
+//     columWidths: { type: Array, default: () => ([]) },
+//     // TODO
+//     currentRow: { type: String, default: '' },
 
-const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
+// });
+
+// const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
 
 
-interface IProperty {
-    tile: string;
-    decription: string;
-    type: string;
-    contentMediaType: string;
-    query: object;
-    enum: string[];
-    format: string;
-    properties: object;
-    items: {
-        type: string;
-        properties: object;
-        argoQuery: object;
-    };
-    displayAs: string;
-}
+// interface IProperty {
+//     tile: string;
+//     decription: string;
+//     type: string;
+//     contentMediaType: string;
+//     query: object;
+//     enum: string[];
+//     format: string;
+//     properties: object;
+//     items: {
+//         type: string;
+//         properties: object;
+//         argoQuery: object;
+//     };
+//     displayAs: string;
+// }
 
 // methodes called from outside, so pass on to our form
+//<IItem[]>([])
 const formElRef = ref(null);
 const validate = () => {
     if (formElRef.value) return formElRef.value.validate();
@@ -62,6 +82,7 @@ const resetFields = () => {
 };
 defineExpose({ validate, resetFields });
 
+//@ts-expect-error
 const validationRules = computed(() => {
 
     let rulesObj = {};
@@ -122,6 +143,8 @@ const includeThisProperty = (formMode: string, dataObj: object[] = [], type: str
     ) return false;
     return true;
 }
+
+//@ts-expect-error
 const propertyIsReadonly = (formMode: string, propertyName: string) => {
     if (formMode.startsWith('Readonly')) return true
     // TODO work with editPermittedObj
@@ -145,7 +168,8 @@ const deleteIsAllowed = computed(() => {
 
 
 // Determin the control type
-const getControlName = (property: IProperty) => {
+const getControlName = (property: INestedObject['property']) => {
+    if (!property) return "StringCodeEditorCtrl";
 
     switch (property.type) {
         case "string":
@@ -168,12 +192,12 @@ const getControlName = (property: IProperty) => {
             else return "StringCodeEditorCtrl";
         case "array":
             // objects
-            if (property.items.type === "object" && property.items.properties) {
+            if (property.items?.type === "object" && property.items.properties) {
                 if (property.displayAs === "table") return "ArrayObjectsTable"; // objects in a table
                 return "ArrayObjectsForm"; // objects in a subform
             }
             // multi select
-            else if (property.items.type === "string") {
+            else if (property.items?.type === "string") {
                 if (property.items.query) return "ArrayQueryCtrl";
                 return "StringCodeEditorCtrl";
             }
@@ -182,13 +206,13 @@ const getControlName = (property: IProperty) => {
 
 
 };
-const isNestedObject = (property: IProperty) => {
+const isNestedObject = (property: INestedObject['property']) => {
     const controlName = getControlName(property)
     if (['ObjectNested', 'ArrayObjectsForm', 'ArrayObjectsTable'].includes(controlName)) return true
     return false
 }
 
-const getComponent = (property: IProperty) => {
+const getComponent = (property: INestedObject['property']) => {
 
     const dynamicComp = [
         { name: "BooleanCtrl", comp: BooleanCtrl },
@@ -212,7 +236,7 @@ const getComponent = (property: IProperty) => {
     if (nameComp) return nameComp.comp;
     else return StringCodeEditorCtrl.comp
 };
-const sortFunc = (type: string, a: any, b: any) => {
+const sortFunc = (type?: string, a: any, b: any) => {
     if (type === "string") {
         if (a.toUpperCase() < b.toUpperCase()) return -1;
         if (a.toUpperCase() > b.toUpperCase()) return 1;
@@ -290,15 +314,15 @@ const deleteIcon =
                     v-model="scope.row[propertyName]"
                     :property="property"
                     :required-arr="property.required"
-                    :updateable-properties="editPermitted[propertyName]"
+                    :edit-permitted="editPermitted"
                     :form-mode="formMode"
                     :size="size"
                     :label-position="labelPosition"
                     :label-width="labelWidth"
                     :query-callback="queryCallback"
                     :colum-widths="columWidths"
-                    @current-change="($event: Event) => $emit('current-change', $event)"
-                    @header-dragend="($event: Event) => $emit('header-dragend', $event)"
+                    @current-change="($event: any) => $emit('current-change', $event)"
+                    @header-dragend="($event: any) => $emit('header-dragend', $event)"
                 >
                 </component>
                 <component

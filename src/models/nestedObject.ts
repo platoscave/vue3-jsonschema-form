@@ -1,7 +1,8 @@
 import type { IProperty } from './property'
 export interface INestedObject {
     modelValue?: any
-    properties?: IProperty
+    properties?: Record<string, IProperty>
+    property?: IProperty
     requiredArr?: string[]
     editPermitted?: {
         items?: {
@@ -10,8 +11,8 @@ export interface INestedObject {
     }
     queryCallback?: Function
     formMode?: string
-    size?: string
+    size?: ("" | "default" | "small" | "large")
     labelWidth?: string
-    labelPosition?: string
+    labelPosition?: ("left" | "top" | "right")
     columWidths?: number[]
 }

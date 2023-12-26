@@ -1,5 +1,7 @@
 export interface IProperty {
     type?: string
+    title?: string
+    description?: string
     maxLength?: number
     minLength?: number
     minimum?: number
@@ -9,7 +11,7 @@ export interface IProperty {
     contentMediaType?: string
     displayAs?: string
     query?: Object
-    properties?: Object
+    properties?:  Record<string, IProperty>
     enum?: string[]
     attrs?: {
         placeholder?: string

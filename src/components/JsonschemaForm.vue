@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { ElForm, ElFormItem } from 'element-plus'
 import BooleanCtrl from "./controls/BooleanCtrl.vue";
 import StringDateTimeCtrl from "./controls/StringDateTimeCtrl.vue";
 import StringMarkdownCtrl from "./controls/StringMarkdownCtrl.vue";
@@ -69,7 +70,7 @@ const emit = defineEmits<{
 // }
 
 // Methodes called from parent comp, so pass on to our form
-const formElRef = ref(null);
+const formElRef = ref<InstanceType<typeof ElForm> | null>(null);
 const validate = () => {
     if (formElRef.value) return formElRef.value.validate();
 };
@@ -131,7 +132,7 @@ const validationRules = computed(() => {
     return rulesObj;
 });
 
-const includeThisProperty = (formMode: string, dataObj: object[] = [], type: string) => {
+const includeThisProperty = (formMode: string, dataObj: object[] = [], type?: string) => {
     if (
         formMode === "Readonly Dense" &&
         (!dataObj || // modelValue is empty
@@ -141,6 +142,8 @@ const includeThisProperty = (formMode: string, dataObj: object[] = [], type: str
     ) return false;
     return true;
 }
+
+//@ts-expect-error
 const propertyIsReadonly = (formMode: string, propertyName: string) => {
     if (formMode.startsWith('Readonly')) return true
     if (formMode === 'Edit Permitted') return false
@@ -280,7 +283,7 @@ const infoIcon =
                     :model-value="modelValue[propertyName]"
                     :property="property"
                     :required-arr="property.required"
-                    :updateable-properties="editPermitted[propertyName]"
+                    :edit-permitted="editPermitted"
                     :form-mode="formMode"
                     :size="size"
                     :label-position="labelPosition"

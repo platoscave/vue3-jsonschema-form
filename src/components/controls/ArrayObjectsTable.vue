@@ -27,7 +27,7 @@ defineEmits<{
         :model-value="modelValue"
         :properties="property.items?.properties"
         :requiredArr="property.required"
-        :updateable-properties="editPermitted.items?.properties"
+        :edit-permitted="editPermitted.items?.properties"
         :form-mode="formMode"
         :size="size"
         :label-position="labelPosition"
