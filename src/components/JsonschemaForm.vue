@@ -15,39 +15,58 @@ import ArrayQueryCtrl from "./controls/ArrayQueryCtrl.vue";
 import StringCtrl from "./controls/StringCtrl.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
 import Markdown2Html from './controls/Markdown2Html.vue'
+import type { INestedObject } from '../models/nestedObject'
 
-const props = defineProps({
-    modelValue: { type: Object, default: () => ({}) },
-    properties: { type: Object, default: () => ({}) },
-    requiredArr: { type: Array, default: () => ([]) },
-    editPermitted: { type: Object, default: () => ({}) },
-    queryCallback: { type: Function },
-    formMode: { type: String, default: 'Readonly Full' },
-    size: { type: String, default: 'default' },
-    labelWidth: { type: String, default: 'auto' },
-    labelPosition: { type: String, default: 'left' },
-    columWidths: { type: Array, default: () => ([]) }
-});
+const props = withDefaults(defineProps<INestedObject>(), {
+    modelValue: () => ({}),
+    properties: () => ({}),
+    requiredArr: () => ([]),
+    editPermitted: () => ({}),
+    queryCallback: () => ({}),
+    formMode: 'Readonly Full',
+    size: 'default',
+    labelWidth: 'auto',
+    labelPosition: 'left',
+    columWidths: () => ([]),
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: Object): void
+    (e: 'current-change', id: string): void
+    (e: 'header-dragend', columWidths: number[]): void
+}>()
 
-const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
+// const props = defineProps({
+//     modelValue: { type: Object, default: () => ({}) },
+//     properties: { type: Object, default: () => ({}) },
+//     requiredArr: { type: Array, default: () => ([]) },
+//     editPermitted: { type: Object, default: () => ({}) },
+//     queryCallback: { type: Function },
+//     formMode: { type: String, default: 'Readonly Full' },
+//     size: { type: String, default: 'default' },
+//     labelWidth: { type: String, default: 'auto' },
+//     labelPosition: { type: String, default: 'left' },
+//     columWidths: { type: Array, default: () => ([]) }
+// });
+
+// const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
 
 
-interface IProperty {
-    tile: string;
-    decription: string;
-    type: string;
-    contentMediaType: string;
-    query: object;
-    enum: string[];
-    format: string;
-    properties: object;
-    items: {
-        type: string;
-        properties: object;
-        query: object;
-    };
-    displayAs: string;
-}
+// interface INestedObject['property'] {
+//     tile: string;
+//     decription: string;
+//     type: string;
+//     contentMediaType: string;
+//     query: object;
+//     enum: string[];
+//     format: string;
+//     properties: object;
+//     items: {
+//         type: string;
+//         properties: object;
+//         query: object;
+//     };
+//     displayAs: string;
+// }
 
 // Methodes called from parent comp, so pass on to our form
 const formElRef = ref(null);
@@ -129,8 +148,8 @@ const propertyIsReadonly = (formMode: string, propertyName: string) => {
 }
 
 // Determin the control name based on property type
-const getControlName = (property: IProperty) => {
-
+const getControlName = (property: INestedObject['property']) => {
+    if (!property) return "StringCodeEditorCtrl";
     switch (property.type) {
         case "string":
             const mediaType = property.contentMediaType
@@ -152,12 +171,12 @@ const getControlName = (property: IProperty) => {
             else return "StringCodeEditorCtrl";
         case "array":
             // objects
-            if (property.items.type === "object" && property.items.properties) {
+            if (property.items?.type === "object" && property.items.properties) {
                 if (property.displayAs === "table") return "ArrayObjectsTable"; // objects in a table
                 return "ArrayObjectsForm"; // objects in a subform
             }
             // multi select
-            else if (property.items.type === "string") {
+            else if (property.items?.type === "string") {
                 if (property.items.query) return "ArrayQueryCtrl";
                 return "StringCodeEditorCtrl";
             }
@@ -166,7 +185,7 @@ const getControlName = (property: IProperty) => {
 
 };
 // Nested object have different props compared to plain controls, so we find out here 
-const isNestedObject = (property: IProperty) => {
+const isNestedObject = (property: INestedObject['property']) => {
     const controlName = getControlName(property)
     if (['ObjectNested', 'ArrayObjectsForm', 'ArrayObjectsTable'].includes(controlName)) return true
     return false
@@ -175,11 +194,11 @@ const isNestedObject = (property: IProperty) => {
 
 const onUpdateModelValue = (newDataObj: any, propertyName: string) => {
     props.modelValue[propertyName] = newDataObj
-    emits('update:modelValue', props.modelValue)
+    emit('update:modelValue', props.modelValue)
 }
 
 // Get the control component based on name 
-const getComponent = (property: IProperty) => {
+const getComponent = (property: INestedObject['property']) => {
 
     const dynamicComp = [
         { name: "BooleanCtrl", comp: BooleanCtrl },
@@ -268,9 +287,9 @@ const infoIcon =
                     :label-width="labelWidth"
                     :query-callback="queryCallback"
                     :colum-widths="columWidths"
-                    @update:modelValue="($event: Event) => onUpdateModelValue($event, propertyName)"
-                    @current-change="($event: Event) => $emit('current-change', $event)"
-                    @header-dragend="($event: Event) => $emit('header-dragend', $event)"
+                    @update:modelValue="($event: any) => onUpdateModelValue($event, propertyName)"
+                    @current-change="($event: any) => $emit('current-change', $event)"
+                    @header-dragend="($event: any) => $emit('header-dragend', $event)"
                 >
                 </component>
                 <component

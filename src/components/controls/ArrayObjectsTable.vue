@@ -1,27 +1,33 @@
 <script setup lang="ts">
 import JsonschemaTable from '../JsonschemaTable.vue'
+import type { INestedObject } from '../../models/nestedObject'
 
-defineProps({
-    modelValue: { type: Object, default: () => ([{}]) },
-    property: { type: Object, default: () => ({}) },
-    requiredArr: { type: Array, default: () => ([]) },
-    editPermitted: { type: Object, default: () => ({ items: {} }) },
-    queryCallback: { type: Function },
-    formMode: { type: String, default: 'Readonly Full' },
-    size: { type: String, default: 'default' },
-    labelWidth: { type: String, default: 'auto' },
-    labelPosition: { type: String, default: 'left' },
-    columWidths: { type: Array, default: () => ([]) }
-});
-const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
+withDefaults(defineProps<INestedObject>(), {
+    modelValue: () => ([{}]),
+    property: () => ({}),
+    requiredArr: () => ([]),
+    editPermitted: () => ({}),
+    queryCallback: () => ({}),
+    formMode: 'Readonly Full',
+    size: 'default',
+    labelWidth: 'auto',
+    labelPosition: 'left',
+    columWidths: () => ([]),
+})
+defineEmits<{
+    (e: 'update:modelValue', modelValue: Object): void
+    (e: 'current-change', id: string): void
+    (e: 'header-dragend', columWidths: number[]): void
+}>()
+
 </script>
 
 <template>
     <JsonschemaTable
         :model-value="modelValue"
-        :properties="property.items.properties"
+        :properties="property.items?.properties"
         :requiredArr="property.required"
-        :updateable-properties="editPermitted.items.properties"
+        :updateable-properties="editPermitted.items?.properties"
         :form-mode="formMode"
         :size="size"
         :label-position="labelPosition"

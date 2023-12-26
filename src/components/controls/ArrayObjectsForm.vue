@@ -1,22 +1,27 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useDark } from '@vueuse/core'
+import type { INestedObject } from '../../models/nestedObject'
 
-const props = defineProps({
-    modelValue: { type: Object, default: () => ([{}]) },
-    property: { type: Object, default: () => ({}) },
-    requiredArr: { type: Array, default: () => ([]) },
-    editPermitted: { type: Object, default: () => ({ items: {} }) },
-    queryCallback: { type: Function },
-    formMode: { type: String, default: 'Readonly Full' },
-    size: { type: String, default: 'default' },
-    labelWidth: { type: String, default: 'auto' },
-    labelPosition: { type: String, default: 'left' },
-    columWidths: { type: Array, default: () => ([]) }
-});
-const emits = defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
+const props = withDefaults(defineProps<INestedObject>(), {
+    modelValue: () => ([{}]),
+    property: () => ({}),
+    requiredArr: () => ([]),
+    editPermitted: () => ({}),
+    queryCallback: () => ({}),
+    formMode: 'Readonly Full',
+    size: 'default',
+    labelWidth: 'auto',
+    labelPosition: 'left',
+    columWidths: () => ([]),
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: Object): void
+    (e: 'current-change', id: string): void
+    (e: 'header-dragend', columWidths: number[]): void
+}>()
 
-// used to forece update after reorder
+// used to force update after reorder
 const componentKey = ref(0)
 
 const addIsAllowed = computed(() => {
@@ -92,7 +97,7 @@ const handleDragend = () => {
         if (oldIdx) modelValueReordered.push(props.modelValue[oldIdx])
     })
     // send the new array
-    emits('update:modelValue', modelValueReordered)
+    emit('update:modelValue', modelValueReordered)
     // force rerender. The new order does not do this automaticly
     componentKey.value += 1
     // restore visibility
@@ -134,18 +139,18 @@ const deleteIcon =
             >
                 <JsonschemaForm
                     :model-value="item"
-                    :properties="property.items.properties"
+                    :properties="property.items?.properties"
                     :requiredArr="property.required"
-                    :updateable-properties="editPermitted.items.properties"
+                    :updateable-properties="editPermitted.items?.properties"
                     :form-mode="formMode"
                     :size="size"
                     :label-position="labelPosition"
                     :label-width="labelWidth"
                     :query-callback="queryCallback"
                     :colum-widths="columWidths"
-                    @update:modelValue="($event: Event) => modelValue[idx] = $event"
-                    @current-change="($event: Event) => $emit('current-change', $event)"
-                    @header-dragend="($event: Event) => $emit('header-dragend', $event)"
+                    @update:modelValue="($event: any) => modelValue[idx] = $event"
+                    @current-change="($event: any) => $emit('current-change', $event)"
+                    @header-dragend="($event: any) => $emit('header-dragend', $event)"
                 >
                 </JsonschemaForm>
                 <!-- Delete icon -->

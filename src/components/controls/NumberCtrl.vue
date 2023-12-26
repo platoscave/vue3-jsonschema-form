@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { computed } from "vue";
-const props = defineProps({
-    modelValue: { type: Number },
-    property: { type: Object, default: () => ({}) },
-    readonly: { type: Boolean, default: true },
-});
-defineEmits(['update:modelValue']);
+import type { IProperty } from '../../models/property'
+
+export interface IProps {
+    modelValue?: number
+    property?: IProperty
+    readonly?: boolean
+}
+const props = withDefaults(defineProps<IProps>(), {
+    modelValue: undefined,
+    property: () => ({}),
+    readonly: true
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: number): void
+}>()
 
 const precision = computed(() => {
     if (props.property.type === "number") {
@@ -35,7 +44,7 @@ const precision = computed(() => {
         :min="property.minimum"
         :max="property.maximum"
         :precision="precision"
-        :placeholder="property.attrs.placeholder"
+        :placeholder="property.attrs?.placeholder"
         :controls=false
         @input="($event: any) => $emit('update:modelValue', $event)"
     >

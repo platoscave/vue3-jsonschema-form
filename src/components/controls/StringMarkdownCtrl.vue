@@ -1,12 +1,21 @@
 <script setup lang="ts">
 import Markdown2Html from './Markdown2Html.vue';
 import StringCodeEditorCtrl from './StringCodeEditorCtrl.vue'
+import type { IProperty } from '../../models/property'
 
-defineProps({
-    modelValue: { type: String, default: "" },
-    property: { type: Object, default: () => ({}) },
-    readonly: { type: Boolean, default: true },
-});
+export interface IProps {
+    modelValue?: string
+    property?: IProperty
+    readonly?: boolean
+}
+withDefaults(defineProps<IProps>(), {
+    modelValue: '',
+    property: () => ({}),
+    readonly: true
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: string): void
+}>()
 
 </script>
 
@@ -23,7 +32,7 @@ defineProps({
             :model-value="modelValue"
             :property="property"
             :readonly="readonly"
-            @update:modelValue="($event: Event) => $emit('update:modelValue', $event)"
+            @update:modelValue="($event) => $emit('update:modelValue', $event)"
         ></StringCodeEditorCtrl>
     </div>
 </template>

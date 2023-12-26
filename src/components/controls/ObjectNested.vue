@@ -1,17 +1,23 @@
 <script setup lang="ts">
-defineProps({
-    modelValue: { type: Object, default: () => ({}) },
-    property: { type: Object, default: () => ({}) },
-    requiredArr: { type: Array, default: () => ([]) },
-    editPermitted: { type: Object, default: () => ({}) },
-    queryCallback: { type: Function },
-    formMode: { type: String, default: 'Readonly Full' },
-    size: { type: String, default: 'default' },
-    labelWidth: { type: String, default: 'auto' },
-    labelPosition: { type: String, default: 'left' },
-    columWidths: { type: Array, default: () => ([]) }
-});
-defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
+import type { INestedObject } from '../../models/nestedObject'
+
+withDefaults(defineProps<INestedObject>(), {
+    modelValue: () => ({}),
+    property: () => ({}),
+    requiredArr: () => ([]),
+    editPermitted: () => ({}),
+    queryCallback: () => ({}),
+    formMode: 'Readonly Full',
+    size: 'default',
+    labelWidth: 'auto',
+    labelPosition: 'left',
+    columWidths: () => ([]),
+})
+defineEmits<{
+    (e: 'update:modelValue', modelValue: Object): void
+    (e: 'current-change', id: string): void
+    (e: 'header-dragend', columWidths: number[]): void
+}>()
 
 </script>
 
@@ -29,8 +35,8 @@ defineEmits(['update:modelValue', 'current-change', 'header-dragend'])
         :query-callback="queryCallback"
         :colum-widths="columWidths"
         @update:modelValue="($event: any) => $emit('update:modelValue', $event)"
-        @current-change="($event: Event) => $emit('current-change', $event)"
-        @header-dragend="($event: Event) => $emit('header-dragend', $event)"
+        @current-change="($event: any) => $emit('current-change', $event)"
+        @header-dragend="($event: any) => $emit('header-dragend', $event)"
     >
     </JsonschemaForm>
 </template>

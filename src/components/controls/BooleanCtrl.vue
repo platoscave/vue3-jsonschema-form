@@ -1,10 +1,16 @@
 <script setup lang="ts">
-defineProps({
-  modelValue: { type: Boolean },
-  property: { type: Object, default: () => ({}) },
-  readonly: { type: Boolean, default: true },
-});
-defineEmits(['update:modelValue']);
+
+export interface IProps {
+  modelValue?: boolean
+  readonly?: boolean
+}
+withDefaults(defineProps<IProps>(), {
+  modelValue: undefined,
+  readonly: true
+})
+const emit = defineEmits<{
+  (e: 'update:modelValue', modelValue: boolean): void
+}>()
 
 </script>
 <template>

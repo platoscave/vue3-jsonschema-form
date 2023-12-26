@@ -9,18 +9,27 @@ import 'codemirror/theme/dracula.css'
 import 'codemirror/mode/javascript/javascript.js'
 import 'codemirror/mode/gfm/gfm.js'
 import 'codemirror/mode/css/css.js'
+import type { IProperty } from '../../models/property'
 
-const props = defineProps({
-    modelValue: { type: String, default: "let a = 10" },
-    property: { type: Object, default: () => ({}) },
-    readonly: { type: Boolean, default: true },
-});
+export interface IProps {
+    modelValue?: string
+    property?: IProperty
+    readonly?: boolean
+}
+const props = withDefaults(defineProps<IProps>(), {
+    modelValue: '',
+    property: () => ({}),
+    readonly: true
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: string): void
+}>()
 
-const emits = defineEmits(["update:modelValue"]);
 const editorRef: any = ref(null)
 let codeMirror: any = null
 
-const getMode = (mediaType: string) => {
+const getMode = () => {
+    const mediaType = props.property.contentMediaType
     if (!mediaType) return 'javascript'
     const mediaTypeArr = mediaType.split('/')
     const simpleMime = mediaTypeArr[1].replace("x-", "");
@@ -54,13 +63,13 @@ watch(() => props.modelValue, (value) => {
 onMounted(() => {
     codeMirror = CodeMirror.fromTextArea(editorRef.value, {
         theme: 'dracula',
-        mode: getMode(props.property.contentMediaType),
+        mode: getMode(),
         readOnly: props.readonly ? 'nocursor' : false,
         //beautify: { initialBeautify: true, autoBeautify: true },
     })
 
     // change event, emit update
-    codeMirror.on('blur', (codeMirror: any) => emits('update:modelValue', codeMirror.getValue()));
+    codeMirror.on('blur', (codeMirror: any) => emit('update:modelValue', codeMirror.getValue()));
 
     // Force refresh after delay (top of event que). Otherwise it'll be empty until you click on it.
     setTimeout(() => codeMirror.refresh())

@@ -1,25 +1,30 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { get } from 'lodash';
+import type { IProperty } from '../../models/property'
 
-const props = defineProps({
-    modelValue: { type: String, defalut: "" },
-    property: { type: Object, default: () => ({}) },
-    readonly: { type: Boolean, default: true },
-});
-const emits = defineEmits(['update:modelValue']);
+export interface IProps {
+    modelValue?: string
+    property?: IProperty
+    readonly?: boolean
+}
+const props = withDefaults(defineProps<IProps>(), {
+    modelValue: '',
+    property: () => ({}),
+    readonly: true
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: string): void
+}>()
 
-
-//const locale = 'en-US';
 // @ts-expect-error
 const locale = window.navigator.userLanguage || window.navigator.language;
+//const locale = 'en-US';
 const localeDate = computed(() => {
     const format = props.property.format
-    let options = {}
+    let options: any = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
     if (format === 'date') options = { year: 'numeric', month: '2-digit', day: '2-digit' }
-    else options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
-    const dateStr = (new Date(props.modelValue)).toLocaleDateString(locale, options);
-    return dateStr
+    return (new Date(props.modelValue)).toLocaleDateString(locale, options);
 });
 
 const emitModelValue = (dateObj: Date) => {
@@ -30,7 +35,7 @@ const emitModelValue = (dateObj: Date) => {
         // In the case of pure date, remove time / time zone
         if (format === 'date') utcStr = utcStr.substring(0, 10);
     }
-    emits('update:modelValue', utcStr)
+    emit('update:modelValue', utcStr)
 }
 
 // TODO disabled date

@@ -1,12 +1,22 @@
 <script setup lang="ts">
 import StringCodeEditorCtrl from "./StringCodeEditorCtrl.vue";
-defineProps({
-    modelValue: { type: String, default: "" },
-    property: { type: Object, default: () => ({}) },
-    readonly: { type: Boolean, default: true },
-});
+import type { IProperty } from '../../models/property'
 
-const emit = defineEmits(["update:modelValue"]);
+export interface IProps {
+    modelValue?: string
+    property?: IProperty
+    readonly?: boolean
+}
+
+withDefaults(defineProps<IProps>(), {
+    modelValue: '',
+    property: () => ({}),
+    readonly: true
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: string): void
+}>()
+
 </script>
 
 <template>

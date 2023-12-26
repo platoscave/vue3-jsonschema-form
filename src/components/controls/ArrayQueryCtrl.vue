@@ -1,27 +1,42 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-const props = defineProps({
-    modelValue: { type: Array, default: () => ([]) },
-    property: { type: Object, default: () => ({}) },
-    readonly: { type: Boolean, default: true },
-    queryCallback: { type: Function, default: () => ([]) },
-    required: { type: Boolean, default: false },
-});
-defineEmits(['update:modelValue']);
+import type { IProperty } from '../../models/property'
+
+export interface IProps {
+    modelValue?: string[]
+    property?: IProperty
+    readonly?: boolean
+    queryCallback?: Function
+    required?: boolean
+}
+const props = withDefaults(defineProps<IProps>(), {
+    modelValue: () => ([]),
+    property: () => ({ items: {} }),
+    readonly: true,
+    queryCallback: () => ({}),
+    required: false
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: string[]): void
+}>()
+
+interface IItem {
+    key: string
+    label?: string
+    iconSrc?: string
+}
+const itemsRef = ref<IItem[]>([])
 
 
-const itemsRef = ref([])
-
-
-const readonlyLabels = computed(() => {
+const readonlyItems = computed(() => {
     if (!(props.modelValue && itemsRef.value)) return "";
-    return itemsRef.value.filter((obj: any) => {
-        return props.modelValue.includes(obj.key);
+    return itemsRef.value.filter((item) => {
+        return props.modelValue.includes(item.key);
     });
 });
 
 onMounted(async () => {
-    if (props.queryCallback && props.property.items.query) {
+    if (props.queryCallback && props.property.items?.query) {
         const results: [] = await props.queryCallback(props.property.items.query)
 
         // Copy itemsRef from results to itemsRef using push(). Perserve reactivity!
@@ -30,11 +45,6 @@ onMounted(async () => {
         }
     }
 })
-interface IItems {
-    key: any;
-    label: string;
-    iconSrc: string;
-}
 </script>
 
 <template>
@@ -43,7 +53,7 @@ interface IItems {
         class="sf-readonly-wide"
     >
         <div
-            v-for="item in (readonlyLabels as IItems)"
+            v-for="item in readonlyItems as Array<IItem>"
             :key="item.key"
             :model-value="item.key"
         >
@@ -55,7 +65,7 @@ interface IItems {
     <el-checkbox-group
         v-else-if="itemsRef.length < 5"
         :model-value="modelValue"
-        @update:modelValue="($event) => $emit('update:modelValue', $event)"
+        @update:modelValue="($event: any) => $emit('update:modelValue', $event)"
     >
         <el-checkbox
             v-for="item in itemsRef"

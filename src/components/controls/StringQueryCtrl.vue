@@ -1,15 +1,42 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-const props = defineProps({
-    modelValue: { type: String, default: "" },
-    property: { type: Object, default: () => ({}) },
-    readonly: { type: Boolean, default: true },
-    queryCallback: { type: Function, default: () => ([]) },
-    required: { type: Boolean, default: false },
-});
-defineEmits(['update:modelValue']);
+import type { IProperty } from '../../models/property'
 
-const itemsRef = ref([])
+export interface IProps {
+    modelValue?: string
+    property?: IProperty
+    readonly?: boolean
+    queryCallback?: Function
+    required?: boolean
+}
+const props = withDefaults(defineProps<IProps>(), {
+    modelValue: '',
+    property: () => ({ items: {} }),
+    readonly: true,
+    queryCallback: () => ({}),
+    required: false
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: string): void
+}>()
+
+interface IItem {
+    key: string
+    label?: string
+    iconSrc?: string
+}
+const itemsRef = ref<IItem[]>([])
+
+// const props = defineProps({
+//     modelValue: { type: String, default: "" },
+//     property: { type: Object, default: () => ({}) },
+//     readonly: { type: Boolean, default: true },
+//     queryCallback: { type: Function, default: () => ([]) },
+//     required: { type: Boolean, default: false },
+// });
+// defineEmits(['update:modelValue']);
+
+// const itemsRef = ref([])
 
 const readonlyOutput = computed(() => {
     if (!(props.modelValue && itemsRef.value)) return { icon: '', label: '' };
@@ -51,7 +78,7 @@ onMounted(async () => {
         <el-radio-group
             v-else-if="itemsRef.length < 5"
             :model-value="modelValue"
-            @update:modelValue="($event) => $emit('update:modelValue', $event)"
+            @update:modelValue="($event: any) => $emit('update:modelValue', $event)"
         >
             <el-radio
                 v-for="item in itemsRef"

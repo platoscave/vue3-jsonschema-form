@@ -8,15 +8,21 @@ import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { lowlight } from "lowlight/lib/core.js";
+import type { IProperty } from '../../models/property'
 
-const props = defineProps({
-    hashLevel: { type: Number, default: 0 },
-    modelValue: { type: String, default: "" },
-    property: { type: Object, default: {} },
-    readonly: { type: Boolean, default: true },
-});
-
-const emit = defineEmits(["update:modelValue"]);
+export interface IProps {
+    modelValue?: string
+    property?: IProperty
+    readonly?: boolean
+}
+withDefaults(defineProps<IProps>(), {
+    modelValue: '',
+    property: () => ({}),
+    readonly: true
+})
+const emit = defineEmits<{
+    (e: 'update:modelValue', modelValue: string): void
+}>()
 
 const editor = new Editor({
     extensions: [
