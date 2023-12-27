@@ -12,7 +12,7 @@ export interface IProperty {
     contentMediaType?: string
     displayAs?: string
     query?: Object
-    properties?:  Record<string, IProperty>
+    properties?: Record<string, IProperty>
     enum?: string[]
     attrs?: {
         placeholder?: string

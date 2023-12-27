@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useDark } from '@vueuse/core'
-import type { INestedObject } from '../../models/nestedObject'
+import type { IComponentInterface } from '../../models/componentInterface'
 
-const props = withDefaults(defineProps<INestedObject>(), {
+const props = withDefaults(defineProps<IComponentInterface>(), {
     modelValue: () => ([{}]),
     property: () => ({}),
     requiredArr: () => ([]),

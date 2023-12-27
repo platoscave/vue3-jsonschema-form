@@ -192,7 +192,7 @@ export default {
           attrs: {
           },
         },
-        nestedObject: {
+        componentInterface: {
           title: "Nested Object",
           description: "### Object \nDubble nested object",
           type: "object",

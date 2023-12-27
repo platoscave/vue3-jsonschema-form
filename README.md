@@ -32,7 +32,7 @@ import 'jsonschema-form.css'
 ```
 
 ## 4 Description
-**Vue3 JsonSchema Form/Table** takes a [JsonSchema draft v7](https://json-schema.org/) [JSON Schema: A Media Type for Describing JSON Documents](https://json-schema.org/draft/2020-12/json-schema-core) object and generates a form or table based on [Element Plus](https://element-plus.org/en-US/) input controls. The updated data object is returned as an update event.
+**Vue3 JsonSchema Form/Table** takes a [JsonSchema draft v7](https://json-schema.org/) [JSON Schema: A Media Type for Describing JSON Documents](https://json-schema.org/draft/2020-12/json-schema-core) object and generates a form or table based on [Element Plus](https://element-plus.org/en-US/) input controls. The updated data object is returned as an update:modelValue event.
 
 ### 4.1 Key features
 - **Four modes**: The Jsonschema form can be presented in four different modes:
@@ -78,6 +78,35 @@ import 'jsonschema-form.css'
 |:----------------- | --------- | --------- |
 |validate | Validate the whole form. Receives a callback or returns Promise. | Promise |
 |clearValidate | Clear validation message for specified fields. |  |
+
+### Compatability
+| Attribute<br/>Type | Values | Usage |
+|:-------------------| ------ | ------| 
+| **type**<br/>string                   | string,<br/>number,<br/>boolean,<br/>object,<br/>array | Determines control component type e.g. string input, number input, sub-forms etc. | 
+| **title**<br/>string                  | | Used as label in forms and tables. |
+| **description**<br/>string | markdown | Used in info-icon tooltip. |
+| **maxLength**<br/>number              | | **type**: string<br/>Used in string input. Limits the number of characters. |
+| **minLength**<br/>number              | | **type**: string<br/>Used in string input. Generates a validation rule. |
+| **minimum**<br/>number                | | **type**: number<br/>Used in number input. Limits minimum value. |
+| **maximum**<br/>number                | | **type**: number<br/>Used in number input. Limits maximum value. |
+| **multipleOf**<br/>number             | | **type**: number<br/>Used in number input. Determines number of decimal places. |
+| **format**<br/>string | email,<br/>uri |  **type**: string<br/>Used in string input. Generates a validation rule. |              
+| **pattern**<br/>string | regular exspression |  **type**: string<br/>Used in string input. Generates a validation rule. | 
+| **contentMediaType**<br/>string | text/markdown,<br/>image/ | **type**: string<br/>Used in string input. Displays code editor in edit mode.
+| **displayAsTable**<br/>string | boolean |  **type**: array<br/>
+| **query**<br/>object                  |
+| **properties**<br/>properties object  |
+| **enum**<br/>string[]                 |
+| **attrs**<br/>                        |
+| - **placeholder**<br>string            |
+| - **type**<br/>string                   |
+| - **showWordLimit**<br/>boolean         |
+| **items**<br/>                        |
+| - **query**<br/>Object                  |
+| - **properties**<br/>properties object  |
+| - **type**<br/>string                   |
+| **required**<br/>string[]             |
+| **additionalItems**<br/>boolean       |
 
 ### 4.2 Screenshots
 **Readonly Dense** mode

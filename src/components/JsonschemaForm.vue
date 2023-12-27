@@ -17,9 +17,9 @@ import StringCtrl from "./controls/StringCtrl.vue";
 import JsonschemaForm from "./JsonschemaForm.vue";
 import Markdown2Html from './controls/Markdown2Html.vue'
 import type { IProperty } from '../models/property'
-import type { INestedObject } from '../models/nestedObject'
+import type { IComponentInterface } from '../models/componentInterface'
 
-const props = withDefaults(defineProps<INestedObject>(), {
+const props = withDefaults(defineProps<IComponentInterface>(), {
     modelValue: () => ({}),
     properties: () => ({}),
     requiredArr: () => ([]),

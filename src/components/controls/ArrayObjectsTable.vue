@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import JsonschemaTable from '../JsonschemaTable.vue'
-import type { INestedObject } from '../../models/nestedObject'
+import type { IComponentInterface } from '../../models/componentInterface'
 
-withDefaults(defineProps<INestedObject>(), {
+withDefaults(defineProps<IComponentInterface>(), {
     modelValue: () => ([{}]),
     property: () => ({}),
     requiredArr: () => ([]),

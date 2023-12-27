@@ -1,5 +1,5 @@
 import type { IProperty } from './property'
-export interface INestedObject {
+export interface IComponentInterface {
     modelValue?: any
     properties?: Record<string, IProperty>
     property?: IProperty
