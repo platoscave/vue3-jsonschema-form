@@ -1,13 +1,14 @@
-# Vue3 JsonSchema Form/Table
+# Vue3 Jsonschema Form/Table
+A Vue3 plugin that generates Element Plus forms or tables based on a Jsonschema object. 
 Use the same schema that you use for server-side validation, to generate a client-side form or table.
-## 1 Playground
+### Playground
 Try it in our [playground](). 
 Paste your favorite Json Schema and see what happens. 
-## 2 Install
+### Install
 ```
 npm i vue3-jsonschema-form --save
 ```
-## 3 Usage:
+### Usage:
 
 Globally in main.ts:
 ```javascript
@@ -31,10 +32,10 @@ Add jsonschema-form.css to your main.ts, or copy it and use it as inspiration.
 import 'jsonschema-form.css'
 ```
 
-## 4 Description
+### Description
 **Vue3 JsonSchema Form/Table** takes a [JsonSchema draft v7](https://json-schema.org/) [JSON Schema: A Media Type for Describing JSON Documents](https://json-schema.org/draft/2020-12/json-schema-core) object and generates a form or table based on [Element Plus](https://element-plus.org/en-US/) input controls. The updated data object is returned as an update:modelValue event.
 
-### 4.1 Key features
+### Features
 - **Four modes**: The Jsonschema form can be presented in four different modes:
 	- **Readonly Dense**: Read only. Only properties with corresponding data in the data object are shown. 
 	- **Readonly Full**: Read only. All properties are shown.
@@ -53,7 +54,7 @@ import 'jsonschema-form.css'
 - **Dark mode**: Supports light / dark mode
 - **Code editor / Markdown interpreter** 
 
-# Form/Table Attributes
+### Form/Table Attributes
 | Name | Description  | Types | Accepted Values | Default |
 |:----------------- | --------- | --------- | --------- | --------- |
 | model-value / v-model| binding value | object | | { } |
@@ -67,48 +68,49 @@ import 'jsonschema-form.css'
 | colum-widths | An array of colum widths for the table or one of the sub-tables.  | array | | [ ] |
 | current-row | The id of the row to be highlighted  | string | |  |
  
-# Form/Table Events
+### Form/Table Events
 | Name | Description | Parameters | 
 |:----------------- | --------- | --------- |
 |update:modelValue | triggers when data is updated by the user | modelValue|
 |current-change | triggers when current row changes | currentRow, oldCurrentRow |
 |header-dragend | triggers after a table colum is dragged | Array of table colum widths |
-# Form/Table Exposes
+### Form/Table Exposes
 | Name | Description | Parameters | 
 |:----------------- | --------- | --------- |
 |validate | Validate the whole form. Receives a callback or returns Promise. | Promise |
 |clearValidate | Clear validation message for specified fields. |  |
 
 ### Compatability
-| Attribute<br/>Type | Values | Usage |
+Below is an overview of the properties attribute which we support. Foremost among these is the type attribute.
+| Attribute<br>Type | Values | Usage |
 |:-------------------| ------ | ------| 
-| **type**<br/>string                   | string,<br/>number,<br/>boolean,<br/>object,<br/>array | Determines control component type e.g. string input, number input, sub-forms etc. | 
-| **title**<br/>string                  | | Used as label in forms and tables. |
-| **description**<br/>string | markdown | Used in info-icon tooltip. |
-| **maxLength**<br/>number              | | **type**: string<br/>Used in string input. Limits the number of characters. |
-| **minLength**<br/>number              | | **type**: string<br/>Used in string input. Generates a validation rule. |
-| **minimum**<br/>number                | | **type**: number<br/>Used in number input. Limits minimum value. |
-| **maximum**<br/>number                | | **type**: number<br/>Used in number input. Limits maximum value. |
-| **multipleOf**<br/>number             | | **type**: number<br/>Used in number input. Determines number of decimal places. |
-| **format**<br/>string | email,<br/>uri |  **type**: string<br/>Used in string input. Generates a validation rule. |              
-| **pattern**<br/>string | regular exspression |  **type**: string<br/>Used in string input. Generates a validation rule. | 
-| **contentMediaType**<br/>string | text/markdown,<br/>image/ | **type**: string<br/>Used in string input. Displays code editor in edit mode.
-| **displayAsTable**<br/>string | boolean |  **type**: array<br/>
-| **query**<br/>object                  |
-| **properties**<br/>properties object  |
-| **enum**<br/>string[]                 |
-| **attrs**<br/>                        |
-| - **placeholder**<br>string            |
-| - **type**<br/>string                   |
-| - **showWordLimit**<br/>boolean         |
-| **items**<br/>                        |
-| - **query**<br/>Object                  |
-| - **properties**<br/>properties object  |
-| - **type**<br/>string                   |
-| **required**<br/>string[]             |
-| **additionalItems**<br/>boolean       |
+| **type**<br>string                   | string, number, integer, boolean, object, array | Determines control component type e.g. string input, number input, sub-forms etc. | 
+| **title**<br>string                  | | Used as label in forms and tables. |
+| **description**<br>string | markdown | Used in info-icon tooltip. |
+| **maxLength**<br>number              | | **type**: string<br>Used in string input. Limits the number of characters. |
+| **minLength**<br>number              | | **type**: string<br>Used in string input. Used to generate a validation rule. |
+| **minimum**<br>number                | | **type**: number<br>Used in number input. Limits minimum value. |
+| **maximum**<br>number                | | **type**: number<br>Used in number input. Limits maximum value. |
+| **multipleOf**<br>number             | | **type**: number<br>Used in number input. Determines number of decimal places. |
+| **format**<br>string | email, uri, date, date-time |  **type**: string<br>'email, uri': Used in string input, used to generate a validation rule. <br>'date': pure date.<br>'date-time': ISO timestamp, in GMT  |              
+| **pattern**<br>string | regular exspression |  **type**: string<br>Used in string input. Used to generate a validation rule. | 
+| **contentMediaType**<br>string | text/markdown,<br>image/ | **type**: string<br>Used in string input. Displays code editor in edit mode.
+| **displayAsTable**<br>boolean | true, false|  **type**: array<br>Display the array as table or sub-form. 
+| **query**<br>object                  | | **type**: string, array<br>Non-jsonschema. The query used to fill dropdown listbox / radio buttons. |
+| **properties**<br>properties object  | | **type**: object<br>Properties for nested object to be displayed as sub-form. |
+| **enum**<br>string[]                 | | **type**: string<br>Array used to fill dropdown listbox / radio buttons. |
+| **attrs**<br>object | | non-jsonschema |
+| &nbsp;&nbsp;&nbsp;&nbsp;**placeholder**<br>&nbsp;&nbsp;&nbsp;&nbsp;string | | **type**: string, number<br>Placeholder text. |
+| &nbsp;&nbsp;&nbsp;&nbsp;**type**<br>&nbsp;&nbsp;&nbsp;&nbsp;string | password, textarea| **type**: string<br>'password: hiddent input.<br>'textarea': auto grow input field.|
+| &nbsp;&nbsp;&nbsp;&nbsp;**showWordLimit**<br>&nbsp;&nbsp;&nbsp;&nbsp;boolean | true, false | **type**: string **attrs.type**: textarea<br>Whether or not to show character count.|
+| **items**<br>object |  | **type**: array<br>Describes the items of the array.
+| &nbsp;&nbsp;&nbsp;&nbsp;**type**<br>&nbsp;&nbsp;&nbsp;&nbsp;string | object, string | **type**: array<br>|
+| &nbsp;&nbsp;&nbsp;&nbsp;**query**<br>&nbsp;&nbsp;&nbsp;&nbsp;object | |  **type**: array,  **items.type**: string<br>Non-jsonschema. The query used to fill multi-select dropdown listbox / checkboxes.
+| &nbsp;&nbsp;&nbsp;&nbsp;**properties**<br>&nbsp;&nbsp;&nbsp;&nbsp;properties object  | | **type**: array,  **items.type**: object<br>Properties for array item object to be displayed as sub-form. |
+| **required**<br>string[] | | Array of required property names. Used in rule genneration. |
+| **additionalItems**<br>boolean |  | **type**: array<br>Array of required property names. Used in rule genneration. |
 
-### 4.2 Screenshots
+### Screenshots
 **Readonly Dense** mode
 ![[Pasted image 20231102122239.png]]
 
